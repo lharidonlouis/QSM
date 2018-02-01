@@ -1,13 +1,20 @@
 package line_management;
 
+import java.util.List;
+
 public class Station {
 	private long id;
 	private String name;
 	private String type;
+	private Line line;
+	private int capacity;
+	private List<Passenger> passengers;
 	
 	public Station() {
 		
 	}
+	
+	
 	
 	public long getId() {
 		return id;

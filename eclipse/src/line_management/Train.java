@@ -1,14 +1,22 @@
 package line_management;
 
+import java.util.List;
+
 public class Train {
 	private long id;
 	private String destination;
 	private int position;
 	private int speed;
+	private int capacity;
+	private List<Passenger> passengers;
 	private Line line;
 	
 	public Train() {
 		
+	}
+	
+	public Canton getCurrentCanton() {
+		return line.getCantonAtPosition(position);
 	}
 	
 	public long getId() {
@@ -34,6 +42,18 @@ public class Train {
 	}
 	public void setSpeed(int speed) {
 		this.speed = speed;
+	}
+	public int getCapacity() {
+		return capacity;
+	}
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+	public List<Passenger> getPassengers() {
+		return passengers;
+	}
+	public void setPassengers(List<Passenger> passengers) {
+		this.passengers = passengers;
 	}
 	public Line getLine() {
 		return line;

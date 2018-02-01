@@ -5,10 +5,12 @@ public class Canton {
 	private int startPoint;
 	private int length;
 	private Line line;
+	private int occupied;
 	
 	public Canton() {
 		
 	}
+	
 	public long getId() {
 		return id;
 	}
