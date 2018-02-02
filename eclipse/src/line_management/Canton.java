@@ -5,17 +5,20 @@ public class Canton {
 	private int startPoint;
 	private int length;
 	private Line line;
-	private int occupied;
+	private boolean occupied;
 
 	public Canton() {
 		
 	}
 	
-	public int getOccupied() {
+	public boolean getOccupied() {
 		return occupied;
 	}
-	public void setOccupied(int occupied) {
-		this.occupied = occupied;
+	public void setOccupiedTrue() {
+		this.occupied = true;
+	}
+	public void setOccupiedFalse() {
+		this.occupied = false;
 	}
 	public long getId() {
 		return id;
