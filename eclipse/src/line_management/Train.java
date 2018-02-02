@@ -2,7 +2,7 @@ package line_management;
 
 import java.util.List;
 
-public class Train {
+public class Train extends Thread {
 	private long id;
 	private String destination;
 	private int position;
@@ -11,8 +11,8 @@ public class Train {
 	private List<Passenger> passengers;
 	private Line line;
 	
-	public Train() {
-		
+	public Train(Line line) {
+		this.line = line;
 	}
 	
 	public Canton getCurrentCanton() {
