@@ -11,7 +11,25 @@ public class Canton {
 		
 	}
 	
-	public boolean getOccupied() {
+	public boolean addTrain() {
+		if (occupied) {
+			return false;
+		}
+		else {
+			occupied = true;
+			return true;
+		}
+	}
+	
+	public void removeTrain() {
+		occupied = false;
+	}
+	
+	public int getEndPosition() {
+		return startPoint + length;
+	}
+	
+	public boolean isOccupied() {
 		return occupied;
 	}
 	public void setOccupiedTrue() {

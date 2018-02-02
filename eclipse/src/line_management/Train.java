@@ -2,17 +2,50 @@ package line_management;
 
 import java.util.List;
 
+import simulation.Simulation;
+
 public class Train extends Thread {
 	private long id;
 	private String destination;
 	private int position;
 	private int speed;
+	private boolean arrived;
 	private int capacity;
 	private List<Passenger> passengers;
 	private Line line;
 	
-	public Train(Line line) {
+	public Train(Line line, String destination, int position, int speed) {
 		this.line = line;
+		this.destination = destination;
+		this.position = position;
+		this.speed = speed;
+	}
+	
+	public void run() {
+		while(!arrived) {
+			try {
+				sleep(Simulation.DELAY);
+			} catch (InterruptedException e){
+					System.err.println(e.getMessage());
+			}
+			if (position + speed >= line.getCantonAtPosition(position).getEndPosition()) {
+				Canton nextCanton = line.getCantonAtPosition(position + speed);
+			
+				/* CHECK THIS PART */
+				nextCanton.addTrain();
+				arrived = true;
+				position = line.getLength();
+				/* END CHECK */
+				
+			} else {
+				updatePosition();
+			}
+		}
+		line.getCantonAtPosition(position).removeTrain();
+	}
+
+	public void updatePosition() {
+		position += speed;
 	}
 	
 	public Canton getCurrentCanton() {
@@ -46,6 +79,15 @@ public class Train extends Thread {
 	}
 	public void setSpeed(int speed) {
 		this.speed = speed;
+	}
+	public boolean isArrived() {
+		return arrived;
+	}
+	public void setArrivedTrue() {
+		this.arrived = true;
+	}
+	public void setArrivedFalse() {
+		this.arrived = false;
 	}
 	public int getCapacity() {
 		return capacity;
