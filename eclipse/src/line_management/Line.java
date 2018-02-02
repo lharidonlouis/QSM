@@ -22,6 +22,16 @@ public class Line {
 		return canton;
 	}
 	
+	public Station getStationAtPosition(int position) {
+		Station station = new Station();
+		
+		/*
+		 * Function to write
+		 */
+		
+		return station;
+	}
+	
 	public int getLength() {
 		return length;
 	}

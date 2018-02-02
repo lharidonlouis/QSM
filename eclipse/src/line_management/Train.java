@@ -19,6 +19,10 @@ public class Train {
 		return line.getCantonAtPosition(position);
 	}
 	
+	public Station getCurrentStation() {
+		return line.getStationAtPosition(position);
+	}
+	
 	public long getId() {
 		return id;
 	}

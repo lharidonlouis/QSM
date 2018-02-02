@@ -15,7 +15,24 @@ public class Station {
 	}
 	
 	
-	
+	public Line getLine() {
+		return line;
+	}
+	public void setLine(Line line) {
+		this.line = line;
+	}
+	public int getCapacity() {
+		return capacity;
+	}
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+	public List<Passenger> getPassengers() {
+		return passengers;
+	}
+	public void setPassengers(List<Passenger> passengers) {
+		this.passengers = passengers;
+	}
 	public long getId() {
 		return id;
 	}

@@ -6,11 +6,17 @@ public class Canton {
 	private int length;
 	private Line line;
 	private int occupied;
-	
+
 	public Canton() {
 		
 	}
 	
+	public int getOccupied() {
+		return occupied;
+	}
+	public void setOccupied(int occupied) {
+		this.occupied = occupied;
+	}
 	public long getId() {
 		return id;
 	}
