@@ -8,7 +8,7 @@ public class Canton {
 	private boolean occupied;
 
 	public Canton() {
-		
+		/* Add constructor */
 	}
 	
 	public boolean addTrain() {
@@ -24,11 +24,9 @@ public class Canton {
 	public void removeTrain() {
 		occupied = false;
 	}
-	
-	public int getEndPosition() {
+	public int getEndPoint() {
 		return startPoint + length;
 	}
-	
 	public boolean isOccupied() {
 		return occupied;
 	}

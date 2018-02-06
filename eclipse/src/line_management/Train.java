@@ -28,7 +28,7 @@ public class Train extends Thread {
 			} catch (InterruptedException e){
 					System.err.println(e.getMessage());
 			}
-			if (position + speed >= line.getCantonAtPosition(position).getEndPosition()){
+			if (position + speed >= line.getCantonAtPosition(position).getEndPoint()){
 				Canton nextCanton = line.getCantonAtPosition(position + speed);
 
 				/* CHECK THIS PART */

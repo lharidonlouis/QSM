@@ -9,38 +9,34 @@ public class Line {
 	private List<Canton> cantons;
 	private int nbCantons;
 
-	public int getNbCantons() {
-		return nbCantons;
-	}
-
-	public void setNbCantons(int nbCantons) {
-		this.nbCantons = nbCantons;
-	}
-
 	public Line() {
-		
+		/* Add constructor */
 	}
 	
 	public Canton getCantonAtPosition(int position) {
-		Canton canton = new Canton();
+		int i = 0;
 		
-		/* 
-		 * Function to write
-		 */
+		while (cantons.get(i).getEndPoint() < position)
+			i++;
 		
-		return canton;
+		return cantons.get(i);
 	}
 	
 	public Station getStationAtPosition(int position) {
-		Station station = new Station();
+		int i = 0;
 		
-		/*
-		 * Function to write
-		 */
+		while (stations.get(i).getPosition() != position)
+			i++;
 		
-		return station;
+		return stations.get(i);
 	}
 	
+	public int getNbCantons() {
+		return nbCantons;
+	}
+	public void setNbCantons(int nbCantons) {
+		this.nbCantons = nbCantons;
+	}
 	public int getLength() {
 		return length;
 	}

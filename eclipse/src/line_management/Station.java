@@ -8,13 +8,19 @@ public class Station {
 	private String type;
 	private Line line;
 	private int capacity;
+	private int position;
 	private List<Passenger> passengers;
 	
-	public Station() {
-		
+	public Station(){
+		/* Add constructor */
 	}
 	
-	
+	public int getPosition() {
+		return position;
+	}
+	public void setPosition(int position) {
+		this.position = position;
+	}
 	public Line getLine() {
 		return line;
 	}
