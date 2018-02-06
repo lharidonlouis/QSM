@@ -28,15 +28,14 @@ public class Train extends Thread {
 			} catch (InterruptedException e){
 					System.err.println(e.getMessage());
 			}
-			if (position + speed >= line.getCantonAtPosition(position).getEndPosition()) {
+			if (position + speed >= line.getCantonAtPosition(position).getEndPosition()){
 				Canton nextCanton = line.getCantonAtPosition(position + speed);
-			
+
 				/* CHECK THIS PART */
 				nextCanton.addTrain();
 				arrived = true;
 				position = line.getLength();
 				/* END CHECK */
-				
 			} else {
 				updatePosition();
 			}

@@ -7,6 +7,15 @@ public class Line {
 	private int usedLength;
 	private List<Station> stations;
 	private List<Canton> cantons;
+	private int nbCantons;
+
+	public int getNbCantons() {
+		return nbCantons;
+	}
+
+	public void setNbCantons(int nbCantons) {
+		this.nbCantons = nbCantons;
+	}
 
 	public Line() {
 		

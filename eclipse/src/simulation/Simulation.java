@@ -1,7 +1,6 @@
 package simulation;
 
 import java.util.List;
-
 import line_management.Line;
 import line_management.Train;
 import line_management.Builder;
@@ -24,12 +23,20 @@ public class Simulation implements Runnable {
 	public void run() {
 		while(true) {
 			Canton firstCanton = line.getCantons().get(0);
-			if (!firstCanton.isOccupied()) {
+			Canton lastCanton = line.getCantons().get(line.getNbCantons());
+			if (!firstCanton.isOccupied()){
+				String destination = "end";
+				int position = 0;
 				
-				/* HANDLE DESTINATION AND POSITION DEPENDING ON THE WAY */
-				String destination = "";
-				int position=0;
-				/* END HANDLE */
+				Train newtrain = new Train(line, destination, position, REGULAR_SPEED);
+				addTrain(newtrain);
+				newtrain.start();
+				
+				/* HANDLE SPEED VARIATIONS */
+			}
+			else if (!lastCanton.isOccupied()){
+				String destination = "beginning";
+				int position = line.getLength();
 				
 				Train newtrain = new Train(line, destination, position, REGULAR_SPEED);
 				addTrain(newtrain);
