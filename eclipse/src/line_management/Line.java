@@ -17,13 +17,26 @@ public class Line {
 		nbSegments = 0;
 	}
 	
-	public Canton getCantonAtPosition(int position, int way) {
+	public Segment getSegmentAtPosition(int position) {
 		int i = 0;
 		
 		while(segments.get(i).getEndPoint() < position)
 			i++;
 		
-		return segments.get(i).getCanton(way);
+		return segments.get(i);
+	}
+	
+	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException{
+		int i = 0;
+		
+		while(segments.get(i).getEndPoint() < position)
+			i++;
+		
+		if (i <= nbSegments)
+			return segments.get(i).getCanton(way);
+		
+		else throw new TrainArrivedException();
+		
 	}
 	
 	public Station getStationAtPosition(int position) {

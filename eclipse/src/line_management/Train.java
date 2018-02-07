@@ -6,49 +6,91 @@ import simulation.Simulation;
 
 public class Train extends Thread {
 	private long id;
-	private String destination;
+	private int way;
 	private int position;
 	private int speed;
 	private boolean arrived;
 	private int capacity;
+	private Canton currentcanton;
 	private List<Passenger> passengers;
 	private Line line;
 	
-	public Train(Line line, String destination, int position, int speed) {
+	public Train(Line line, int way, int position, int speed) {
 		this.line = line;
-		this.destination = destination;
+		this.way = way;
 		this.position = position;
 		this.speed = speed;
 	}
 	
 	public void run() {
-		while(!arrived) {
+		while (!arrived) {
 			try {
 				sleep(Simulation.DELAY);
-			} catch (InterruptedException e){
-					System.err.println(e.getMessage());
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
 			}
-			if (position + speed >= line.getCantonAtPosition(position).getEndPoint()){
-				Canton nextCanton = line.getCantonAtPosition(position + speed);
-
-				/* CHECK THIS PART */
-				nextCanton.addTrain();
-				arrived = true;
-				position = line.getLength();
-				/* END CHECK */
-			} else {
-				updatePosition();
+			if (way == 0) {
+				if (position + speed >= line.getSegmentAtPosition(position).getEndPoint()) {
+					try {
+						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
+						if (nextcanton.isOccupied()) {
+							setPosition(line.getSegmentAtPosition(position + speed).getStartPoint() - 1);
+							try {
+								wait();
+							} catch (InterruptedException e) {
+								System.err.println(e.getMessage());
+							}
+						}
+						Canton oldcanton = getCurrentCanton();
+						nextcanton.setOccupiedTrue();
+						updatePosition();
+						oldcanton.setOccupiedFalse();
+					} catch (TrainArrivedException e) {
+						arrived = true;
+						setPosition(line.getLength());
+					}
+				}
+				else {
+					updatePosition();
+				}
+			}
+			else {
+				if (position - speed <= line.getSegmentAtPosition(position).getStartPoint()) {
+					try {
+						Canton nextcanton = line.getCantonAtPosition(position - speed, way);
+						if (nextcanton.isOccupied()) {
+							setPosition(line.getSegmentAtPosition(position + speed).getEndPoint() + 1);
+							try {
+								wait();
+							} catch (InterruptedException e) {
+								System.err.println(e.getMessage());
+							}
+						}
+						Canton oldcanton = getCurrentCanton();
+						nextcanton.setOccupiedTrue();
+						updatePosition();
+						oldcanton.setOccupiedFalse();
+					} catch (TrainArrivedException e) {
+						arrived = true;
+						setPosition(line.getLength());
+					}
+				}
+				else {
+					updatePosition();
+				}
 			}
 		}
-		line.getCantonAtPosition(position).removeTrain();
+		currentcanton.setOccupiedFalse();
 	}
 
 	public void updatePosition() {
-		position += speed;
+		if (way == 0)
+			position += speed;
+		else position -= speed;
 	}
-	
+
 	public Canton getCurrentCanton() {
-		return line.getCantonAtPosition(position);
+		return currentcanton;
 	}
 	
 	public Station getCurrentStation() {
@@ -61,11 +103,11 @@ public class Train extends Thread {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getDestination() {
-		return destination;
+	public int getWay() {
+		return way;
 	}
-	public void setDestination(String destination) {
-		this.destination = destination;
+	public void setWat(int way) {
+		this.way = way;
 	}
 	public int getPosition() {
 		return position;

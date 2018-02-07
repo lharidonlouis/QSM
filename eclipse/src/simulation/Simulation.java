@@ -9,8 +9,8 @@ import line_management.Canton;
 public class Simulation implements Runnable{
 	private Line line;
 	private List<Train> trains;
-	private static final int DELAY = 50;
-	private static final int REGULAR_SPEED = 2;
+	public static final int DELAY = 50;
+	public static final int REGULAR_SPEED = 2;
 	
 	public Simulation() {
 		Builder builder = new Builder();
