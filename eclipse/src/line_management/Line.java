@@ -45,8 +45,6 @@ public class Line {
 		else {
 			throw new SizeExceededException();
 		}
-		/* Use this in Builder and add a new Segment */
-		/* canton = new Canton(id, totalLenght - usedLength, usedLength);*/
 
 	}
 	

@@ -9,41 +9,38 @@ import line_management.Canton;
 public class Simulation implements Runnable{
 	private Line line;
 	private List<Train> trains;
-	public static final int DELAY = 50;
+	private static final int DELAY = 50;
 	private static final int REGULAR_SPEED = 2;
 	
 	public Simulation() {
 		Builder builder = new Builder();
 		
-		/* ADD LINE BUILD */
-		/* builder.build */
+		builder.build(1000);
+		if (builder.isBuilt())
+			line = builder.getLine();
 	}
 	
 	@Override
 	public void run() {
 		while(true) {
-			Canton firstCanton = line.getCantons().get(0);
-			Canton lastCanton = line.getCantons().get(line.getNbCantons());
-			if (!firstCanton.isOccupied()){
-				String destination = "end";
-				int position = 0;
-				
-				Train newtrain = new Train(line, destination, position, REGULAR_SPEED);
-				addTrain(newtrain);
-				newtrain.start();
-				
-				/* HANDLE SPEED VARIATIONS */
+			Canton[] firstCantons = new Canton[2];
+			firstCantons[0] = line.getSegments().get(0).getCanton(0);
+			firstCantons[1] = line.getSegments().get(line.getNbSegments()).getCanton(1);
+			int position;
+			
+			for (int i = 0; i < 2; i++) {
+				if (!firstCantons[i].isOccupied()) {
+					if (i == 0)
+						position = 0;
+					else position = line.getLength();
+					Train newtrain = new Train(line, i, position, REGULAR_SPEED);
+					addTrain(newtrain);
+					newtrain.start();
+					
+					/* HANDLE SPEED VARIATIONS */
+				}
 			}
-			else if (!lastCanton.isOccupied()){
-				String destination = "beginning";
-				int position = line.getLength();
-				
-				Train newtrain = new Train(line, destination, position, REGULAR_SPEED);
-				addTrain(newtrain);
-				newtrain.start();
-				
-				/* HANDLE SPEED VARIATIONS */
-			}
+			
 			try {
 				Thread.sleep(DELAY);
 			} catch (InterruptedException e) {
