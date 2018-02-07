@@ -5,14 +5,18 @@ import java.util.List;
 public class Station {
 	private long id;
 	private String name;
-	private String type;
+	private int type;
 	private Line line;
 	private int capacity;
 	private int position;
 	private List<Passenger> passengers;
 	
-	public Station(){
-		/* Add constructor */
+	public Station(String name, int type, Line line, int capacity, int position){
+		this.name = name;
+		this.type = type;
+		this.line = line;
+		this.capacity = capacity;
+		this.position = position;
 	}
 	
 	public int getPosition() {
@@ -39,22 +43,22 @@ public class Station {
 	public void setPassengers(List<Passenger> passengers) {
 		this.passengers = passengers;
 	}
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getType() {
+	public int getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
+	}
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
 	}
 }

@@ -1,41 +1,63 @@
 package line_management;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Line {
 	private int length;
 	private int usedLength;
-	private List<Station> stations;
-	private List<Canton> cantons;
-	private int nbCantons;
+	private ArrayList<Station> stations;
+	private ArrayList<Segment> segments;
+	private int nbSegments;
 
-	public Line() {
-		/* Add constructor */
+	public Line(int length) {
+		this.length = length;
+		usedLength = 0;
+		stations = new ArrayList<Station>();
+		segments = new ArrayList<Segment>();
+		nbSegments = 0;
 	}
 	
-	public Canton getCantonAtPosition(int position) {
+	public Canton getCantonAtPosition(int position, int way) {
 		int i = 0;
 		
-		while (cantons.get(i).getEndPoint() < position)
+		while(segments.get(i).getEndPoint() < position)
 			i++;
 		
-		return cantons.get(i);
+		return segments.get(i).getCanton(way);
 	}
 	
 	public Station getStationAtPosition(int position) {
 		int i = 0;
 		
-		while (stations.get(i).getPosition() != position)
+		while(stations.get(i).getPosition() != position)
 			i++;
 		
 		return stations.get(i);
 	}
 	
-	public int getNbCantons() {
-		return nbCantons;
+
+	public void addSegment(Segment segment) throws SizeExceededException {
+		if(usedLength + segment.getLength() <= length) {
+			usedLength += segment.getLength();
+			nbSegments++;
+			segments.add(segment);
+		}
+		else {
+			throw new SizeExceededException();
+		}
+		/* Use this in Builder and add a new Segment */
+		/* canton = new Canton(id, totalLenght - usedLength, usedLength);*/
+
 	}
-	public void setNbCantons(int nbCantons) {
-		this.nbCantons = nbCantons;
+	
+	public ArrayList<Segment> getSegments() {
+		return segments;
+	}
+	public int getNbSegments() {
+		return nbSegments;
+	}
+	public void setNbSegments(int nbSegments) {
+		this.nbSegments = nbSegments;
 	}
 	public int getLength() {
 		return length;
@@ -49,16 +71,10 @@ public class Line {
 	public void setUsedLength(int usedLength) {
 		this.usedLength = usedLength;
 	}
-	public List<Station> getStations() {
+	public ArrayList<Station> getStations() {
 		return stations;
 	}
-	public void setStations(List<Station> stations) {
+	public void setStations(ArrayList<Station> stations) {
 		this.stations = stations;
-	}
-	public List<Canton> getCantons() {
-		return cantons;
-	}
-	public void setCantons(List<Canton> cantons) {
-		this.cantons = cantons;
 	}
 }
