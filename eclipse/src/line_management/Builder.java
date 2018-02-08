@@ -36,6 +36,8 @@ public class Builder {
 
 			id++;
 		}
+		
+		built = true;
 	}
 	
 	public Line getLine() {
