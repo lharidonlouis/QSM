@@ -16,12 +16,10 @@ public class Builder {
 		line = new Line(lineLength);
 		long id = 0;
 		int startseg = 0;
-		int length;
-		
+		int length;		
 		while(line.getUsedLength() < line.getLength()) {
 			length = (int) (Math.random()*(MAX_LENGTH - MIN_LENGTH + 1)) + MIN_LENGTH;
-			Segment segment = new Segment(startseg, length , line, id);
-			
+			Segment segment = new Segment(startseg, length , line, id);			
 			try {
 				line.addSegment(segment);
 			} catch (SizeExceededException e) {
@@ -33,11 +31,9 @@ public class Builder {
 					/* Length miscalculation */
 				}
 			}
-
 			startseg += length;
 			id++;
-		}
-		
+		}		
 		built = true;
 	}
 	
