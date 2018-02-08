@@ -1,40 +1,71 @@
 package simulation;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.concurrent.Task;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.VLineTo;
 import javafx.stage.Stage;
+import line_management.Canton;
+import line_management.Line;
+import line_management.Train;
 
-public class SimulationGUI extends Application {
+public class SimulationGUI extends Application{
 	private Dashboard dashboard=new Dashboard();
-
+	public static final int DELAY = 500;
+	public static final int REGULAR_SPEED = 2;
+	private Line line;
 	public static void main(String[] args) {
 		Application.launch(SimulationGUI.class, args);
 	}
+	
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		primaryStage.setTitle("QSM");
 		Group root=new Group();
-		Scene scene = new Scene(root, 800, 600, Color.ALICEBLUE);
-        
+		Scene scene = new Scene(root, 1920, 1080, Color.ALICEBLUE);
+
 		dashboard.printRails(root);
 		dashboard.printStations(root);
 		dashboard.printStationsLines(root);
 		dashboard.printTrains(root);
-		
+	 
+        
         primaryStage.setScene(scene);
         primaryStage.show();
-	}
-	
+ 
+        	while(true) {
+    			line = dashboard.getLine();
+    			Canton[] firstCantons = new Canton[2];
+    			firstCantons[0] = line.getSegments().get(0).getCanton(0);
+    			firstCantons[1] = line.getSegments().get(line.getNbSegments()-1).getCanton(1);
+    			int position;	
+    			for (int i = 0; i < 2; i++) {
+    				System.out.println("i = " + i + " occupied : "+ firstCantons[i].isOccupied());
+    				if (!firstCantons[i].isOccupied()) {
+    					if (i == 0)
+    						position = 0;
+    					else position = line.getLength();
+    					Train newtrain = new Train(line, i, position, REGULAR_SPEED);
+    					newtrain.start();	
+    					//dashboard.addTrain(newtrain);
+    					//HANDLE SPEED VARIATIONS 
+    				}
+    			}
+
+    			try {
+    				Thread.sleep(DELAY);
+    			} catch (InterruptedException e) {
+    				System.err.println(e.getMessage());
+    			}
+        	}
+
+        
+        
+        
+						
+	}	
 	
 }

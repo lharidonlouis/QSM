@@ -9,6 +9,8 @@ public class Segment {
 	
 	public Segment(int startPoint, int length, Line line, long id) {
 		cantons = new Canton[2];
+		cantons[0] = new Canton();
+		cantons[1] = new Canton();
 		this.startPoint = startPoint;
 		this.length = length;
 		this.line = line;

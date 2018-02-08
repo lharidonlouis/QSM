@@ -1,126 +1,122 @@
 package simulation;
 
+import line_management.Train;
+import line_management.Line;
+import line_management.Segment;
+import line_management.Canton;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import line_management.Builder;
 
 public class Dashboard {
 	private Line line;
-	
-	
+	private List<Train> trains = new ArrayList<Train>();
+	private static final int START_X = 50;
+	private static final int LENGHT = 1400;
+
 	public Dashboard(){
 		Builder builder=new Builder();
-		builder.build(800);
-	}
-	public void printRails(Group window){
-		Rectangle go=new Rectangle();
-		Rectangle goback=new Rectangle();
-		
-		go.setX(50);
-		go.setY(300);
-		go.setWidth(700);
-		go.setHeight(50);
-		go.setFill(Color.ANTIQUEWHITE);
-		go.setStroke(Color.BLACK);
-		go.setStrokeWidth(2);
-        go.setArcHeight(10);
-        go.setArcWidth(10);
-		
-		goback.setX(50);
-		goback.setY(400);
-		goback.setWidth(700);
-		goback.setHeight(50);
-		goback.setFill(Color.ANTIQUEWHITE);
-		goback.setStroke(Color.BLACK);
-		goback.setStrokeWidth(2);
-		goback.setArcHeight(10);
-        goback.setArcWidth(10);
-        
-        window.getChildren().add(go);
-        window.getChildren().add(goback);
+		builder.build(15);
+		line = builder.getLine();
 	}
 	
-	public void printStations(Group window){
-		Circle station1=new Circle();
-		Circle station2=new Circle();
-		Circle station3=new Circle();
-		Circle station4=new Circle();
-		Circle station5=new Circle();
-		Circle station6=new Circle();
-		Circle station7=new Circle();
+	public void addTrain(Train train) {
+		trains.add(train);
+	}
+	
+	public void printRails(Group window){
+		Rectangle railforward=new Rectangle();
+		Rectangle railbackward=new Rectangle();
 		
-		stationsSpecs(station1, 100);
-		stationsSpecs(station2, 200);
-		stationsSpecs(station3, 300);
-		stationsSpecs(station4, 400);
-		stationsSpecs(station5, 500);
-		stationsSpecs(station6, 600);
-		stationsSpecs(station7, 700);
+		railforward.setX(START_X);
+		railforward.setY(300);
+		railforward.setWidth(LENGHT);
+		railforward.setHeight(START_X);
+		railforward.setFill(Color.ANTIQUEWHITE);
+		railforward.setStroke(Color.BLACK);
+		railforward.setStrokeWidth(2);
+		railforward.setArcHeight(10);
+		railforward.setArcWidth(10);
 		
-		window.getChildren().add(station1);
-		window.getChildren().add(station2);
-		window.getChildren().add(station3);
-		window.getChildren().add(station4);
-		window.getChildren().add(station5);
-		window.getChildren().add(station6);
-		window.getChildren().add(station7);
+		railbackward.setX(START_X);
+		railbackward.setY(400);
+		railbackward.setWidth(LENGHT);
+		railbackward.setHeight(START_X);
+		railbackward.setFill(Color.ANTIQUEWHITE);
+		railbackward.setStroke(Color.BLACK);
+		railbackward.setStrokeWidth(2);
+		railbackward.setArcHeight(10);
+		railbackward.setArcWidth(10);
+        window.getChildren().add(railforward);
+        window.getChildren().add(railbackward);
+	}
+	
+	public void printStations(Group window){		
+		List<Circle>  circles = new ArrayList<Circle>();
+		double cur_l = START_X;
+		int i = 0;
+		Circle departure=new Circle();
+		stationsSpecs(departure, (int)cur_l);
+		circles.add(departure);
+		for (Segment segment : line.getSegments()) {
+			cur_l = (((double) segment.getLength()/(double) line.getLength())*(double)LENGHT) + cur_l; 
+			System.out.println("station" + i + " : " + "total l = " + line.getLength() + " segment lenght = " + segment.getLength() + " cur lenght = " + cur_l);			
+			Circle station=new Circle();
+			stationsSpecs(station, (int)cur_l);
+			circles.add(station);
+			i++;
+		}
+		window.getChildren().addAll(circles);
 	}
 	
 	public void printStationsLines(Group window){
-		Line station1above=new Line(100, 300, 100, 350);
-		Line station1under=new Line(100, 400, 100, 450);
-		Line station2above=new Line(200, 300, 200, 350);
-		Line station2under=new Line(200, 400, 200, 450);
-		Line station3above=new Line(300, 300, 300, 350);
-		Line station3under=new Line(300, 400, 300, 450);
-		Line station4above=new Line(400, 300, 400, 350);
-		Line station4under=new Line(400, 400, 400, 450);
-		Line station5above=new Line(500, 300, 500, 350);
-		Line station5under=new Line(500, 400, 500, 450);
-		Line station6above=new Line(600, 300, 600, 350);
-		Line station6under=new Line(600, 400, 600, 450);
-		Line station7above=new Line(700, 300, 700, 350);
-		Line station7under=new Line(700, 400, 700, 450);
-		
-		
-		window.getChildren().add(station1above);
-		window.getChildren().add(station1under);
-		window.getChildren().add(station2above);
-		window.getChildren().add(station2under);
-		window.getChildren().add(station3above);
-		window.getChildren().add(station3under);
-		window.getChildren().add(station4above);
-		window.getChildren().add(station4under);
-		window.getChildren().add(station5above);
-		window.getChildren().add(station5under);
-		window.getChildren().add(station6above);
-		window.getChildren().add(station6under);
-		window.getChildren().add(station7above);
-		window.getChildren().add(station7under);
+		List<javafx.scene.shape.Line>  linesabove = new ArrayList<javafx.scene.shape.Line>();
+		List<javafx.scene.shape.Line>  linesunder = new ArrayList<javafx.scene.shape.Line>();
+		double cur_l = START_X;
+		int i = 0;
+		for (Segment segment : line.getSegments()) {
+			cur_l = (((double) segment.getLength()/(double) line.getLength())*(double)LENGHT) + cur_l; 
+			javafx.scene.shape.Line lineabove=new javafx.scene.shape.Line((int)cur_l, 300, (int)cur_l, 350);
+			javafx.scene.shape.Line lineunder=new javafx.scene.shape.Line((int)cur_l, 400, (int)cur_l, 450);
+			linesabove.add(lineabove);
+			linesunder.add(lineunder);
+			i++;
+		}
+		window.getChildren().addAll(linesabove);
+		window.getChildren().addAll(linesunder);
 	}
 	
 	public void printTrains(Group window){
-		Rectangle train1=new Rectangle();
-		Rectangle train2=new Rectangle();
-		Rectangle train3=new Rectangle();
-		
-		train1.setX(110);
-		train1.setY(310);
-		train1.setWidth(70);
-		train1.setHeight(30);
-		train1.setFill(Color.DARKBLUE);
-		
-		window.getChildren().add(train1);
+		List<Rectangle> trains_gui = new ArrayList<Rectangle>();
+		int i=0;
+		for (Train train : trains) {
+			double pos = ((double)train.getPosition()/(double)line.getLength())*(double)LENGHT;
+			System.out.println("train" + i + " : " + "position = " + train.getPosition() + " position a lechelle : " + pos);			
+			Rectangle train_gui=new Rectangle();	
+			train_gui.setX((int)pos);
+			train_gui.setY(420);
+			train_gui.setWidth(20);
+			train_gui.setHeight(10);
+			train_gui.setFill(Color.DARKBLUE);
+			i++;
+		}
+		window.getChildren().addAll(trains_gui);
 	}
 	
 	public void stationsSpecs(Circle station, int positionX){
 		station.setCenterX(positionX);
 		station.setCenterY(375);
-		station.setRadius(20);
+		station.setRadius(10);
 		station.setFill(Color.DARKTURQUOISE);
 		station.setStroke(Color.DARKBLUE);
+	}
+	
+	Line getLine() {
+		return this.line;
 	}
 }
