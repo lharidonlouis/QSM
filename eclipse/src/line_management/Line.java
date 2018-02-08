@@ -4,17 +4,17 @@ import java.util.ArrayList;
 
 public class Line {
 	private int length;
-	private int usedLength;
 	private ArrayList<Station> stations;
 	private ArrayList<Segment> segments;
 	private int nbSegments;
+	private int nbStations;
 
-	public Line(int length) {
-		this.length = length;
-		usedLength = 0;
+	public Line() {
+		length = 0;
 		stations = new ArrayList<Station>();
 		segments = new ArrayList<Segment>();
 		nbSegments = 0;
+		nbStations = 0;
 	}
 	
 	public Segment getSegmentAtPosition(int position) {
@@ -49,18 +49,26 @@ public class Line {
 	}
 	
 
-	public void addSegment(Segment segment) throws SizeExceededException {
-		if(usedLength + segment.getLength() <= length) {
-			usedLength += segment.getLength();
-			nbSegments++;
-			segments.add(segment);
-		}
-		else {
-			throw new SizeExceededException();
-		}
-
+	public void addSegment(Segment segment) {
+		length += segment.getLength();
+		nbSegments++;
+		segments.add(segment);
 	}
 	
+	public void addStation(Station station) {
+		nbStations++;
+		stations.add(station);
+	}
+	
+	public int getNbStations() {
+		return nbStations;
+	}
+	public void setNbStations(int nbStations) {
+		this.nbStations = nbStations;
+	}
+	public void setSegments(ArrayList<Segment> segments) {
+		this.segments = segments;
+	}
 	public ArrayList<Segment> getSegments() {
 		return segments;
 	}
@@ -75,12 +83,6 @@ public class Line {
 	}
 	public void setLength(int length) {
 		this.length = length;
-	}
-	public int getUsedLength() {
-		return usedLength;
-	}
-	public void setUsedLength(int usedLength) {
-		this.usedLength = usedLength;
 	}
 	public ArrayList<Station> getStations() {
 		return stations;
