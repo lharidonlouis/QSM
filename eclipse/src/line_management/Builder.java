@@ -12,28 +12,25 @@ public class Builder {
 		built = false;
 	}
 	
-	public void build(int lineLength) {
-		line = new Line(lineLength);
+	public void build(int lineNbStations) {
+		line = new Line();
 		long id = 0;
-		int startseg = 0;
-		int length;		
-		while(line.getUsedLength() < line.getLength()) {
+		Station station;
+		Segment segment;
+		int length;
+		int i;
+		
+		for (i = 0; i < lineNbStations - 1; i++) {
 			length = (int) (Math.random()*(MAX_LENGTH - MIN_LENGTH + 1)) + MIN_LENGTH;
-			Segment segment = new Segment(startseg, length , line, id);			
-			try {
-				line.addSegment(segment);
-			} catch (SizeExceededException e) {
-				length = line.getLength() - line.getUsedLength();
-				segment = new Segment(line.getUsedLength(), length, line, id);
-				try {
-					line.addSegment(segment);
-				} catch (SizeExceededException e1) {
-					/* Length miscalculation */
-				}
-			}
-			startseg += length;
-			id++;
-		}		
+			station = new Station("Station" + String.valueOf(i), 0, line, 50, line.getLength());
+			line.addStation(station);
+			segment = new Segment(line.getLength(), length , line, id);
+			line.addSegment(segment);
+		}
+		
+		station = new Station("Station" + String.valueOf(i), 0, line, 50, line.getLength());
+		line.addStation(station);
+		
 		built = true;
 	}
 	
