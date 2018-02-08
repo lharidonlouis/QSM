@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.VLineTo;
 import javafx.stage.Stage;
 
 public class SimulationGUI extends Application {
@@ -82,6 +83,10 @@ public class SimulationGUI extends Application {
 		window.getChildren().add(station5);
 		window.getChildren().add(station6);
 		window.getChildren().add(station7);
+	}
+	
+	public void printStationsLines(Group window){
+		
 	}
 	
 	public void stationsSpecs(Circle station, int positionX){
