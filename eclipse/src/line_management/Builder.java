@@ -34,6 +34,7 @@ public class Builder {
 				}
 			}
 
+			startseg += length;
 			id++;
 		}
 		
