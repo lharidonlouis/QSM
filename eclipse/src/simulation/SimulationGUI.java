@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.VLineTo;
 import javafx.stage.Stage;
@@ -27,6 +28,8 @@ public class SimulationGUI extends Application {
         
 		printRails(root);
 		printStations(root);
+		printStationsLines(root);
+		
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
@@ -38,7 +41,7 @@ public class SimulationGUI extends Application {
 		go.setX(50);
 		go.setY(300);
 		go.setWidth(700);
-		go.setHeight(20);
+		go.setHeight(50);
 		go.setFill(Color.ANTIQUEWHITE);
 		go.setStroke(Color.BLACK);
 		go.setStrokeWidth(2);
@@ -48,7 +51,7 @@ public class SimulationGUI extends Application {
 		goback.setX(50);
 		goback.setY(400);
 		goback.setWidth(700);
-		goback.setHeight(20);
+		goback.setHeight(50);
 		goback.setFill(Color.ANTIQUEWHITE);
 		goback.setStroke(Color.BLACK);
 		goback.setStrokeWidth(2);
@@ -86,12 +89,35 @@ public class SimulationGUI extends Application {
 	}
 	
 	public void printStationsLines(Group window){
+		Line station1above=new Line(100, 300, 100, 350);
+		Line station1under=new Line(100, 400, 100, 450);
+		Line station2above=new Line(200, 300, 200, 350);
+		Line station2under=new Line(200, 400, 200, 450);
+		Line station3above=new Line(300, 300, 300, 350);
+		Line station3under=new Line(300, 400, 300, 450);
+		Line station4above=new Line(400, 300, 400, 350);
+		Line station4under=new Line(400, 400, 400, 450);
+		Line station5above=new Line(500, 300, 500, 350);
+		Line station5under=new Line(500, 400, 500, 450);
 		
+		
+		//station1.setRotate(0);
+		
+		window.getChildren().add(station1above);
+		window.getChildren().add(station1under);
+		window.getChildren().add(station2above);
+		window.getChildren().add(station2under);
+		window.getChildren().add(station3above);
+		window.getChildren().add(station3under);
+		window.getChildren().add(station4above);
+		window.getChildren().add(station4under);
+		window.getChildren().add(station5above);
+		window.getChildren().add(station5under);
 	}
 	
 	public void stationsSpecs(Circle station, int positionX){
 		station.setCenterX(positionX);
-		station.setCenterY(350);
+		station.setCenterY(375);
 		station.setRadius(20);
 		station.setFill(Color.DARKTURQUOISE);
 		station.setStroke(Color.DARKBLUE);
