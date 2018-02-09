@@ -26,6 +26,12 @@ public class SimulationGUI extends Application{
 		primaryStage.setTitle("QSM");
 		Group root=new Group();
 		Scene scene = new Scene(root, 1920, 1080, Color.ALICEBLUE);
+		
+		line = dashboard.getLine();
+		Train newtrain = new Train(line, 0, 0, REGULAR_SPEED);
+		newtrain.start();	
+		Train newtrain1 = new Train(line, 1, 1450, REGULAR_SPEED);
+		newtrain1.start();	
 
 		dashboard.printRails(root);
 		dashboard.printStations(root);
@@ -36,7 +42,7 @@ public class SimulationGUI extends Application{
         primaryStage.setScene(scene);
         primaryStage.show();
  
-        	while(true) {
+      /*  	while(true) {
     			line = dashboard.getLine();
     			Canton[] firstCantons = new Canton[2];
     			firstCantons[0] = line.getSegments().get(0).getCanton(0);
@@ -60,7 +66,7 @@ public class SimulationGUI extends Application{
     			} catch (InterruptedException e) {
     				System.err.println(e.getMessage());
     			}
-        	}
+        	}*/
 
         
         
