@@ -1,6 +1,7 @@
 package line_management;
 
 import java.util.ArrayList;
+import line_management.TrainArrivedException;
 
 public class Line {
 	private int length;
@@ -27,28 +28,24 @@ public class Line {
 	}
 	
 	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException{
-		int i = 0;
-		
-		System.out.println("Nb segments : " + nbSegments);
-		
-		while(segments.get(i).getEndPoint() < position && i < nbSegments) {
+		int i=0;
+		while( (segments.get(i).getEndPoint() < position ) && (i < nbSegments) ) {
 			i++;
 		}
-		
-		System.out.println("i : " + i);
-		
-		if (i <= nbSegments)
+		System.out.println("Position : " + position + " | Nb segments : " + nbSegments + " | Segment number " + i );
+		if (i < nbSegments) {
 			return segments.get(i).getCanton(way);
-		
+		}
 		else throw new TrainArrivedException();
 	}
 	
-	public Station getStationAtPosition(int position) {
+	public Station getStationAtPosition(int position, int speed) {
 		int i = 0;
-		
-		while(stations.get(i).getPosition() != position)
+		while( !(((position-speed) <= stations.get(i).getPosition()) && (stations.get(i).getPosition() <=  (position + speed)))) {
+			System.out.println("Sation " + i + " : " + (position-speed) + " < " + stations.get(i).getPosition() + " < " + (position+speed) + "????");
 			i++;
-		
+		}
+		System.out.println("Sation " + i + " : " + (position-speed) + " < " + stations.get(i).getPosition() + " < " + (position+speed) + "!!!!");
 		return stations.get(i);
 	}
 	
@@ -57,11 +54,13 @@ public class Line {
 		length += segment.getLength();
 		nbSegments++;
 		segments.add(segment);
+		System.out.println("Segment " + nbSegments + " added");
 	}
 	
 	public void addStation(Station station) {
 		nbStations++;
 		stations.add(station);
+		System.out.println("Station " + nbStations + " added");
 	}
 	
 	public int getNbStations() {

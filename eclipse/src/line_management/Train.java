@@ -15,8 +15,9 @@ public class Train extends Thread {
 	private List<Passenger> passengers;
 	private Line line;
 	
-	public Train(Line line, int way, int position, int speed, Canton canton) {
+	public Train(Line line, int id, int way, int position, int speed, Canton canton) {
 		this.line = line;
+		this.id = id;
 		this.way = way;
 		this.position = position;
 		this.speed = speed;
@@ -31,13 +32,17 @@ public class Train extends Thread {
 				System.err.println(e.getMessage());
 			}
 			if (way == 0) {
-				if (position + speed >= line.getSegmentAtPosition(position).getEndPoint()) {
+				System.out.println("Train n°" + this.getId() + "[speed:" + speed + "]" + " position : " + position + " way : " + way + " Segment : " + line.getSegmentAtPosition(position).getId());
+				if (position + speed > line.getSegmentAtPosition(position).getEndPoint()) {
+					System.out.println("Train " + this.getId() + " arrived at station : " + getCurrentStation().getName().toString() + " on position : " + getCurrentStation().getPosition());
 					try {
 						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
 						nextcanton.enter(this);
-					} catch (TrainArrivedException e) {
+					} catch (TrainArrivedException e) { }
+					catch (java.lang.IndexOutOfBoundsException e) {
 						arrived = true;
 						setPosition(line.getLength());
+						System.out.println("train " +   getId() + " arrived");
 					}
 				}
 				else {
@@ -45,21 +50,27 @@ public class Train extends Thread {
 				}
 			}
 			else {
-				if (position - speed <= line.getSegmentAtPosition(position).getStartPoint()) {
-					try {
-						Canton nextcanton = line.getCantonAtPosition(position - speed, way);
-						nextcanton.enter(this);
-					} catch (TrainArrivedException e) {
-						arrived = true;
-						setPosition(line.getLength());
-					}
+				System.out.println("Train n°" + this.getId() + "[speed:-" + speed + "]" + " position : " + position + " way : " + way + " Segment : " + line.getSegmentAtPosition(position).getId());
+				if (position - speed < line.getSegmentAtPosition(position).getStartPoint()) {
+						if( (position-speed)<0) {
+							arrived = true;
+							setPosition(line.getLength());
+							System.out.println("train " +   getId() + " arrived");
+						}
+						else {
+							try{
+								System.out.println("Train " + this.getId() + " arrived at station : " + getCurrentStation().getName().toString());
+								Canton nextcanton = line.getCantonAtPosition(position - speed, way);
+								nextcanton.enter(this);
+							} catch (TrainArrivedException e) { }							
+						}
 				}
 				else {
 					updatePosition();
 				}
 			}
 		}
-		currentcanton.setOccupiedFalse();
+		currentcanton.exit();
 	}
 
 	public void updatePosition() {
@@ -77,7 +88,7 @@ public class Train extends Thread {
 	}
 	
 	public Station getCurrentStation() {
-		return line.getStationAtPosition(position);
+		return line.getStationAtPosition(position, speed);
 	}
 	
 	public long getId() {

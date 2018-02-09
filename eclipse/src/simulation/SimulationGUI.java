@@ -12,7 +12,7 @@ import line_management.Train;
 
 public class SimulationGUI extends Application{
 	private Dashboard dashboard=new Dashboard();
-	public static final int DELAY = 500;
+	public static final int DELAY = 50;
 	public static final int REGULAR_SPEED = 2;
 	private Line line;
 	public static void main(String[] args) {
@@ -28,9 +28,9 @@ public class SimulationGUI extends Application{
 		Scene scene = new Scene(root, 1920, 1080, Color.ALICEBLUE);
 		
 		line = dashboard.getLine();
-		Train newtrain = new Train(line, 0, 0, REGULAR_SPEED, line.getCantonAtPosition(0, 0));
+		Train newtrain = new Train(line, 15, 0, 0, REGULAR_SPEED, line.getCantonAtPosition(0, 0));
 		newtrain.start();	
-		Train newtrain1 = new Train(line, 1, line.getLength(), REGULAR_SPEED, line.getCantonAtPosition(line.getLength(), 1));
+		Train newtrain1 = new Train(line,124, 1, line.getLength(), REGULAR_SPEED, line.getCantonAtPosition(line.getLength(), 1));
 		newtrain1.start();
 
 		dashboard.printRails(root);

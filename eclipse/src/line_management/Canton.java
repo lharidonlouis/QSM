@@ -1,5 +1,8 @@
 package line_management;
 
+import line_management.Canton;
+import line_management.Train;
+
 public class Canton {
 	private boolean occupied;
 
@@ -7,7 +10,7 @@ public class Canton {
 		occupied = false;
 	}
 	
-	public synchronized void enter(Train train) {
+	/*public synchronized void enter(Train train) {
 		if(occupied) {
 			try {
 				wait();
@@ -21,10 +24,30 @@ public class Canton {
 		oldcanton.exit();
 		setOccupiedFalse();
 	}
+	*/
+	public synchronized void enter(Train train) {
+		if (occupied) {
+			System.out.println(toString() + " occupied !");
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		System.out.println("Canton changed successfully");
+		Canton oldCanton = train.getCurrentCanton();
+		train.setCurrentCanton(this);
+		train.updatePosition();
+
+		oldCanton.exit();
+		occupied = true;
+
+	}
 	
 	public synchronized void exit() {
 		setOccupiedFalse();
 		notify();
+		System.out.println("Canton freed !");
 	}
 	
 	public boolean isOccupied() {

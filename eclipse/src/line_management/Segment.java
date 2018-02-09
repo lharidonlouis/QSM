@@ -14,6 +14,7 @@ public class Segment {
 		this.startPoint = startPoint;
 		this.length = length;
 		this.line = line;
+		this.id = id;
 	}
 
 	public Canton getCanton(int way) {

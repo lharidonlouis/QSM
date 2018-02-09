@@ -27,16 +27,16 @@ public class Simulation implements Runnable{
 			firstCantons[0] = line.getSegments().get(0).getCanton(0);
 			firstCantons[1] = line.getSegments().get(line.getNbSegments()).getCanton(1);
 			int position;
-			
+			int n =0;
 			for (int i = 0; i < 2; i++) {
 				if (!firstCantons[i].isOccupied()) {
 					if (i == 0)
 						position = 0;
 					else position = line.getLength();
-					Train newtrain = new Train(line, i, position, REGULAR_SPEED, firstCantons[i]);
+					Train newtrain = new Train(line, n, i, position, REGULAR_SPEED, firstCantons[i]);
 					addTrain(newtrain);
 					newtrain.start();
-					
+					n++;
 					/* HANDLE SPEED VARIATIONS */
 				}
 			}
