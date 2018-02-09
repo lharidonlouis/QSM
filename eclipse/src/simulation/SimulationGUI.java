@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import line_management.Canton;
 import line_management.Line;
 import line_management.Train;
+import line_management.TrainArrivedException;
 
 public class SimulationGUI extends Application{
 	private Dashboard dashboard=new Dashboard();
@@ -30,15 +31,18 @@ public class SimulationGUI extends Application{
 		line = dashboard.getLine();
 		Train newtrain = new Train(line, 15, 0, 0, REGULAR_SPEED, line.getCantonAtPosition(0, 0));
 		newtrain.start();	
+	
 		Train newtrain1 = new Train(line,124, 1, line.getLength(), REGULAR_SPEED, line.getCantonAtPosition(line.getLength(), 1));
 		newtrain1.start();
+		dashboard.printTrains(root);
+		System.out.println("drawn train");
+
 
 		dashboard.printRails(root);
 		dashboard.printStations(root);
 		dashboard.printStationsLines(root);
-		dashboard.printTrains(root);
         
-        primaryStage.setScene(scene);
+		primaryStage.setScene(scene);
         primaryStage.show();
  
       /*  	while(true) {

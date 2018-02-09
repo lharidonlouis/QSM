@@ -59,7 +59,6 @@ public class Line {
 	
 	public void addStation(Station station) {
 		nbStations++;
-		length += 1;
 		stations.add(station);
 		System.out.println("Station " + nbStations + " added");
 	}
