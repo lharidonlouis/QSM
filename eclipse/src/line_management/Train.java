@@ -24,6 +24,7 @@ public class Train extends Thread {
 	}
 	
 	public void run() {
+		currentcanton.enter(this);
 		while (!arrived) {
 			try {
 				sleep(SimulationGUI.DELAY);
@@ -47,7 +48,9 @@ public class Train extends Thread {
 					catch (java.lang.IndexOutOfBoundsException e) {
 						arrived = true;
 						setPosition(line.getLength());
+						this.currentcanton.exit();
 						System.out.println("train " +   getId() + " arrived");
+						this.stop();
 					}
 				}
 				else {
@@ -60,7 +63,9 @@ public class Train extends Thread {
 						if( (position-speed)<0) {
 							arrived = true;
 							setPosition(line.getLength());
+							this.currentcanton.exit();
 							System.out.println("train " +   getId() + " arrived");
+							this.stop();
 						}
 						else {
 							try{

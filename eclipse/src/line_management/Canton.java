@@ -34,13 +34,13 @@ public class Canton {
 				System.err.println(e.getMessage());
 			}
 		}
-		System.out.println("Canton changed successfully");
 		Canton oldCanton = train.getCurrentCanton();
 		train.setCurrentCanton(this);
 		train.updatePosition();
 
 		oldCanton.exit();
-		occupied = true;
+		setOccupiedTrue();
+		System.out.println("Train " + train.getId() + " : Canton changed ");
 
 	}
 	
