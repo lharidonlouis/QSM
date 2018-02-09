@@ -32,7 +32,7 @@ public class Line {
 		while( (segments.get(i).getEndPoint() < position ) && (i < nbSegments) ) {
 			i++;
 		}
-		System.out.println("Position : " + position + " | Nb segments : " + nbSegments + " | Segment number " + i );
+		//System.out.println("Position : " + position + " | Nb segments : " + nbSegments + " | Segment number " + i );
 		if (i < nbSegments) {
 			return segments.get(i).getCanton(way);
 		}
@@ -41,11 +41,11 @@ public class Line {
 	
 	public Station getStationAtPosition(int position, int speed) {
 		int i = 0;
-		while( !(((position-speed) <= stations.get(i).getPosition()) && (stations.get(i).getPosition() <=  (position + speed)))) {
-			System.out.println("Sation " + i + " : " + (position-speed) + " < " + stations.get(i).getPosition() + " < " + (position+speed) + "????");
+		while( !(((position-speed) < stations.get(i).getPosition()) && (stations.get(i).getPosition() <  (position + speed)))) {
+			//System.out.println("Sation " + i + " : " + (position-speed) + " < " + stations.get(i).getPosition() + " < " + (position+speed) + "????");
 			i++;
 		}
-		System.out.println("Sation " + i + " : " + (position-speed) + " < " + stations.get(i).getPosition() + " < " + (position+speed) + "!!!!");
+		//System.out.println("Sation " + i + " : " + (position-speed) + " < " + stations.get(i).getPosition() + " < " + (position+speed) + "!!!!");
 		return stations.get(i);
 	}
 	
