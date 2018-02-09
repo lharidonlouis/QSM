@@ -3,6 +3,7 @@ package line_management;
 import java.util.List;
 
 import simulation.Simulation;
+import simulation.SimulationGUI;
 
 public class Train extends Thread {
 	private long id;
@@ -23,11 +24,10 @@ public class Train extends Thread {
 		this.speed = speed;
 		this.currentcanton = canton;
 	}
-	
 	public void run() {
 		while (!arrived) {
 			try {
-				sleep(Simulation.DELAY);
+				sleep(SimulationGUI.DELAY);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
@@ -36,6 +36,7 @@ public class Train extends Thread {
 				if (position + speed > line.getSegmentAtPosition(position).getEndPoint()) {
 					System.out.println("Train " + this.getId() + " arrived at station : " + getCurrentStation().getName().toString() + " on position : " + getCurrentStation().getPosition());
 					try {
+						System.out.println("Train " + this.getId() + " arrived at station : " + getCurrentStation().getName().toString());
 						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
 						nextcanton.enter(this);
 					} catch (TrainArrivedException e) { }
