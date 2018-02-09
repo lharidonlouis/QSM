@@ -1,10 +1,14 @@
 package simulation;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import line_management.Canton;
 import line_management.Line;
@@ -13,7 +17,7 @@ import line_management.TrainArrivedException;
 
 public class SimulationGUI extends Application{
 	private Dashboard dashboard=new Dashboard();
-	public static final int DELAY = 50;
+	public static final int DELAY = 25;
 	public static final int REGULAR_SPEED = 2;
 	private Line line;
 	public static void main(String[] args) {
@@ -29,20 +33,6 @@ public class SimulationGUI extends Application{
 		Scene scene = new Scene(root, 1920, 1080, Color.ALICEBLUE);
 		
 		line = dashboard.getLine();
-		
-		/*Train newtrain = new Train(line, 15, 0, 0, REGULAR_SPEED, line.getCantonAtPosition(0, 0));
-		newtrain.start();	
-		Train newtrain1 = new Train(line,124, 1, line.getLength(), REGULAR_SPEED, line.getCantonAtPosition(line.getLength(), 1));
-		newtrain1.start();
-		*/
-
-		//dashboard.printTrains(root);
-		dashboard.printRails(root);
-		dashboard.printStations(root);
-		dashboard.printStationsLines(root);
-        
-		primaryStage.setScene(scene);
-        primaryStage.show();
         
         Task task = new Task<Void>() {
             @Override public Void call() throws TrainArrivedException {
@@ -52,8 +42,8 @@ public class SimulationGUI extends Application{
 					terminus[0] = line.getCantonAtPosition(0, 0);
 					terminus[1] = line.getCantonAtPosition(line.getNbSegments()-1, 1);
 					int position;
-					System.out.println("Sens " + 0 + " occuped : " +  terminus[0].isOccupied() );
-					System.out.println("Sens " + 1 + " occuped : " +  terminus[1].isOccupied() );
+					//System.out.println("Sens " + 0 + " occuped : " +  terminus[0].isOccupied() );
+					//System.out.println("Sens " + 1 + " occuped : " +  terminus[1].isOccupied() );
 					for(int i =0; i<2; i++) {
 						Train newtrain = null;
 						if(!terminus[i].isOccupied()) {
@@ -71,7 +61,7 @@ public class SimulationGUI extends Application{
 						if(newtrain != null){
 							System.out.println("Train " + id + " successfully created");
 							newtrain.start();
-							dashboard.addTrain(newtrain);
+							dashboard.trains.add(newtrain);
 							id++;
 						}
 					}
@@ -84,7 +74,51 @@ public class SimulationGUI extends Application{
 				}
             }
         };
+        
+        
+		dashboard.printRails(root);
+		dashboard.printStations(root);
+		dashboard.printStationsLines(root);
+
+		
+		/*Platform.runLater(new Runnable() {
+		    @Override
+		    public void run() {
+		    	while(true) {
+			    	int i=0;
+					System.out.println("printing trains");
+					for (Train train : dashboard.trains) {
+						double pos = ((double)train.getPosition()/(double)line.getLength())*(double)1400;
+						System.out.println("train" + i + " : " + "position = " + train.getPosition() + " position a lechelle : " + pos);			
+						Rectangle train_gui=new Rectangle();	
+						train_gui.setX((int)pos);
+						train_gui.setY(420);
+						train_gui.setWidth(20);
+						train_gui.setHeight(10);
+						train_gui.setFill(Color.DARKBLUE);
+						i++;
+						dashboard.trains_gui.add(train_gui);
+						ObservableValue<Integer> obsInt = new SimpleIntegerProperty(train.getPosition()).asObject();
+						train_gui.xProperty().bind(obsInt);
+					    //if(!root.getChildren().contains(train_gui)) {
+					   // 		root.getChildren().add(train_gui);
+					    //}
+					}
+					try {
+					Thread.sleep(DELAY);
+				} catch (InterruptedException e) {
+					System.err.println(e.getMessage());
+				}
+		    	}
+		    }
+		});*/
+
+        
+       
         new Thread(task).start();
+        
+        primaryStage.setScene(scene);
+        primaryStage.show();
         
 	}	
 	

@@ -15,14 +15,14 @@ import line_management.Builder;
 
 public class Dashboard {
 	private Line line;
-	private List<Train> trains = new ArrayList<Train>();
-	List<Rectangle> trains_gui = new ArrayList<Rectangle>();
+	public List<Train> trains = new ArrayList<Train>();
+	public List<Rectangle> trains_gui = new ArrayList<Rectangle>();
 	private static final int START_X = 50;
 	private static final int LENGHT = 1400;
 
 	public Dashboard(){
 		Builder builder=new Builder();
-		builder.build(5);
+		builder.build(15);
 		line = builder.getLine();
 	}
 	
@@ -93,7 +93,9 @@ public class Dashboard {
 	}
 	
 	public void printTrains(Group window){
+		trains_gui.clear();
 		int i=0;
+		System.out.println("printing trains");
 		for (Train train : trains) {
 			double pos = ((double)train.getPosition()/(double)line.getLength())*(double)LENGHT;
 			System.out.println("train" + i + " : " + "position = " + train.getPosition() + " position a lechelle : " + pos);			
@@ -104,27 +106,11 @@ public class Dashboard {
 			train_gui.setHeight(10);
 			train_gui.setFill(Color.DARKBLUE);
 			i++;
+			trains_gui.add(train_gui);
 		}
 		window.getChildren().addAll(trains_gui);
 	}
-	public void updateTrain(Group window){
 
-		List<Rectangle> trains_gui = new ArrayList<Rectangle>();
-		int i=0;
-		for (Train train : trains) {
-			double pos = ((double)train.getPosition()/(double)line.getLength())*(double)LENGHT;
-			System.out.println("train" + i + " : " + "position = " + train.getPosition() + " position a lechelle : " + pos);			
-			Rectangle train_gui=new Rectangle();	
-			train_gui.setX((int)pos);
-			train_gui.setY(420);
-			train_gui.setWidth(20);
-			train_gui.setHeight(10);
-			train_gui.setFill(Color.DARKBLUE);
-			i++;
-		}
-		window.getChildren().addAll(trains_gui);
-
-	}
 	public void stationsSpecs(Circle station, int positionX){
 		station.setCenterX(positionX);
 		station.setCenterY(375);
