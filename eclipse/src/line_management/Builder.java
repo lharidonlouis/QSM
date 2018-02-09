@@ -26,8 +26,8 @@ public class Builder {
 			line.addStation(station);
 			segment = new Segment(line.getLength(), length , line, id);
 			line.addSegment(segment);
-		}
-		
+			id++;
+		}		
 		station = new Station("Station" + String.valueOf(i), 0, line, 50, line.getLength());
 		line.addStation(station);
 		
