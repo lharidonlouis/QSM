@@ -1,6 +1,6 @@
 package line_management;
 
-import java.util.List;
+import java.util.ArrayList;
 import simulation.SimulationGUI;
 
 public class Train extends Thread {
@@ -11,7 +11,7 @@ public class Train extends Thread {
 	private boolean arrived;
 	private int capacity;
 	private Canton currentcanton;
-	private List<Passenger> passengers;
+	private ArrayList<Passenger> passengers;
 	private Line line;
 	
 	public Train(Line line, int id, int way, int position, int speed, Canton canton) {
@@ -33,9 +33,14 @@ public class Train extends Thread {
 			if (way == 0) {
 				System.out.println("Train n°" + this.getId() + "[speed:" + speed + "]" + " position : " + position + " way : " + way + " Segment : " + line.getSegmentAtPosition(position).getId());
 				if (position + speed > line.getSegmentAtPosition(position).getEndPoint()) {
-					System.out.println("Train " + this.getId() + " arrived at station : " + getCurrentStation().getName().toString() + " on position : " + getCurrentStation().getPosition());
 					try {
-						System.out.println("Train " + this.getId() + " arrived at station : " + getCurrentStation().getName().toString());
+						/*
+						 * Passenger handling
+						 */
+						Station currentStation = getCurrentStation();
+						currentStation.pickPassengers(this);
+						
+						System.out.println("Train " + this.getId() + " arrived at station : " + currentStation.getName().toString());
 						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
 						nextcanton.enter(this);
 					} catch (TrainArrivedException e) { }
@@ -59,10 +64,16 @@ public class Train extends Thread {
 						}
 						else {
 							try{
-								System.out.println("Train " + this.getId() + " arrived at station : " + getCurrentStation().getName().toString());
+								/*
+								 * Passenger handling
+								 */
+								Station currentStation = getCurrentStation();
+								currentStation.pickPassengers(this);
+								
+								System.out.println("Train " + this.getId() + " arrived at station : " + currentStation.getName().toString());
 								Canton nextcanton = line.getCantonAtPosition(position - speed, way);
 								nextcanton.enter(this);
-							} catch (TrainArrivedException e) { }							
+							} catch (TrainArrivedException e) { }
 						}
 				}
 				else {
@@ -130,10 +141,10 @@ public class Train extends Thread {
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
 	}
-	public List<Passenger> getPassengers() {
+	public ArrayList<Passenger> getPassengers() {
 		return passengers;
 	}
-	public void setPassengers(List<Passenger> passengers) {
+	public void setPassengers(ArrayList<Passenger> passengers) {
 		this.passengers = passengers;
 	}
 	public Line getLine() {

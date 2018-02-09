@@ -1,6 +1,6 @@
 package line_management;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Station {
 	private long id;
@@ -9,7 +9,7 @@ public class Station {
 	private Line line;
 	private int capacity;
 	private int position;
-	private List<Passenger> passengers;
+	private ArrayList<Passenger> passengers;
 	
 	public Station(String name, int type, Line line, int capacity, int position){
 		this.name = name;
@@ -17,6 +17,20 @@ public class Station {
 		this.line = line;
 		this.capacity = capacity;
 		this.position = position;
+	}
+	
+	public void pickPassengers(Train train) {
+		int i;
+		ArrayList<Passenger> trainpassengers = train.getPassengers();
+		for (i = 0; i < trainpassengers.size(); i++) {
+			if (trainpassengers.get(i).getType() == type) {
+				trainpassengers.remove(i);
+			}
+		}
+		while ((train.getPassengers().size() < train.getCapacity()) && (passengers.size() > 0)) {
+			trainpassengers.add(passengers.get(passengers.size()));
+			passengers.remove(passengers.size());
+		}
 	}
 	
 	public int getPosition() {
@@ -37,10 +51,10 @@ public class Station {
 	public void setCapacity(int capacity) {
 		this.capacity = capacity;
 	}
-	public List<Passenger> getPassengers() {
+	public ArrayList<Passenger> getPassengers() {
 		return passengers;
 	}
-	public void setPassengers(List<Passenger> passengers) {
+	public void setPassengers(ArrayList<Passenger> passengers) {
 		this.passengers = passengers;
 	}
 	public String getName() {
