@@ -17,7 +17,7 @@ import line_management.TrainArrivedException;
 
 public class SimulationGUI extends Application{
 	private Dashboard dashboard=new Dashboard();
-	public static final int DELAY = 25;
+	public static final int DELAY = 100;
 	public static final int REGULAR_SPEED = 2;
 	private Line line;
 	public static void main(String[] args) {
