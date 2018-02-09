@@ -31,29 +31,12 @@ public class SimulationGUI extends Application{
 		line = dashboard.getLine();
 		Train newtrain = new Train(line, 15, 0, 0, REGULAR_SPEED, line.getCantonAtPosition(0, 0));
 		newtrain.start();	
-		
-		Task task = new Task<Void>() {
-		    @Override public void run() {
-		    	Train newtrain1;
-				try {
-					newtrain1 = new Train(line,124, 1, line.getLength(), REGULAR_SPEED, line.getCantonAtPosition(line.getLength(), 1));
-					newtrain1.start();
-					while(!newtrain1.isArrived()) {
-						dashboard.printTrains(root);
-						System.out.println("drawn train");
+	
+		Train newtrain1 = new Train(line,124, 1, line.getLength(), REGULAR_SPEED, line.getCantonAtPosition(line.getLength(), 1));
+		newtrain1.start();
+		dashboard.printTrains(root);
+		System.out.println("drawn train");
 
-					}
-				} catch (TrainArrivedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		    }
-			@Override
-			protected Void call() throws Exception {
-				return null;
-			}
-		};	
-		new Thread(task).start();
 
 		dashboard.printRails(root);
 		dashboard.printStations(root);

@@ -1,8 +1,6 @@
 package line_management;
 
 import java.util.List;
-
-import simulation.Simulation;
 import simulation.SimulationGUI;
 
 public class Train extends Thread {
@@ -24,6 +22,7 @@ public class Train extends Thread {
 		this.speed = speed;
 		this.currentcanton = canton;
 	}
+	
 	public void run() {
 		while (!arrived) {
 			try {
