@@ -38,7 +38,7 @@ public class Train extends Thread {
 						 * Passenger handling
 						 */
 						Station currentStation = getCurrentStation();
-						currentStation.pickPassengers(this);
+						//currentStation.pickPassengers(this);
 						
 						System.out.println("Train " + this.getId() + " arrived at station : " + currentStation.getName().toString());
 						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
@@ -68,7 +68,7 @@ public class Train extends Thread {
 								 * Passenger handling
 								 */
 								Station currentStation = getCurrentStation();
-								currentStation.pickPassengers(this);
+								//currentStation.pickPassengers(this);
 								
 								System.out.println("Train " + this.getId() + " arrived at station : " + currentStation.getName().toString());
 								Canton nextcanton = line.getCantonAtPosition(position - speed, way);
