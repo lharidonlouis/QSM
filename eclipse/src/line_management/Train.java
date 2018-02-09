@@ -15,11 +15,12 @@ public class Train extends Thread {
 	private List<Passenger> passengers;
 	private Line line;
 	
-	public Train(Line line, int way, int position, int speed) {
+	public Train(Line line, int way, int position, int speed, Canton canton) {
 		this.line = line;
 		this.way = way;
 		this.position = position;
 		this.speed = speed;
+		this.currentcanton = canton;
 	}
 	
 	public void run() {
@@ -33,18 +34,7 @@ public class Train extends Thread {
 				if (position + speed >= line.getSegmentAtPosition(position).getEndPoint()) {
 					try {
 						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
-						if (nextcanton.isOccupied()) {
-							setPosition(line.getSegmentAtPosition(position + speed).getStartPoint() - 1);
-							try {
-								wait();
-							} catch (InterruptedException e) {
-								System.err.println(e.getMessage());
-							}
-						}
-						Canton oldcanton = getCurrentCanton();
-						nextcanton.setOccupiedTrue();
-						updatePosition();
-						oldcanton.setOccupiedFalse();
+						nextcanton.enter(this);
 					} catch (TrainArrivedException e) {
 						arrived = true;
 						setPosition(line.getLength());
@@ -58,18 +48,7 @@ public class Train extends Thread {
 				if (position - speed <= line.getSegmentAtPosition(position).getStartPoint()) {
 					try {
 						Canton nextcanton = line.getCantonAtPosition(position - speed, way);
-						if (nextcanton.isOccupied()) {
-							setPosition(line.getSegmentAtPosition(position + speed).getEndPoint() + 1);
-							try {
-								wait();
-							} catch (InterruptedException e) {
-								System.err.println(e.getMessage());
-							}
-						}
-						Canton oldcanton = getCurrentCanton();
-						nextcanton.setOccupiedTrue();
-						updatePosition();
-						oldcanton.setOccupiedFalse();
+						nextcanton.enter(this);
 					} catch (TrainArrivedException e) {
 						arrived = true;
 						setPosition(line.getLength());
@@ -91,6 +70,10 @@ public class Train extends Thread {
 
 	public Canton getCurrentCanton() {
 		return currentcanton;
+	}
+	
+	public void setCurrentCanton(Canton canton) {
+		currentcanton = canton;
 	}
 	
 	public Station getCurrentStation() {

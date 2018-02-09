@@ -7,6 +7,26 @@ public class Canton {
 		occupied = false;
 	}
 	
+	public synchronized void enter(Train train) {
+		if(occupied) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		Canton oldcanton = train.getCurrentCanton();
+		train.setCurrentCanton(this);
+		train.updatePosition();
+		oldcanton.exit();
+		setOccupiedFalse();
+	}
+	
+	public synchronized void exit() {
+		setOccupiedFalse();
+		notify();
+	}
+	
 	public boolean isOccupied() {
 		return occupied;
 	}

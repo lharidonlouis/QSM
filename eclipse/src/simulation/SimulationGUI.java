@@ -28,16 +28,15 @@ public class SimulationGUI extends Application{
 		Scene scene = new Scene(root, 1920, 1080, Color.ALICEBLUE);
 		
 		line = dashboard.getLine();
-		Train newtrain = new Train(line, 0, 0, REGULAR_SPEED);
+		Train newtrain = new Train(line, 0, 0, REGULAR_SPEED, line.getCantonAtPosition(0, 0));
 		newtrain.start();	
-		Train newtrain1 = new Train(line, 1, 1450, REGULAR_SPEED);
-		newtrain1.start();	
+		Train newtrain1 = new Train(line, 1, line.getLength(), REGULAR_SPEED, line.getCantonAtPosition(line.getLength(), 1));
+		newtrain1.start();
 
 		dashboard.printRails(root);
 		dashboard.printStations(root);
 		dashboard.printStationsLines(root);
 		dashboard.printTrains(root);
-	 
         
         primaryStage.setScene(scene);
         primaryStage.show();

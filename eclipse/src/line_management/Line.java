@@ -29,14 +29,18 @@ public class Line {
 	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException{
 		int i = 0;
 		
-		while(segments.get(i).getEndPoint() < position)
+		System.out.println("Nb segments : " + nbSegments);
+		
+		while(segments.get(i).getEndPoint() < position && i < nbSegments) {
 			i++;
+		}
+		
+		System.out.println("i : " + i);
 		
 		if (i <= nbSegments)
 			return segments.get(i).getCanton(way);
 		
 		else throw new TrainArrivedException();
-		
 	}
 	
 	public Station getStationAtPosition(int position) {

@@ -33,7 +33,7 @@ public class Simulation implements Runnable{
 					if (i == 0)
 						position = 0;
 					else position = line.getLength();
-					Train newtrain = new Train(line, i, position, REGULAR_SPEED);
+					Train newtrain = new Train(line, i, position, REGULAR_SPEED, firstCantons[i]);
 					addTrain(newtrain);
 					newtrain.start();
 					
