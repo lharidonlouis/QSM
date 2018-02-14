@@ -2,6 +2,9 @@ package line_management;
 
 import java.util.ArrayList;
 
+/*
+ * represents a train station
+ */
 public class Station {
 	private long id;
 	private String name;
@@ -11,6 +14,10 @@ public class Station {
 	private int position;
 	private ArrayList<Passenger> passengers;
 	
+	/*
+	 * creates a new station on the line at a given position
+	 * with a new name and a given capacity and type
+	 */
 	public Station(String name, int type, Line line, int capacity, int position){
 		this.name = name;
 		this.type = type;
@@ -19,6 +26,11 @@ public class Station {
 		this.position = position;
 	}
 	
+	/*
+	 * allows the passengers on board of the train
+	 * of which type matches the station's type to get off the train
+	 * and the waiting passengers in the station to get in the train
+	 */
 	public void pickPassengers(Train train) {
 		int i;
 		ArrayList<Passenger> trainpassengers = train.getPassengers();
@@ -33,46 +45,52 @@ public class Station {
 		}
 	}
 	
+	/*
+	 * returns the station's position
+	 */
 	public int getPosition() {
 		return position;
 	}
-	public void setPosition(int position) {
-		this.position = position;
-	}
+	
+	/*
+	 * returns the line
+	 */
 	public Line getLine() {
 		return line;
 	}
-	public void setLine(Line line) {
-		this.line = line;
-	}
+	
+	/*
+	 * returns the station's capacity
+	 */
 	public int getCapacity() {
 		return capacity;
 	}
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
+	
+	/*
+	 * returns the passengers in the station
+	 */
 	public ArrayList<Passenger> getPassengers() {
 		return passengers;
 	}
-	public void setPassengers(ArrayList<Passenger> passengers) {
-		this.passengers = passengers;
-	}
+	
+	/*
+	 * returns the station's name
+	 */
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	
+	/*
+	 * returns the type
+	 */
 	public int getType() {
 		return type;
 	}
-	public void setType(int type) {
-		this.type = type;
-	}
+	
+	/*
+	 * returns the station's id
+	 */
 	public long getId() {
 		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
 	}
 }

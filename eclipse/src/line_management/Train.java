@@ -3,6 +3,10 @@ package line_management;
 import java.util.ArrayList;
 import simulation.SimulationGUI;
 
+/*
+ * represents a moving train on the line
+ * with its speed, a list of passengers and a given way
+ */
 public class Train extends Thread {
 	private long id;
 	private int way;
@@ -14,7 +18,11 @@ public class Train extends Thread {
 	private ArrayList<Passenger> passengers;
 	private Line line;
 	
+	/*
+	 * creates a new train on the line
+	 */
 	public Train(Line line, int id, int way, int position, int speed, Canton canton) {
+		arrived = false;
 		this.line = line;
 		this.id = id;
 		this.way = way;
@@ -23,7 +31,13 @@ public class Train extends Thread {
 		this.currentcanton = canton;
 	}
 	
+	/*
+	 * main method to handle train movements
+	 */
 	public void run() {
+		/*
+		 * put the train on the first canton
+		 */
 		currentcanton.enter(this);
 		while (!arrived) {
 			try {
@@ -31,131 +45,176 @@ public class Train extends Thread {
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
+			
 			if (way == 0) {
-				System.out.println("Train n°" + this.getId() + "[speed:" + speed + "]" + " position : " + position + " way : " + way + " Segment : " + line.getSegmentAtPosition(position).getId());
+				/*
+				 * if the train reaches the end of the segment it is on
+				 */
 				if (position + speed > line.getSegmentAtPosition(position).getEndPoint()) {
 					try {
 						/*
-						 * Passenger handling
+						 * pick passengers at the current station
 						 */
 						Station currentStation = getCurrentStation();
-						//currentStation.pickPassengers(this);
+						currentStation.pickPassengers(this);
 						
-						System.out.println("Train " + this.getId() + " arrived at station : " + currentStation.getName().toString());
+						/*
+						 * enter the next canton on the line
+						 */
 						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
 						nextcanton.enter(this);
-					} catch (TrainArrivedException e) { }
-					catch (java.lang.IndexOutOfBoundsException e) {
+					} catch (TrainArrivedException e) {
+						/*
+						 * if the train as reached the end of the line
+						 * exit the last canton and set the train as arrived
+						 */
 						arrived = true;
 						setPosition(line.getLength());
-						this.currentcanton.exit();
-						System.out.println("train " +   getId() + " arrived");
-						this.stop();
+						currentcanton.exit();
 					}
 				}
 				else {
+					/*
+					 * make the train move
+					 */
 					updatePosition();
 				}
 			}
 			else {
-				System.out.println("Train n°" + this.getId() + "[speed:-" + speed + "]" + " position : " + position + " way : " + way + " Segment : " + line.getSegmentAtPosition(position).getId());
+				/*
+				 * if the train reaches the end of the segment it is on
+				 * 
+				 * NEEDS REFACTOR TO HANDLE SEGMENT -1
+				 */
 				if (position - speed < line.getSegmentAtPosition(position).getStartPoint()) {
+						/*
+						 * if the train as reached the end of the line
+						 * exit the last canton and set the train as arrived
+						 */
 						if( (position-speed)<0) {
 							arrived = true;
 							setPosition(line.getLength());
-							this.currentcanton.exit();
-							System.out.println("train " +   getId() + " arrived");
-							this.stop();
+							currentcanton.exit();
 						}
 						else {
 							try{
 								/*
-								 * Passenger handling
+								 * pick passengers at the current station
 								 */
 								Station currentStation = getCurrentStation();
-								//currentStation.pickPassengers(this);
+								currentStation.pickPassengers(this);
 								
-								System.out.println("Train " + this.getId() + " arrived at station : " + currentStation.getName().toString());
+
+								/*
+								 * enter the next canton on the line
+								 */
 								Canton nextcanton = line.getCantonAtPosition(position - speed, way);
 								nextcanton.enter(this);
 							} catch (TrainArrivedException e) { }
 						}
 				}
 				else {
+					/*
+					 * make the train move
+					 */
 					updatePosition();
 				}
 			}
 		}
-		currentcanton.exit();
 	}
 
+	/*
+	 * make the train move on the line
+	 */
 	public void updatePosition() {
 		if (way == 0)
 			position += speed;
 		else position -= speed;
 	}
 
+	/*
+	 * returns the current canton of the train
+	 */
 	public Canton getCurrentCanton() {
 		return currentcanton;
 	}
 	
+	/*
+	 * changes the train's current canton
+	 */
 	public void setCurrentCanton(Canton canton) {
 		currentcanton = canton;
 	}
 	
+	/*
+	 * returns the current station of the train
+	 * 
+	 * NEEDS CONCEPTUAL REVIEW
+	 */
 	public Station getCurrentStation() {
 		return line.getStationAtPosition(position, speed);
 	}
 	
+	/*
+	 * returns the train's id
+	 */
 	public long getId() {
 		return id;
 	}
-	public void setId(long id) {
-		this.id = id;
-	}
+	
+	/*
+	 * returns the train's way
+	 */
 	public int getWay() {
 		return way;
 	}
-	public void setWat(int way) {
-		this.way = way;
-	}
+	
+	/*
+	 * returns the train's position
+	 */
 	public int getPosition() {
 		return position;
 	}
+	
+	/*
+	 * changes the train's position
+	 */
 	public void setPosition(int position) {
 		this.position = position;
 	}
+	
+	/*
+	 * returns the speed
+	 */
 	public int getSpeed() {
 		return speed;
 	}
+	
+	/*
+	 * changes the speed
+	 */
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}
-	public boolean isArrived() {
-		return arrived;
-	}
-	public void setArrivedTrue() {
-		this.arrived = true;
-	}
-	public void setArrivedFalse() {
-		this.arrived = false;
-	}
+	
+	/*
+	 * returns the train's capacity
+	 */
 	public int getCapacity() {
 		return capacity;
 	}
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
+	
+	/*
+	 * returns the passengers in the train
+	 */
 	public ArrayList<Passenger> getPassengers() {
 		return passengers;
 	}
-	public void setPassengers(ArrayList<Passenger> passengers) {
-		this.passengers = passengers;
-	}
+	
+	/*
+	 * returns the line
+	 */
 	public Line getLine() {
 		return line;
-	}
-	public void setLine(Line line) {
-		this.line = line;
 	}
 }

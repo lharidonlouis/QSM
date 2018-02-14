@@ -36,8 +36,12 @@ public class Line {
 	
 	/*
 	 * returns the canton for a given way at a given position on the line
+	 * 
+	 * 
+	 * 
+	 * HANDLE SEGMENT INDEX -1
 	 */
-	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException{
+	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException {
 		int i=0;
 		while( (segments.get(i).getEndPoint() < position ) && (i < nbSegments) ) {
 			i++;
