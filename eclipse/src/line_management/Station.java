@@ -12,6 +12,7 @@ public class Station {
 	private Line line;
 	private int capacity;
 	private int position;
+	private boolean occupied;
 	private ArrayList<Passenger> passengers;
 	
 	/*
@@ -45,6 +46,45 @@ public class Station {
 		}
 	}
 	
+	/*
+	 * makes a new train enter the station
+	 * and wait if it is occupied until it is free
+	 * then sets the old canton of the train as not occupied
+	 * and the station as occupied
+	 */
+	public synchronized void enter(Train train) {
+		
+	}
+	
+	/*
+	 * sets the station that a train is leaving as not occupied
+	 * and the train's current station as null
+	 */
+	public synchronized void exit() {
+		
+	}
+	
+	/*
+	 * allows to check if a train is in the station
+	 */
+	public boolean isOccupied() {
+		return occupied;
+	}
+
+	/*
+	 * sets the station as occupied
+	 */
+	public void setOccupiedTrue() {
+		occupied = true;
+	}
+	
+	/*
+	 * sets the station as not occupied
+	 */
+	public void setOccupiedFalse() {
+		occupied = false;
+	}
+
 	/*
 	 * returns the station's position
 	 */
