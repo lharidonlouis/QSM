@@ -44,11 +44,11 @@ public class SimulationGUI extends Application{
 							switch (i) {
 								case 0:
 										position = 0;
-										newtrain = new Train(line, id, i, position, REGULAR_SPEED, line.getCantonAtPosition(0, 0));
+										newtrain = new Train(line, id, i, position, REGULAR_SPEED);
 								break;
 								case 1:
 										position = line.getLength();
-										newtrain = new Train(line, id, i, position, REGULAR_SPEED, line.getCantonAtPosition(line.getNbSegments()-1, 1));
+										newtrain = new Train(line, id, i, position, REGULAR_SPEED);
 								break;
 							}
 						}

@@ -65,20 +65,6 @@ public class Train extends Thread {
 			position += speed;
 		else position -= speed;
 	}
-	
-	/*
-	 * returns the train's current station
-	 */
-	public Station getCurrentstation() {
-		return currentstation;
-	}
-
-	/*
-	 * allows to set the train's current station
-	 */
-	public void setCurrentstation(Station currentstation) {
-		this.currentstation = currentstation;
-	}
 
 	/*
 	 * returns the current canton of the train
@@ -96,11 +82,16 @@ public class Train extends Thread {
 	
 	/*
 	 * returns the current station of the train
-	 * 
-	 * NEEDS CONCEPTUAL REVIEW
 	 */
 	public Station getCurrentStation() {
-		return line.getStationAtPosition(position, speed);
+		return currentstation;
+	}
+	
+	/*
+	 * changes the train's current station
+	 */
+	public void setCurrentStation(Station station) {
+		currentstation = station;
 	}
 	
 	/*

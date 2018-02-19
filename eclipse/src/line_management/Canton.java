@@ -23,15 +23,27 @@ public class Canton {
 	 * and the canton as occupied
 	 */
 	public synchronized void enter(Train train) {
-		
+		if(occupied) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		Station oldstation = train.getCurrentStation();
+		train.setCurrentCanton(this);
+		oldstation.exit(train);	
+		setOccupiedTrue();
 	}
 	
 	/*
 	 * sets the canton that a train is leaving as not occupied
 	 * and the train's current canton as null
 	 */
-	public synchronized void exit() {
-		
+	public synchronized void exit(Train train) {
+		setOccupiedFalse();
+		train.setCurrentCanton(null);
+		notify();
 	}
 	
 	/*

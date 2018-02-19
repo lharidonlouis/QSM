@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * represents a train station
  */
 public class Station {
-	private long id;
+	private int id;
 	private String name;
 	private int type;
 	private Line line;
@@ -19,12 +19,13 @@ public class Station {
 	 * creates a new station on the line at a given position
 	 * with a new name and a given capacity and type
 	 */
-	public Station(String name, int type, Line line, int capacity, int position){
+	public Station(String name, int type, Line line, int capacity, int position, int id){
 		this.name = name;
 		this.type = type;
 		this.line = line;
 		this.capacity = capacity;
 		this.position = position;
+		this.id = id;
 	}
 	
 	/*
@@ -53,15 +54,27 @@ public class Station {
 	 * and the station as occupied
 	 */
 	public synchronized void enter(Train train) {
-		
+		if(occupied) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		Canton oldcanton = train.getCurrentCanton();
+		train.setCurrentStation(this);
+		oldcanton.exit(train);	
+		setOccupiedTrue();
 	}
 	
 	/*
 	 * sets the station that a train is leaving as not occupied
 	 * and the train's current station as null
 	 */
-	public synchronized void exit() {
-		
+	public synchronized void exit(Train train) {
+		setOccupiedFalse();
+		train.setCurrentStation(null);
+		notify();
 	}
 	
 	/*
@@ -130,7 +143,14 @@ public class Station {
 	/*
 	 * returns the station's id
 	 */
-	public long getId() {
+	public int getId() {
 		return id;
+	}
+	
+	/*
+	 * returns a short description of the station
+	 */
+	public String getDescription() {
+		return "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity;
 	}
 }

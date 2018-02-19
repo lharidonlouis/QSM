@@ -79,6 +79,7 @@ public class Line {
 	 */
 	public void addStation(Station station) {
 		nbStations++;
+		length++;
 		stations.add(station);
 	}
 	
@@ -108,5 +109,12 @@ public class Line {
 	 */
 	public int getLength() {
 		return length;
+	}
+	
+	/*
+	 * returns a short description of the line
+	 */
+	public String getDescription() {
+		return "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments;
 	}
 }

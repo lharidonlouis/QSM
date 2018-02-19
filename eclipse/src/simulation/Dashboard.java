@@ -21,7 +21,7 @@ public class Dashboard {
 	private static final int LENGHT = 1400;
 
 	public Dashboard(){
-		Builder builder=new Builder();
+		Builder builder=new Builder(false);
 		builder.build(15);
 		line = builder.getLine();
 	}
