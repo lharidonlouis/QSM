@@ -43,7 +43,7 @@ public class Train extends Thread {
 		currentcanton.enter(this);
 		while (!arrived) {
 			try {
-				sleep(SimulationGUI.DELAY);
+				sleep(speed);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
@@ -62,8 +62,8 @@ public class Train extends Thread {
 	 */
 	public void updatePosition() {
 		if (way == 0)
-			position += speed;
-		else position -= speed;
+			position += 1;
+		else position -= 1;
 	}
 
 	/*
