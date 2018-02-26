@@ -1,7 +1,6 @@
 package line_management;
 
 import java.util.ArrayList;
-import simulation.SimulationGUI;
 
 /*
  * represents a moving train on the line
@@ -22,15 +21,15 @@ public class Train extends Thread {
 	/*
 	 * creates a new train on the line
 	 */
-	public Train(Line line, int id, int way, int position, int speed) {
+	public Train(int id, int way, Station station, int speed) {
 		arrived = false;
-		this.line = line;
+		currentstation = station;
+		this.line = station.getLine();
 		this.id = id;
 		this.way = way;
-		this.position = position;
+		this.position = station.getPosition();
 		this.speed = speed;
 		currentcanton = null;
-		currentstation = null;
 	}
 	
 	/*
@@ -49,10 +48,50 @@ public class Train extends Thread {
 			}
 			
 			if (way == 0) {
-				
+				int nextposition = position + 1;
+					if (currentstation != null) {
+						try {
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							nextcanton.enter(this);
+							updatePosition();
+						} catch (TrainArrivedException terminus) {
+							arrived = true;
+							/*
+							 * Destroy train when getting out of the last station ?
+							 */
+						}
+					}
+					else if (currentcanton != null) {
+						Station nextstation = line.getStationAtPosition(nextposition);
+						nextstation.enter(this);
+						updatePosition();
+					}
+					else {
+						System.err.println("Train neither in station nor canton");
+					}
 			}
 			else {
-				
+				int nextposition = position - 1;
+					if (currentstation != null) {
+						try {
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							nextcanton.enter(this);
+							updatePosition();
+						} catch (TrainArrivedException terminus) {
+							arrived = true;
+							/*
+							 * Destroy train when getting out of the last station ?
+							 */
+						}
+					}
+					else if (currentcanton != null) {
+						Station nextstation = line.getStationAtPosition(nextposition);
+						nextstation.enter(this);
+						updatePosition();
+					}
+					else {
+						System.err.println("Train neither in station nor canton");
+					}
 			}
 		}
 	}
