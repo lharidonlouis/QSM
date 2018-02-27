@@ -1,7 +1,6 @@
 package line_management;
 
 import java.util.ArrayList;
-import simulation.SimulationGUI;
 
 /*
  * represents a moving train on the line
@@ -15,20 +14,22 @@ public class Train extends Thread {
 	private boolean arrived;
 	private int capacity;
 	private Canton currentcanton;
+	private Station currentstation;
 	private ArrayList<Passenger> passengers;
 	private Line line;
 	
 	/*
 	 * creates a new train on the line
 	 */
-	public Train(Line line, int id, int way, int position, int speed, Canton canton) {
+	public Train(int id, int way, Station station, int speed) {
 		arrived = false;
-		this.line = line;
+		currentstation = station;
+		this.line = station.getLine();
 		this.id = id;
 		this.way = way;
-		this.position = position;
+		this.position = station.getPosition();
 		this.speed = speed;
-		this.currentcanton = canton;
+		currentcanton = null;
 	}
 	
 	/*
@@ -41,84 +42,56 @@ public class Train extends Thread {
 		currentcanton.enter(this);
 		while (!arrived) {
 			try {
-				sleep(SimulationGUI.DELAY);
+				sleep(speed);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 			
 			if (way == 0) {
-				/*
-				 * if the train reaches the end of the segment it is on
-				 */
-				if (position + speed > line.getSegmentAtPosition(position).getEndPoint()) {
-					try {
-						/*
-						 * pick passengers at the current station
-						 */
-						Station currentStation = getCurrentStation();
-						currentStation.pickPassengers(this);
-						
-						/*
-						 * enter the next canton on the line
-						 */
-						Canton nextcanton = line.getCantonAtPosition(position + speed, way);
-						nextcanton.enter(this);
-					} catch (TrainArrivedException e) {
-						/*
-						 * if the train as reached the end of the line
-						 * exit the last canton and set the train as arrived
-						 */
-						arrived = true;
-						setPosition(line.getLength());
-						currentcanton.exit();
+				int nextposition = position + 1;
+					if (currentstation != null) {
+						try {
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							nextcanton.enter(this);
+							updatePosition();
+						} catch (TrainArrivedException terminus) {
+							arrived = true;
+							/*
+							 * Destroy train when getting out of the last station ?
+							 */
+						}
 					}
-				}
-				else {
-					/*
-					 * make the train move
-					 */
-					updatePosition();
-				}
+					else if (currentcanton != null) {
+						Station nextstation = line.getStationAtPosition(nextposition);
+						nextstation.enter(this);
+						updatePosition();
+					}
+					else {
+						System.err.println("Train neither in station nor canton");
+					}
 			}
 			else {
-				/*
-				 * if the train reaches the end of the segment it is on
-				 * 
-				 * NEEDS REFACTOR TO HANDLE SEGMENT -1
-				 */
-				if (position - speed < line.getSegmentAtPosition(position).getStartPoint()) {
-						/*
-						 * if the train as reached the end of the line
-						 * exit the last canton and set the train as arrived
-						 */
-						if( (position-speed)<0) {
+				int nextposition = position - 1;
+					if (currentstation != null) {
+						try {
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							nextcanton.enter(this);
+							updatePosition();
+						} catch (TrainArrivedException terminus) {
 							arrived = true;
-							setPosition(line.getLength());
-							currentcanton.exit();
+							/*
+							 * Destroy train when getting out of the last station ?
+							 */
 						}
-						else {
-							try{
-								/*
-								 * pick passengers at the current station
-								 */
-								Station currentStation = getCurrentStation();
-								currentStation.pickPassengers(this);
-								
-
-								/*
-								 * enter the next canton on the line
-								 */
-								Canton nextcanton = line.getCantonAtPosition(position - speed, way);
-								nextcanton.enter(this);
-							} catch (TrainArrivedException e) { }
-						}
-				}
-				else {
-					/*
-					 * make the train move
-					 */
-					updatePosition();
-				}
+					}
+					else if (currentcanton != null) {
+						Station nextstation = line.getStationAtPosition(nextposition);
+						nextstation.enter(this);
+						updatePosition();
+					}
+					else {
+						System.err.println("Train neither in station nor canton");
+					}
 			}
 		}
 	}
@@ -128,8 +101,8 @@ public class Train extends Thread {
 	 */
 	public void updatePosition() {
 		if (way == 0)
-			position += speed;
-		else position -= speed;
+			position += 1;
+		else position -= 1;
 	}
 
 	/*
@@ -148,11 +121,16 @@ public class Train extends Thread {
 	
 	/*
 	 * returns the current station of the train
-	 * 
-	 * NEEDS CONCEPTUAL REVIEW
 	 */
 	public Station getCurrentStation() {
-		return line.getStationAtPosition(position, speed);
+		return currentstation;
+	}
+	
+	/*
+	 * changes the train's current station
+	 */
+	public void setCurrentStation(Station station) {
+		currentstation = station;
 	}
 	
 	/*

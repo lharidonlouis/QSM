@@ -5,7 +5,7 @@ package line_management;
  * with two cantons to represent both ways
  */
 public class Segment {
-	private long id;
+	private int id;
 	private Canton[] cantons;
 	private int startPoint;
 	private int length;
@@ -14,7 +14,7 @@ public class Segment {
 	/*
 	 * creates two new cantons
 	 */
-	public Segment(int startPoint, int length, Line line, long id) {
+	public Segment(int startPoint, int length, Line line, int id) {
 		cantons = new Canton[2];
 		cantons[0] = new Canton();
 		cantons[1] = new Canton();
@@ -42,7 +42,7 @@ public class Segment {
 	 * returns the end of the segment
 	 */
 	public int getEndPoint() {
-		return startPoint + length;
+		return startPoint + length - 1;
 	}
 	
 	/*
@@ -62,7 +62,7 @@ public class Segment {
 	/*
 	 * returns the segment's id
 	 */
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 }

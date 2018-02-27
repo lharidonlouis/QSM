@@ -37,32 +37,42 @@ public class Line {
 	/*
 	 * returns the canton for a given way at a given position on the line
 	 * 
-	 * 
-	 * 
-	 * HANDLE SEGMENT INDEX -1
 	 */
 	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException {
 		int i=0;
-		while( (segments.get(i).getEndPoint() < position ) && (i < nbSegments) ) {
+		Segment segment = null;
+		while(i < nbSegments && segment == null) {
+			if (positionInSegment(segments.get(i), position))
+				segment=segments.get(i);
+			
 			i++;
 		}
-		if (i < nbSegments) {
-			return segments.get(i).getCanton(way);
+		if (segment != null) {
+			return segment.getCanton(way);
 		}
 		else throw new TrainArrivedException();
 	}
 	
+	public boolean positionInSegment(Segment segment, int position) {
+		return (position >= segment.getStartPoint() && position <= segment.getEndPoint());
+	}
+	
 	/*
 	 * returns the station that a train is reaching at a given position with a given speed
-	 * 
-	 * NEEDS CONCEPTUAL REVIEW
 	 */
-	public Station getStationAtPosition(int position, int speed) {
+	public Station getStationAtPosition(int position) {
 		int i = 0;
-		while( !(((position-speed) < stations.get(i).getPosition()) && (stations.get(i).getPosition() <  (position + speed)))) {
+		Station station = null;
+		while(stations.get(i).getPosition() < position && i < nbStations) {
 			i++;
 		}
-		return stations.get(i);
+		if (stations.get(i).getPosition() == position)
+			station = stations.get(i);
+		
+		else
+			System.err.println("Station not found, returns null");
+		
+		return station;
 	}
 	
 	/*
@@ -79,6 +89,7 @@ public class Line {
 	 */
 	public void addStation(Station station) {
 		nbStations++;
+		length++;
 		stations.add(station);
 	}
 	
@@ -108,5 +119,12 @@ public class Line {
 	 */
 	public int getLength() {
 		return length;
+	}
+	
+	/*
+	 * returns a short description of the line
+	 */
+	public String getDescription() {
+		return "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments;
 	}
 }

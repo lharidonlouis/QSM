@@ -19,31 +19,30 @@ public class Canton {
 	/*
 	 * makes a new train enter the canton
 	 * and wait if it is occupied until it is free
-	 * then sets the old canton of the train as not occupied
-	 * and the new one as occupied
+	 * then sets the old station of the train as not occupied
+	 * and the canton as occupied
 	 */
 	public synchronized void enter(Train train) {
-		if (occupied) {
+		if(occupied) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 		}
-		Canton oldCanton = train.getCurrentCanton();
+		Station oldstation = train.getCurrentStation();
 		train.setCurrentCanton(this);
-		train.updatePosition();
-
-		oldCanton.exit();
+		oldstation.exit(train);	
 		setOccupiedTrue();
 	}
 	
 	/*
 	 * sets the canton that a train is leaving as not occupied
-	 * and notifies the calling canton that the train can now enter it
+	 * and the train's current canton as null
 	 */
-	public synchronized void exit() {
+	public synchronized void exit(Train train) {
 		setOccupiedFalse();
+		train.setCurrentCanton(null);
 		notify();
 	}
 	
