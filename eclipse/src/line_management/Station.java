@@ -66,7 +66,7 @@ public class Station {
 		oldcanton.exit(train);	
 		setOccupiedTrue();
 	}
-	
+
 	/*
 	 * sets the station that a train is leaving as not occupied
 	 * and the train's current station as null
