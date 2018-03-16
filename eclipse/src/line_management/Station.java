@@ -6,24 +6,27 @@ import java.util.ArrayList;
  * represents a train station
  */
 public class Station {
-	private long id;
+	private int id;
 	private String name;
 	private int type;
 	private Line line;
 	private int capacity;
 	private int position;
+	private boolean[] tracksoccupied;
 	private ArrayList<Passenger> passengers;
 	
 	/*
 	 * creates a new station on the line at a given position
 	 * with a new name and a given capacity and type
 	 */
-	public Station(String name, int type, Line line, int capacity, int position){
+	public Station(String name, int type, Line line, int capacity, int position, int id){
 		this.name = name;
 		this.type = type;
 		this.line = line;
 		this.capacity = capacity;
 		this.position = position;
+		this.id = id;
+		passengers = new ArrayList<Passenger>();
 	}
 	
 	/*
@@ -39,12 +42,67 @@ public class Station {
 				trainpassengers.remove(i);
 			}
 		}
-		while ((train.getPassengers().size() < train.getCapacity()) && (passengers.size() > 0)) {
-			trainpassengers.add(passengers.get(passengers.size()));
-			passengers.remove(passengers.size());
+		i = 0;
+		while ((train.getPassengers().size() < train.getCapacity()) && (i < passengers.size())) {
+			if(passengers.get(i).getWay() == train.getWay()) {
+				train.getPassengers().add(passengers.get(i));
+				passengers.remove(i);
+			}
+			i++;
 		}
 	}
 	
+	/*
+	 * makes a new train enter the station
+	 * and wait if it is occupied until it is free
+	 * then sets the old canton of the train as not occupied
+	 * and the station as occupied
+	 */
+	public synchronized void enter(Train train) {
+		if(tracksoccupied[train.getWay()]) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		Canton oldcanton = train.getCurrentCanton();
+		train.setCurrentStation(this);
+		oldcanton.exit(train);	
+		setTrackOccupiedTrue(train.getWay());
+	}
+	
+	/*
+	 * sets the station that a train is leaving as not occupied
+	 * and the train's current station as null
+	 */
+	public synchronized void exit(Train train) {
+		setTrackOccupiedFalse(train.getWay());
+		train.setCurrentStation(null);
+		notify();
+	}
+	
+	/*
+	 * allows to check if a train is on a track of the station
+	 */
+	public boolean isTrackOccupied(int index) {
+		return tracksoccupied[index];
+	}
+
+	/*
+	 * sets the station's track index as occupied
+	 */
+	public void setTrackOccupiedTrue(int index) {
+		tracksoccupied[index] = true;
+	}
+	
+	/*
+	 * sets the station's track index as not occupied
+	 */
+	public void setTrackOccupiedFalse(int index) {
+		tracksoccupied[index] = false;
+	}
+
 	/*
 	 * returns the station's position
 	 */
@@ -90,7 +148,14 @@ public class Station {
 	/*
 	 * returns the station's id
 	 */
-	public long getId() {
+	public int getId() {
 		return id;
+	}
+	
+	/*
+	 * returns a short description of the station
+	 */
+	public String getDescription() {
+		return "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity;
 	}
 }
