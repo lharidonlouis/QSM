@@ -6,10 +6,12 @@ package line_management;
 public class Passenger {
 	private long id;
 	private int type;
+	private int way;
 	
-	public Passenger(int type, long id) {
+	public Passenger(int type, long id, int way) {
 		this.type = type;
 		this.id = id;
+		this.way = way;
 	}
 
 	/*
@@ -24,5 +26,12 @@ public class Passenger {
 	 */
 	public int getType() {
 		return type;
+	}
+	
+	/*
+	 * returns the passenger's way
+	 */
+	public int getWay() {
+		return way;
 	}
 }
