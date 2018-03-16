@@ -22,7 +22,7 @@ public class CantonTest {
 		Canton cantonTest = new Canton();
 		Line lineTest = new Line();
 		Station stationTest = new Station("TestA", 1, lineTest, 53, 8, 1);
-		Train trainTest = new Train(-2, 0, stationTest, 3);
+		Train trainTest = new Train(-2, 0, stationTest, 3, 1);
 		assertFalse("Canton built as occupied", cantonTest.isOccupied());
 		cantonTest.enter(trainTest);
 		assertSame("Canton Setting Failed", cantonTest, trainTest.getCurrentCanton());
@@ -35,7 +35,7 @@ public class CantonTest {
 		Canton cantonTest = new Canton();
 		Line lineTest = new Line();
 		Station stationTest = new Station("TestB", 0, lineTest, 5, 2, 5);
-		Train trainTest = new Train(5, 1, stationTest, 8);
+		Train trainTest = new Train(5, 1, stationTest, 8, 1);
 		cantonTest.enter(trainTest);
 		assertTrue("Enter failed", cantonTest.isOccupied());
 		cantonTest.exit(trainTest);

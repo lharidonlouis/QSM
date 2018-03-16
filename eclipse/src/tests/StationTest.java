@@ -39,7 +39,7 @@ public class StationTest {
 		int type=0, capacity=12, position=12, id=0;
 		Line lineTest = new Line();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, capacity);
 		Passenger trainPassengerTest1 = new Passenger(0, 0);
 		Passenger trainPassengerTest2 = new Passenger(0, 1);
 		Passenger trainPassengerTest3 = new Passenger(5, 2);
@@ -64,7 +64,7 @@ public class StationTest {
 		Line lineTest = new Line();
 		Canton cantonTest = new Canton();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, 1);
 		cantonTest.enter(trainTest);
 		stationTest.enter(trainTest);
 		assertEquals("Enter failed to free previous Canton", null, trainTest.getCurrentCanton());
@@ -78,7 +78,7 @@ public class StationTest {
 		Line lineTest = new Line();
 		Canton cantonTest = new Canton();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, 1);
 		cantonTest.enter(trainTest);
 		stationTest.enter(trainTest);
 		assertEquals("Train failed to enter the station", stationTest, trainTest.getCurrentStation());
@@ -151,7 +151,7 @@ public class StationTest {
 		int type=0, capacity=12, position=12, id=0;
 		Line lineTest = new Line();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, capacity);
 		ArrayList<Passenger> passengersTest = new ArrayList<Passenger>();
 		Passenger stationPassengerTest1 = new Passenger(3, 5);
 		Passenger stationPassengerTest2 = new Passenger(0, 4);

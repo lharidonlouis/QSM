@@ -21,7 +21,7 @@ public class Train extends Thread {
 	/*
 	 * creates a new train on the line
 	 */
-	public Train(int id, int way, Station station, int speed) {
+	public Train(int id, int way, Station station, int speed, int capacity) {
 		arrived = false;
 		currentstation = station;
 		this.line = station.getLine();
@@ -29,6 +29,7 @@ public class Train extends Thread {
 		this.way = way;
 		this.position = station.getPosition();
 		this.speed = speed;
+		this.capacity = capacity;
 		currentcanton = null;
 	}
 	

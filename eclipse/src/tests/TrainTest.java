@@ -25,7 +25,7 @@ public class TrainTest {
 		Line lineTest = new Line();
 		Canton cantonTest = new Canton();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, 1);
 		assertEquals("Failed to initiate line as Station's line", stationTest, trainTest.getCurrentStation());
 		assertEquals("Failed to initiate current Canton as null", null, trainTest.getCurrentCanton());
 		assertEquals("Failed to initiate position as station's position", position, trainTest.getPosition());
@@ -37,8 +37,8 @@ public class TrainTest {
 		Line lineTest = new Line();
 		Canton cantonTest = new Canton();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
-		Train trainTest2 = new Train(2, 1, stationTest, 2);
+		Train trainTest = new Train(0, 0, stationTest, 3, 1);
+		Train trainTest2 = new Train(2, 1, stationTest, 2, 1);
 		assertEquals("Train: Failed to get Initiate position", stationTest.getPosition(), trainTest.getPosition());
 		assertEquals("Train: Failed to get Initiate position", stationTest.getPosition(), trainTest2.getPosition());
 		trainTest.updatePosition();
@@ -53,7 +53,7 @@ public class TrainTest {
 		Line lineTest = new Line();
 		Canton cantonTest = new Canton();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, 1);
 		trainTest.setCurrentCanton(cantonTest);
 		assertEquals("Train: Canton Getter failed ", cantonTest, trainTest.getCurrentCanton());
 		stationTest.enter(trainTest);
@@ -74,7 +74,7 @@ public class TrainTest {
 		Canton cantonTest = new Canton();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
 		Station stationTest2 = new Station("StatTest2",1, lineTest, 8, 4, 3);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, 1);
 		assertEquals("Train: failed to get initial station", stationTest, trainTest.getCurrentStation());
 		trainTest.setCurrentStation(stationTest2);
 		assertEquals("Train: failed to get current station", stationTest2, trainTest.getCurrentStation());
@@ -93,7 +93,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, 1);
 		assertEquals("Way getter failed", way, trainTest.getWay());
 	}
 
@@ -103,7 +103,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, 1);
 		assertEquals("Position getter failed", position, trainTest.getPosition());
 	}
 
@@ -113,7 +113,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, 1);
 		assertEquals("Position getter failed", position, trainTest.getPosition());
 		trainTest.setPosition(62);
 		assertEquals("Position Setter failed", 62, trainTest.getPosition());
@@ -125,7 +125,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, 1);
 		assertEquals("Speed getter failed", speed, trainTest.getSpeed());
 	}
 
@@ -135,7 +135,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, 1);
 		assertEquals("Speed getter failed", speed, trainTest.getSpeed());
 		trainTest.setSpeed(-8);
 		assertEquals("Speed Setter failed", -8, trainTest.getSpeed());
@@ -148,7 +148,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, capacity);
 		assertEquals("Capacity getter failed", capacity, trainTest.getCapacity());
 	}
 
@@ -160,7 +160,7 @@ public class TrainTest {
 		int type=0, capacity=12, position=12, id=0;
 		Line lineTest = new Line();
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3);
+		Train trainTest = new Train(0, 0, stationTest, 3, capacity);
 		Passenger trainPassengerTest1 = new Passenger(0, 0);
 		Passenger trainPassengerTest2 = new Passenger(0, 1);
 		Passenger trainPassengerTest3 = new Passenger(5, 2);
@@ -181,7 +181,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, 1);
 		assertEquals("Line getter failed", lineTest, trainTest.getLine());
 	}
 
@@ -191,7 +191,7 @@ public class TrainTest {
 		String name = "StatTest1";
 		Line lineTest = new Line();
 		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed);
+		Train trainTest = new Train(id, way, stationTest, speed, 1);
 		assertEquals("Id getter failed", id, trainTest.getId());
 	}
 
