@@ -206,7 +206,7 @@ public class StationTest {
 		
 		stationTest.getPassengers().add(stationPassengerTest3);
 		
-		assertEquals("Train Passengers missing", 3, trainTest.getPassengers().size());
+		assertEquals("Train Passengers missing", 0, trainTest.getPassengers().size());
 		
 		assertEquals("Station Passengers missing", 3, stationTest.getPassengers().size());
 		

@@ -26,6 +26,7 @@ public class Station {
 		this.capacity = capacity;
 		this.position = position;
 		this.id = id;
+		tracksoccupied = new boolean[2];
 		passengers = new ArrayList<Passenger>();
 	}
 	
