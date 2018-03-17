@@ -17,18 +17,23 @@ public class TrainTest {
 
 	@Test
 	public void testRun() {
-		int type = 0, capacity = 0, position = 12, id = 0, way = 0, speed = 3;
+		int type = 0, capacity = 0, id = 0, way = 0, speed = 3;
+		int type2 = 1, capacity2 = 3, id2 = 1, way2 = 1, speed2 = 1;
 		
 		Builder builderTest = new Builder(true);
 
 		builderTest.build(7);
 		
 		Train trainTest = new Train(id, way, builderTest.getLine().getStationAtPosition(0), speed, capacity);
-		
+		Train trainTest2 = new Train(id2, way2, builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), speed2, capacity2);
+
 		trainTest.run();
 		
-		assertEquals("Train run failed at some point", builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), trainTest.getCurrentStation());
+		assertEquals("Train run failed at some point (way=0)", builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), trainTest.getCurrentStation());
 		
+		trainTest2.run();
+
+		assertEquals("Train run failed at some point (way=1)", builderTest.getLine().getStationAtPosition(0), trainTest2.getCurrentStation());
 	}
 
 	@Test
