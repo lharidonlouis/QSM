@@ -12,7 +12,7 @@ public class Station {
 	private Line line;
 	private int capacity;
 	private int position;
-	private boolean occupied;
+	private boolean[] tracksoccupied;
 	private ArrayList<Passenger> passengers;
 	
 	/*
@@ -26,6 +26,7 @@ public class Station {
 		this.capacity = capacity;
 		this.position = position;
 		this.id = id;
+		passengers = new ArrayList<Passenger>();
 	}
 	
 	/*
@@ -41,9 +42,13 @@ public class Station {
 				trainpassengers.remove(i);
 			}
 		}
-		while ((train.getPassengers().size() < train.getCapacity()) && (passengers.size() > 0)) {
-			trainpassengers.add(passengers.get(passengers.size()));
-			passengers.remove(passengers.size());
+		i = 0;
+		while ((train.getPassengers().size() < train.getCapacity()) && (i < passengers.size())) {
+			if(passengers.get(i).getWay() == train.getWay()) {
+				train.getPassengers().add(passengers.get(i));
+				passengers.remove(i);
+			}
+			i++;
 		}
 	}
 	
@@ -54,7 +59,7 @@ public class Station {
 	 * and the station as occupied
 	 */
 	public synchronized void enter(Train train) {
-		if(occupied) {
+		if(tracksoccupied[train.getWay()]) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -64,38 +69,38 @@ public class Station {
 		Canton oldcanton = train.getCurrentCanton();
 		train.setCurrentStation(this);
 		oldcanton.exit(train);	
-		setOccupiedTrue();
+		setTrackOccupiedTrue(train.getWay());
 	}
-
+	
 	/*
 	 * sets the station that a train is leaving as not occupied
 	 * and the train's current station as null
 	 */
 	public synchronized void exit(Train train) {
-		setOccupiedFalse();
+		setTrackOccupiedFalse(train.getWay());
 		train.setCurrentStation(null);
 		notify();
 	}
 	
 	/*
-	 * allows to check if a train is in the station
+	 * allows to check if a train is on a track of the station
 	 */
-	public boolean isOccupied() {
-		return occupied;
+	public boolean isTrackOccupied(int index) {
+		return tracksoccupied[index];
 	}
 
 	/*
-	 * sets the station as occupied
+	 * sets the station's track index as occupied
 	 */
-	public void setOccupiedTrue() {
-		occupied = true;
+	public void setTrackOccupiedTrue(int index) {
+		tracksoccupied[index] = true;
 	}
 	
 	/*
-	 * sets the station as not occupied
+	 * sets the station's track index as not occupied
 	 */
-	public void setOccupiedFalse() {
-		occupied = false;
+	public void setTrackOccupiedFalse(int index) {
+		tracksoccupied[index] = false;
 	}
 
 	/*
