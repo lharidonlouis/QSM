@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import line_management.Builder;
 import line_management.Canton;
 import line_management.Line;
 import line_management.Passenger;
@@ -16,7 +17,18 @@ public class TrainTest {
 
 	@Test
 	public void testRun() {
-		fail("Not yet implemented");
+		int type = 0, capacity = 0, position = 12, id = 0, way = 0, speed = 3;
+		
+		Builder builderTest = new Builder(true);
+
+		builderTest.build(7);
+		
+		Train trainTest = new Train(id, way, builderTest.getLine().getStationAtPosition(0), speed, capacity);
+		
+		trainTest.run();
+		
+		assertEquals("Train run failed at some point", builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), trainTest.getCurrentStation());
+		
 	}
 
 	@Test
@@ -63,7 +75,7 @@ public class TrainTest {
 		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
 		Train trainTest = new Train(0, 0, stationTest, 3, 1);
 		
-		trainTest.setCurrentCanton(cantonTest);
+		cantonTest.enter(trainTest);
 		assertEquals("Train: Canton Getter failed ", cantonTest, trainTest.getCurrentCanton());
 		
 		stationTest.enter(trainTest);
