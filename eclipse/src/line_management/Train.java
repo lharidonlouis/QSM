@@ -51,7 +51,9 @@ public class Train extends Thread {
 					if (currentstation != null) {
 						try {
 							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-							nextcanton.enter(this);
+							int nextstationposition = line.getSegmentAtPosition(nextposition).getEndPoint() + 1;
+							Station followingstation = line.getStationAtPosition(nextstationposition);
+							nextcanton.enter(this, followingstation);
 							updatePosition();
 						} catch (TrainArrivedException terminus) {
 							arrived = true;
@@ -74,7 +76,9 @@ public class Train extends Thread {
 					if (currentstation != null) {
 						try {
 							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-							nextcanton.enter(this);
+							int nextstationposition = line.getSegmentAtPosition(nextposition).getStartPoint() - 1;
+							Station followingstation = line.getStationAtPosition(nextstationposition);
+							nextcanton.enter(this, followingstation);
 							updatePosition();
 						} catch (TrainArrivedException terminus) {
 							arrived = true;

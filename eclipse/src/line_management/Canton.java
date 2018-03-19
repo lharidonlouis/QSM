@@ -22,8 +22,15 @@ public class Canton {
 	 * then sets the old station of the train as not occupied
 	 * and the canton as occupied
 	 */
-	public synchronized void enter(Train train) {
+	public synchronized void enter(Train train, Station followingstation) {
 		if(occupied) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		if(followingstation.isTrackOccupied(train.getWay())) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
