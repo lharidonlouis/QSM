@@ -14,18 +14,22 @@ public class Station {
 	private int position;
 	private boolean[] tracksoccupied;
 	private ArrayList<Passenger> passengers;
+	private boolean isBackup;
+	private boolean isTerminus;
 	
 	/*
 	 * creates a new station on the line at a given position
 	 * with a new name and a given capacity and type
 	 */
-	public Station(String name, int type, Line line, int capacity, int position, int id){
+	public Station(String name, int type, Line line, int capacity, int position, int id, boolean backup, boolean terminus){
 		this.name = name;
 		this.type = type;
 		this.line = line;
 		this.capacity = capacity;
 		this.position = position;
 		this.id = id;
+		isBackup = backup;
+		isTerminus = terminus;
 		passengers = new ArrayList<Passenger>();
 	}
 	
