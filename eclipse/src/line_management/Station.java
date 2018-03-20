@@ -177,11 +177,11 @@ public class Station {
 		return isStart[index];
 	}
 	
-	public void setStart(int index) {
-		isStart[index] = true;
+	public void setStart(int index, boolean value) {
+		isStart[index] = value;
 	}
 	
-	public void setTerminus(int index) {
-		isTerminus[index] = true;
+	public void setTerminus(int index, boolean value) {
+		isTerminus[index] = value;
 	}
 }

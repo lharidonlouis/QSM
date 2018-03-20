@@ -8,12 +8,14 @@ import line_management.Train;
  */
 public class Canton {
 	private boolean occupied;
+	private Segment segment;
 
 	/*
 	 * constructor simply sets the canton as not occupied
 	 */
-	public Canton() {
+	public Canton(Segment segment) {
 		occupied = false;
+		this.segment = segment;
 	}
 	
 	/*

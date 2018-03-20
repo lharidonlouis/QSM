@@ -76,6 +76,24 @@ public class Line {
 		return station;
 	}
 	
+	public Segment getSegmentForCanton(Canton canton) {
+		Segment segment = null;
+		int i = 0, j;
+		boolean found = false;
+		
+		while (i < segments.size() && !found) {
+			for (j = 0; j < 2; j++) {
+				if (segments.get(i).getCanton(j) == canton) {
+					segment = segments.get(i);
+					found = true;
+				}
+			}
+			i++;
+		}
+		
+		return segment;
+	}
+	
 	/*
 	 * adds a new segment to the line
 	 */
@@ -134,5 +152,24 @@ public class Line {
 	 */
 	public ArrayList<Train> getTrains() {
 		return trains;
+	}
+	
+	public ArrayList<Station> getStations(){
+		return stations;
+	}
+
+	public int getIndexForStation(Station station) {
+		int i = 0;
+		boolean found = false;
+		int index = 0;
+		
+		while (i < stations.size() && !found) {
+			if (stations.get(i) == station) {
+				index = i;
+				found = true;
+			}
+		}
+		
+		return index;
 	}
 }

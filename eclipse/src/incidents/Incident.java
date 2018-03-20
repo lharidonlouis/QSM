@@ -1,18 +1,22 @@
 package incidents;
 
-import java.util.ArrayList;
-
-import line_management.*;
+import line_management.Line;
+import line_management.Train;
+import line_management.TrainArrivedException;
+import line_management.Canton;
+import line_management.Station;
 
 public class Incident {
 	private Line line;
 	private Canton canton;
 	private Train blockedtrain;
 	private Station station;
+	private Station nextStart;
+	private Station previousTerminus;
 	private boolean active;
 	private int typeincident;
 
-	public Incident(Line line, Canton canton) {
+	public Incident(Line line, Canton canton, int way) {
 		typeincident = 0;
 		active = true;
 		this.line = line;
@@ -27,9 +31,9 @@ public class Incident {
 		else {
 			canton.setOccupiedTrue();
 		}
-		
-		// Activer premier départ suivant
-		// Activer premier terminus précédent
+
+		activateNextStart(way);
+		activatePreviousTerminus(way);
 	}
 	
 	public Incident(Line line, Station station, int way) {
@@ -66,15 +70,73 @@ public class Incident {
 		} catch (TrainArrivedException e) {}
 		
 
-		// Activer premier départ suivant
-		// Activer premier terminus précédent
+		activateNextStart(way);
+		activatePreviousTerminus(way);
 	}
 	
-	private void activateNextStart() {
+	private void activateNextStart(int way) {
+		int stationIndex = 0;
+		boolean found;
+		Station nextStation;
 		
+		if (typeincident == 0) {
+			found = false;
+			if (way == 0) {
+				nextStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getEndPoint() + 1);
+				stationIndex = line.getIndexForStation(nextStation);
+						
+				while (stationIndex<line.getStations().size() && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						nextStart = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex++;
+				}
+			}
+			else {
+				nextStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getStartPoint() - 1);
+				stationIndex = line.getIndexForStation(nextStation);
+				
+				while (stationIndex>=0 && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						nextStart = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex--;
+				}
+			}
+			
+			nextStart.setStart(way, true);
+		}
+		else {
+			stationIndex = line.getIndexForStation(station);
+			found = false;
+			if (way == 0) {
+				stationIndex++;
+				while (stationIndex<line.getStations().size() && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						nextStart = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex++;
+				}
+			}
+			else {
+				stationIndex--;
+				while (stationIndex>=0 && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						nextStart = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex--;
+				}
+			}
+			nextStart.setStart(way, true);
+		}
 	}
 	
-	private void activatePreviousTerminus() {
+	
+	private void activatePreviousTerminus(int way) {
 		
 	}
 	
@@ -125,12 +187,15 @@ public class Incident {
 	}
 	
 	public void terminate() {
-		if (typeincident == 0)
-		// parcourir trains
-		// si aucun train bloqué sur le canton : le remettre non occupé
+		if (typeincident == 0) {
+			if (blockedtrain != null) {
+				
+			}
+		}
 			
-		if (typeincident == 1)
-		// 
+		if (typeincident == 1) {
+			
+		}
 		
 		active = false;
 	}
