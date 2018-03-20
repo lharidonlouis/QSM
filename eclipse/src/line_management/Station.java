@@ -15,13 +15,14 @@ public class Station {
 	private boolean[] tracksoccupied;
 	private ArrayList<Passenger> passengers;
 	private boolean isBackup;
-	private boolean isTerminus;
+	private boolean[] isTerminus;
+	private boolean[] isStart;
 	
 	/*
 	 * creates a new station on the line at a given position
 	 * with a new name and a given capacity and type
 	 */
-	public Station(String name, int type, Line line, int capacity, int position, int id, boolean backup, boolean terminus){
+	public Station(String name, int type, Line line, int capacity, int position, int id, boolean backup, boolean[] terminus, boolean[] start){
 		this.name = name;
 		this.type = type;
 		this.line = line;
@@ -30,6 +31,7 @@ public class Station {
 		this.id = id;
 		isBackup = backup;
 		isTerminus = terminus;
+		isStart = start;
 		passengers = new ArrayList<Passenger>();
 	}
 	
@@ -161,5 +163,25 @@ public class Station {
 	 */
 	public String getDescription() {
 		return "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity;
+	}
+
+	public boolean isBackup() {
+		return isBackup;
+	}
+
+	public boolean isTerminus(int index) {
+		return isTerminus[index];
+	}
+
+	public boolean getIsStart(int index) {
+		return isStart[index];
+	}
+	
+	public void setStart(int index) {
+		isStart[index] = true;
+	}
+	
+	public void setTerminus(int index) {
+		isTerminus[index] = true;
 	}
 }

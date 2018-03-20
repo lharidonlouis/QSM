@@ -30,7 +30,8 @@ public class Builder {
 		int i, type, capacity, length;
 		Station station;
 		Segment segment;
-		boolean terminus = true;
+		boolean terminus[] = {false, true};
+		boolean start[] = {true, false};
 		boolean backup = true;
 		
 		int maxi = lineNbStations/5 + 2;
@@ -47,15 +48,19 @@ public class Builder {
 			type = (int)(Math.random() * ((2 - 0) + 1));
 			capacity = (int)(Math.random() * ((MAX_CAPACITY - MIN_CAPACITY) + 1)) + MIN_CAPACITY;
 			
-			if (i == 1)
-				terminus = false;
+			if (i == 1) {
+				terminus[0] = false;
+				terminus[1] = false;
+				start[0] = false;
+				start[1] = false;
+			}
 			
 			if (remaining == 0) {
 				backup = true;
 				remaining = maxi;
 			}
 			
-			station = new Station("Station" + i, type, line, capacity, line.getLength(), i, backup, terminus);
+			station = new Station("Station" + i, type, line, capacity, line.getLength(), i, backup, terminus, start);
 			line.addStation(station);
 			
 			backup = false;
@@ -76,9 +81,14 @@ public class Builder {
 			}
 		}
 		
+		terminus[0] = true;
+		terminus[1] = false;
+		start[0] = false;
+		start[1] = true;
+		
 		type = (int)(Math.random() * ((2 - 0) + 1));
 		capacity = (int)(Math.random() * ((MAX_CAPACITY - MIN_CAPACITY) + 1)) + MIN_CAPACITY;
-		station = new Station("Station" + i, type, line, capacity, line.getLength(), i, true, true);
+		station = new Station("Station" + i, type, line, capacity, line.getLength(), i, true, terminus, start);
 		line.addStation(station);
 		
 		if(debug) {

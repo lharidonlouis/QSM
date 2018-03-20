@@ -10,6 +10,7 @@ public class Line {
 	private int length;
 	private ArrayList<Station> stations;
 	private ArrayList<Segment> segments;
+	private ArrayList<Train> trains;
 	private int nbSegments;
 	private int nbStations;
 
@@ -20,6 +21,7 @@ public class Line {
 		length = 0;
 		stations = new ArrayList<Station>();
 		segments = new ArrayList<Segment>();
+		trains = new ArrayList<Train>();
 		nbSegments = 0;
 		nbStations = 0;
 	}
@@ -36,7 +38,6 @@ public class Line {
 	
 	/*
 	 * returns the canton for a given way at a given position on the line
-	 * 
 	 */
 	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException {
 		int i=0;
@@ -126,5 +127,12 @@ public class Line {
 	 */
 	public String getDescription() {
 		return "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments;
+	}
+
+	/*
+	 * returns the list of trains on the line
+	 */
+	public ArrayList<Train> getTrains() {
+		return trains;
 	}
 }
