@@ -12,15 +12,17 @@ public class Incident {
 	private Train blockedtrain;
 	private Station station;
 	private Station nextStart;
-	private Station previousTerminus;
+	private Station prevTerminus;
 	private boolean active;
 	private int typeincident;
+	private int way;
 
 	public Incident(Line line, Canton canton, int way) {
 		typeincident = 0;
 		active = true;
 		this.line = line;
 		this.canton = canton;
+		this.way = way;
 		blockedtrain = null;
 		
 		if (canton.isOccupied()) {
@@ -32,8 +34,8 @@ public class Incident {
 			canton.setOccupiedTrue();
 		}
 
-		activateNextStart(way);
-		activatePreviousTerminus(way);
+		activateNextStart();
+		activatePreviousTerminus();
 	}
 	
 	public Incident(Line line, Station station, int way) {
@@ -41,6 +43,7 @@ public class Incident {
 		active = true;
 		this.line = line;
 		this.station = station;
+		this.way = way;
 		int cantonposition;
 
 		blockedtrain = null;
@@ -70,11 +73,11 @@ public class Incident {
 		} catch (TrainArrivedException e) {}
 		
 
-		activateNextStart(way);
-		activatePreviousTerminus(way);
+		activateNextStart();
+		activatePreviousTerminus();
 	}
 	
-	private void activateNextStart(int way) {
+	private void activateNextStart() {
 		int stationIndex = 0;
 		boolean found;
 		Station nextStation;
@@ -135,8 +138,79 @@ public class Incident {
 		}
 	}
 	
+	private void activatePreviousTerminus() {
+		int stationIndex = 0;
+		boolean found;
+		Station prevStation;
+		
+		if (typeincident == 0) {
+			found = false;
+			if (way == 0) {
+				prevStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getStartPoint() - 1);
+				stationIndex = line.getIndexForStation(prevStation);
+						
+				while (stationIndex>=0 && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						prevTerminus = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex--;
+				}
+			}
+			else {
+				prevStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getEndPoint() + 1);
+				stationIndex = line.getIndexForStation(prevStation);
+				
+				while (stationIndex<line.getStations().size() && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						prevTerminus = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex--;
+				}
+			}
+			
+			prevTerminus.setTerminus(way, true);
+		}
+		else {
+			stationIndex = line.getIndexForStation(station);
+			found = false;
+			if (way == 0) {
+				stationIndex--;
+				while (stationIndex>=0 && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						nextStart = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex--;
+				}
+			}
+			else {
+				stationIndex++;
+				while (stationIndex<line.getStations().size() && !found) {
+					if (line.getStations().get(stationIndex).isBackup()) {
+						nextStart = line.getStations().get(stationIndex);
+						found = true;
+					}
+					stationIndex++;
+				}
+			}
+			prevTerminus.setTerminus(way, true);
+		}
+	}
 	
-	private void activatePreviousTerminus(int way) {
+	
+	/*
+	 * A ECRIRE
+	 */
+	private void deactivateNextStart() {
+		
+	}
+	
+	/* 
+	 * A ECRIRE
+	 */
+	private void deactivatePreviousTerminus() {
 		
 	}
 	
@@ -189,16 +263,23 @@ public class Incident {
 	public void terminate() {
 		if (typeincident == 0) {
 			if (blockedtrain != null) {
-				
+				blockedtrain.unblock();
+				blockedtrain = null;
 			}
+			else canton.setOccupiedFalse();
 		}
-			
-		if (typeincident == 1) {
-			
+		else {
+			if (blockedtrain != null) {
+				blockedtrain.unblock();
+				blockedtrain = null;
+			}
+			else
+				station.setTrackOccupiedFalse(way);
 		}
+		
+		deactivateNextStart();
+		deactivatePreviousTerminus();
 		
 		active = false;
 	}
-	
-	
 }
