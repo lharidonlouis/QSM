@@ -75,4 +75,8 @@ public class Canton {
 	public void setOccupiedFalse() {
 		this.occupied = false;
 	}
+	
+	public Segment getSegment() {
+		return segment;
+	}
 }

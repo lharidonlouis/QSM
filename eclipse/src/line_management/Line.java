@@ -39,7 +39,7 @@ public class Line {
 	/*
 	 * returns the canton for a given way at a given position on the line
 	 */
-	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException {
+	public Canton getCantonAtPosition(int position, int way) {
 		int i=0;
 		Segment segment = null;
 		while(i < nbSegments && segment == null) {
@@ -48,10 +48,8 @@ public class Line {
 			
 			i++;
 		}
-		if (segment != null) {
-			return segment.getCanton(way);
-		}
-		else throw new TrainArrivedException();
+		
+		return segment.getCanton(way);
 	}
 	
 	public boolean positionInSegment(Segment segment, int position) {

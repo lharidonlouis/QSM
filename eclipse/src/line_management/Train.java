@@ -52,18 +52,17 @@ public class Train extends Thread {
 				if (way == 0) {
 					int nextposition = position + 1;
 						if (currentstation != null) {
-							try {
-								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-								int nextstationposition = line.getSegmentAtPosition(nextposition).getEndPoint() + 1;
-								Station followingstation = line.getStationAtPosition(nextstationposition);
-								nextcanton.enter(this, followingstation);
-								updatePosition();
-							} catch (TrainArrivedException terminus) {
-								arrived = true;
-								/*
-								 * Destroy train when getting out of the last station ?
-								 */
-							}
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							int nextstationposition = line.getSegmentAtPosition(nextposition).getEndPoint() + 1;
+							Station followingstation = line.getStationAtPosition(nextstationposition);
+							nextcanton.enter(this, followingstation);
+							updatePosition();
+							
+							/*
+							 * Handle arrival at terminus
+							 * arrived = true;
+							 * Destroy train ?
+							 */
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
@@ -77,18 +76,16 @@ public class Train extends Thread {
 				else {
 					int nextposition = position - 1;
 						if (currentstation != null) {
-							try {
-								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-								int nextstationposition = line.getSegmentAtPosition(nextposition).getStartPoint() - 1;
-								Station followingstation = line.getStationAtPosition(nextstationposition);
-								nextcanton.enter(this, followingstation);
-								updatePosition();
-							} catch (TrainArrivedException terminus) {
-								arrived = true;
-								/*
-								 * Destroy train when getting out of the last station ?
-								 */
-							}
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							int nextstationposition = line.getSegmentAtPosition(nextposition).getStartPoint() - 1;
+							Station followingstation = line.getStationAtPosition(nextstationposition);
+							nextcanton.enter(this, followingstation);
+							updatePosition();
+							/*
+							 * Handle arrival at terminus
+							 * arrived = true;
+							 * Destroy train ?
+							 */
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
@@ -210,5 +207,9 @@ public class Train extends Thread {
 	
 	public void unblock() {
 		blocked = false;
+	}
+
+	public boolean isArrived() {
+		return arrived;
 	}
 }
