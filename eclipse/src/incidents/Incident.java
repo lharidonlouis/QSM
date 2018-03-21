@@ -199,19 +199,12 @@ public class Incident {
 		}
 	}
 	
-	
-	/*
-	 * A ECRIRE
-	 */
 	private void deactivateNextStart() {
-		
+		nextStart.setStart(way, false);
 	}
 	
-	/* 
-	 * A ECRIRE
-	 */
 	private void deactivatePreviousTerminus() {
-		
+		prevTerminus.setTerminus(way, false);
 	}
 	
 	private Train getTrainOnCanton(Canton canton) {
