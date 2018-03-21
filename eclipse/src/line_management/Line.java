@@ -10,6 +10,7 @@ public class Line {
 	private int length;
 	private ArrayList<Station> stations;
 	private ArrayList<Segment> segments;
+	private ArrayList<Train> trains;
 	private int nbSegments;
 	private int nbStations;
 
@@ -20,6 +21,7 @@ public class Line {
 		length = 0;
 		stations = new ArrayList<Station>();
 		segments = new ArrayList<Segment>();
+		trains = new ArrayList<Train>();
 		nbSegments = 0;
 		nbStations = 0;
 	}
@@ -36,12 +38,13 @@ public class Line {
 	
 	/*
 	 * returns the canton for a given way at a given position on the line
-	 * 
 	 */
 	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException {
+		//System.out.println("On cherche le canton");
 		int i=0;
 		Segment segment = null;
 		while(i < nbSegments && segment == null) {
+		//	System.out.println("Segment : " + i + " Nbsemgment : " + nbSegments + " position : " + position);
 			if (positionInSegment(segments.get(i), position))
 				segment=segments.get(i);
 			
@@ -73,6 +76,37 @@ public class Line {
 			System.err.println("Station not found, returns null");
 		
 		return station;
+	}
+	
+	
+	public boolean stationexists(int position) {
+		int i = 0;
+		Station station = null;
+		while(stations.get(i).getPosition() < position && i < nbStations) {
+			i++;
+		}
+		if (stations.get(i).getPosition() == position)
+			return true;
+		
+		else
+			return false;
+	}
+	public Segment getSegmentForCanton(Canton canton) {
+		Segment segment = null;
+		int i = 0, j;
+		boolean found = false;
+		
+		while (i < segments.size() && !found) {
+			for (j = 0; j < 2; j++) {
+				if (segments.get(i).getCanton(j) == canton) {
+					segment = segments.get(i);
+					found = true;
+				}
+			}
+			i++;
+		}
+		
+		return segment;
 	}
 	
 	/*
@@ -126,5 +160,31 @@ public class Line {
 	 */
 	public String getDescription() {
 		return "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments;
+	}
+
+	/*
+	 * returns the list of trains on the line
+	 */
+	public ArrayList<Train> getTrains() {
+		return trains;
+	}
+	
+	public ArrayList<Station> getStations(){
+		return stations;
+	}
+
+	public int getIndexForStation(Station station) {
+		int i = 0;
+		boolean found = false;
+		int index = 0;
+		
+		while (i < stations.size() && !found) {
+			if (stations.get(i) == station) {
+				index = i;
+				found = true;
+			}
+		}
+		
+		return index;
 	}
 }

@@ -17,6 +17,7 @@ public class Train extends Thread {
 	private Station currentstation;
 	private ArrayList<Passenger> passengers;
 	private Line line;
+	private boolean blocked;
 	
 	/*
 	 * creates a new train on the line
@@ -33,83 +34,94 @@ public class Train extends Thread {
 		this.capacity = capacity;
 		passengers = new ArrayList<Passenger>();
 		currentcanton = null;
+		blocked = false;
 	}
 	
 	/*
 	 * main method to handle train movements
 	 */
 	public void run() {
-		int nextposition;
-		if (way==0) {
-			nextposition = this.getLine().getSegmentAtPosition(position).getEndPoint();
-			
-		}else{
-			nextposition = this.getLine().getSegmentAtPosition(position-1).getStartPoint();
-		}
 		while (!arrived) {
-			try {
-				sleep(speed);
-			} catch (InterruptedException e) {
-				System.err.println(e.getMessage());
-			}
-			
-			if (way == 0) {
-					if (currentstation != null) {
-						try {
-							updatePosition();
-							Canton nextcanton = line.getCantonAtPosition(position, way);
-							nextcanton.enter(this);
-							nextposition = this.getLine().getSegmentAtPosition(position).getEndPoint();
-						} catch (TrainArrivedException terminus) {
-							arrived = true;
-							/*
-							 * Destroy train when getting out of the last station ?
-							 */
-						}
-					}
-					else if (currentcanton != null) {
-						if (position >= nextposition) {
-							nextposition = position + 1;
-							Station nextstation = line.getStationAtPosition(nextposition);
-							nextstation.enter(this);
-						}
-					}
-					else {
-						System.err.println("Train neither in station nor canton");
-					}
-			}
-			else {
-				if (currentstation != null) {
-					try {
-						System.out.println("I'm here " + getCurrentStation().getName() + " and should be here: " + line.getStationAtPosition(0).getName());
-						updatePosition();
-						Canton nextcanton = line.getCantonAtPosition(position, way);
-						nextcanton.enter(this);
-						nextposition = this.getLine().getSegmentAtPosition(position).getStartPoint();
-					} catch (TrainArrivedException terminus) {
-						arrived = true;
-						/*
-						 * Destroy train when getting out of the last station ?
-						 */
-					}
+			if (!blocked) {
+				try {
+					sleep(speed);
+				} catch (InterruptedException e) {
+					System.err.println(e.getMessage());
 				}
-				else if (currentcanton != null) {
-					if (position < nextposition) {
-						Station nextstation = line.getStationAtPosition(position);
-						nextstation.enter(this);
-					}
+				
+				if (way == 0) {
+					int nextposition = position + 1;
+						if (currentstation != null) {
+							try {
+								System.out.println("train "  + id + " position : " + position  + " in station");
+								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+								int nextstationposition = line.getSegmentAtPosition(nextposition).getEndPoint() + 1;
+								Station followingstation = line.getStationAtPosition(nextstationposition);
+								nextcanton.enter(this, followingstation);
+								updatePosition();
+							} catch (TrainArrivedException terminus) {
+								arrived = true;
+								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() + 1).setTrackOccupiedFalse(way);
+								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() + 1 ) + " arrived");
+								/*
+								 * Destroy train when getting out of the last station ?
+								 */								
+							}
+						}
+						else if (currentcanton != null) {
+							if(line.stationexists(nextposition)){
+								Station nextstation = line.getStationAtPosition(nextposition);
+								nextstation.enter(this);
+							}
+							updatePosition();
+						}
+						else {
+							System.err.println("Train neither in station nor canton");
+						}
 				}
 				else {
-					System.err.println("Train neither in station nor canton");
+					int nextposition = position - 1;
+						if (currentstation != null) {
+							try {
+								System.out.println("train "  + id + " position : " + position  + " in station");
+								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+								int nextstationposition = line.getSegmentAtPosition(nextposition).getStartPoint() - 1;
+								Station followingstation = line.getStationAtPosition(nextstationposition);
+								nextcanton.enter(this, followingstation);
+								updatePosition(); 
+							} catch (TrainArrivedException terminus) {
+								arrived = true;
+								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() - 1).setTrackOccupiedFalse(way);
+								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() - 1)  + " arrived");
+							} 
+						}
+						else if (currentcanton != null) {
+							if(line.stationexists(nextposition)){
+								Station nextstation = line.getStationAtPosition(nextposition);
+								nextstation.enter(this);
+							}
+							updatePosition();
+						}
+						else {
+							System.err.println("Train neither in station nor canton");
+						}
 				}
 			}
-			this.updatePosition();
-			if (currentstation != null) {
-				System.out.println("Train " + id + " has arrived ? " + arrived + " and station: " + currentstation.getName());
-			}
+			else {}
 		}
+		line.getStationAtPosition(position).setTrackOccupiedFalse(way);
+		try {
+			line.getCantonAtPosition((position-1), way).setOccupiedFalse();
+		} catch (TrainArrivedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Fin du threan train : " + id);
 	}
 
+	public boolean isArrived() {
+		return arrived;
+	}
 	/*
 	 * make the train move on the line
 	 */
@@ -152,6 +164,14 @@ public class Train extends Thread {
 	 */
 	public long getId() {
 		return id;
+	}
+	
+
+	/*
+	 * returns the train's id
+	 */
+	public void destroy() {
+
 	}
 	
 	/*
@@ -208,5 +228,13 @@ public class Train extends Thread {
 	 */
 	public Line getLine() {
 		return line;
+	}
+	
+	public void block() {
+		blocked = true;
+	}
+	
+	public void unblock() {
+		blocked = false;
 	}
 }

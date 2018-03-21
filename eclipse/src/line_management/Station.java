@@ -2,6 +2,7 @@ package line_management;
 
 import java.util.ArrayList;
 
+
 /*
  * represents a train station
  */
@@ -12,21 +13,26 @@ public class Station {
 	private Line line;
 	private int capacity;
 	private int position;
-	private boolean[] tracksoccupied;
+	private boolean[] tracksoccupied = new boolean[2];
 	private ArrayList<Passenger> passengers;
+	private boolean isBackup;
+	private boolean[] isTerminus;
+	private boolean[] isStart;
 	
 	/*
 	 * creates a new station on the line at a given position
 	 * with a new name and a given capacity and type
 	 */
-	public Station(String name, int type, Line line, int capacity, int position, int id){
+	public Station(String name, int type, Line line, int capacity, int position, int id, boolean backup, boolean[] terminus, boolean[] start){
 		this.name = name;
 		this.type = type;
 		this.line = line;
 		this.capacity = capacity;
 		this.position = position;
 		this.id = id;
-		tracksoccupied = new boolean[2];
+		isBackup = backup;
+		isTerminus = terminus;
+		isStart = start;
 		passengers = new ArrayList<Passenger>();
 	}
 	
@@ -60,13 +66,14 @@ public class Station {
 	 * and the station as occupied
 	 */
 	public synchronized void enter(Train train) {
-		if(tracksoccupied[train.getWay()]) {
+		while(tracksoccupied[train.getWay()]) {
 			try {
-				wait();
+				train.sleep(100);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 		}
+		pickPassengers(train);
 		Canton oldcanton = train.getCurrentCanton();
 		train.setCurrentStation(this);
 		oldcanton.exit(train);	
@@ -78,8 +85,8 @@ public class Station {
 	 * and the train's current station as null
 	 */
 	public synchronized void exit(Train train) {
-		setTrackOccupiedFalse(train.getWay());
 		train.setCurrentStation(null);
+		setTrackOccupiedFalse(train.getWay());
 		notify();
 	}
 	
@@ -94,7 +101,7 @@ public class Station {
 	 * sets the station's track index as occupied
 	 */
 	public void setTrackOccupiedTrue(int index) {
-		tracksoccupied[index] = true;
+		tracksoccupied[index] = true;		
 	}
 	
 	/*
@@ -158,5 +165,25 @@ public class Station {
 	 */
 	public String getDescription() {
 		return "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity;
+	}
+
+	public boolean isBackup() {
+		return isBackup;
+	}
+
+	public boolean isTerminus(int index) {
+		return isTerminus[index];
+	}
+
+	public boolean getIsStart(int index) {
+		return isStart[index];
+	}
+	
+	public void setStart(int index, boolean value) {
+		isStart[index] = value;
+	}
+	
+	public void setTerminus(int index, boolean value) {
+		isTerminus[index] = value;
 	}
 }

@@ -8,12 +8,14 @@ import line_management.Train;
  */
 public class Canton {
 	private boolean occupied;
+	private Segment segment;
 
 	/*
 	 * constructor simply sets the canton as not occupied
 	 */
-	public Canton() {
+	public Canton(Segment segment) {
 		occupied = false;
+		this.segment = segment;
 	}
 	
 	/*
@@ -22,10 +24,17 @@ public class Canton {
 	 * then sets the old station of the train as not occupied
 	 * and the canton as occupied
 	 */
-	public synchronized void enter(Train train) {
-		if(occupied) {
+	public synchronized void enter(Train train, Station followingstation) {
+		while(occupied) {
 			try {
-				wait();
+				train.sleep(100);
+			} catch (InterruptedException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		while(followingstation.isTrackOccupied(train.getWay())) {
+			try {
+				train.sleep(100);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
