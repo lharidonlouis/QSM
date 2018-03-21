@@ -2,6 +2,7 @@ package line_management;
 
 import java.util.ArrayList;
 
+
 /*
  * represents a train station
  */
@@ -12,7 +13,7 @@ public class Station {
 	private Line line;
 	private int capacity;
 	private int position;
-	private boolean[] tracksoccupied;
+	private boolean[] tracksoccupied = new boolean[2];
 	private ArrayList<Passenger> passengers;
 	private boolean isBackup;
 	private boolean[] isTerminus;
@@ -65,13 +66,14 @@ public class Station {
 	 * and the station as occupied
 	 */
 	public synchronized void enter(Train train) {
-		if(tracksoccupied[train.getWay()]) {
+		while(tracksoccupied[train.getWay()]) {
 			try {
-				wait();
+				train.sleep(100);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 		}
+		pickPassengers(train);
 		Canton oldcanton = train.getCurrentCanton();
 		train.setCurrentStation(this);
 		oldcanton.exit(train);	
@@ -83,8 +85,8 @@ public class Station {
 	 * and the train's current station as null
 	 */
 	public synchronized void exit(Train train) {
-		setTrackOccupiedFalse(train.getWay());
 		train.setCurrentStation(null);
+		setTrackOccupiedFalse(train.getWay());
 		notify();
 	}
 	
@@ -99,7 +101,7 @@ public class Station {
 	 * sets the station's track index as occupied
 	 */
 	public void setTrackOccupiedTrue(int index) {
-		tracksoccupied[index] = true;
+		tracksoccupied[index] = true;		
 	}
 	
 	/*

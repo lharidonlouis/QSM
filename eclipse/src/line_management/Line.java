@@ -40,9 +40,11 @@ public class Line {
 	 * returns the canton for a given way at a given position on the line
 	 */
 	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException {
+		//System.out.println("On cherche le canton");
 		int i=0;
 		Segment segment = null;
 		while(i < nbSegments && segment == null) {
+		//	System.out.println("Segment : " + i + " Nbsemgment : " + nbSegments + " position : " + position);
 			if (positionInSegment(segments.get(i), position))
 				segment=segments.get(i);
 			
@@ -76,6 +78,19 @@ public class Line {
 		return station;
 	}
 	
+	
+	public boolean stationexists(int position) {
+		int i = 0;
+		Station station = null;
+		while(stations.get(i).getPosition() < position && i < nbStations) {
+			i++;
+		}
+		if (stations.get(i).getPosition() == position)
+			return true;
+		
+		else
+			return false;
+	}
 	public Segment getSegmentForCanton(Canton canton) {
 		Segment segment = null;
 		int i = 0, j;

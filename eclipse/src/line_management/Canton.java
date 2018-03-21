@@ -25,16 +25,16 @@ public class Canton {
 	 * and the canton as occupied
 	 */
 	public synchronized void enter(Train train, Station followingstation) {
-		if(occupied) {
+		while(occupied) {
 			try {
-				wait();
+				train.sleep(100);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 		}
-		if(followingstation.isTrackOccupied(train.getWay())) {
+		while(followingstation.isTrackOccupied(train.getWay())) {
 			try {
-				wait();
+				train.sleep(100);
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}

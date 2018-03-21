@@ -4,122 +4,123 @@ import line_management.Train;
 import line_management.Line;
 import line_management.Segment;
 import line_management.Canton;
+
+import java.awt.BasicStroke;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javax.swing.JPanel;
 import line_management.Builder;
 
-public class Dashboard {
+public class Dashboard  extends JPanel{
 	private Line line;
 	public List<Train> trains = new ArrayList<Train>();
-	public List<Rectangle> trains_gui = new ArrayList<Rectangle>();
 	private static final int START_X = 50;
-	private static final int LENGHT = 1400;
+	private static final int LENGHT = 1000;
+	private static final int START_Y = 150;
+
 
 	public Dashboard(){
-		Builder builder=new Builder(false);
-		builder.build(15);
+		Builder builder=  new Builder(true);
+		builder.build(6);
 		line = builder.getLine();
 	}
-	
-	public void addTrain(Train train) {
-		trains.add(train);
-	}
-	
-	public void printRails(Group window){
-		Rectangle railforward=new Rectangle();
-		Rectangle railbackward=new Rectangle();
-		
-		railforward.setX(START_X);
-		railforward.setY(300);
-		railforward.setWidth(LENGHT);
-		railforward.setHeight(START_X);
-		railforward.setFill(Color.ANTIQUEWHITE);
-		railforward.setStroke(Color.BLACK);
-		railforward.setStrokeWidth(2);
-		railforward.setArcHeight(10);
-		railforward.setArcWidth(10);
-		
-		railbackward.setX(START_X);
-		railbackward.setY(400);
-		railbackward.setWidth(LENGHT);
-		railbackward.setHeight(START_X);
-		railbackward.setFill(Color.ANTIQUEWHITE);
-		railbackward.setStroke(Color.BLACK);
-		railbackward.setStrokeWidth(2);
-		railbackward.setArcHeight(10);
-		railbackward.setArcWidth(10);
-        window.getChildren().add(railforward);
-        window.getChildren().add(railbackward);
-	}
-	
-	public void printStations(Group window){		
-		List<Circle>  circles = new ArrayList<Circle>();
-		double cur_l = START_X;
-		int i = 0;
-		Circle departure=new Circle();
-		stationsSpecs(departure, (int)cur_l);
-		circles.add(departure);
-		for (Segment segment : line.getSegments()) {
-			cur_l = (((double) segment.getLength()/(double) line.getLength())*(double)LENGHT) + cur_l; 
-			System.out.println("station" + i + " : " + "total l = " + line.getLength() + " segment lenght = " + segment.getLength() + " cur lenght = " + cur_l);			
-			Circle station=new Circle();
-			stationsSpecs(station, (int)cur_l);
-			circles.add(station);
-			i++;
-		}
-		window.getChildren().addAll(circles);
-	}
-	
-	public void printStationsLines(Group window){
-		List<javafx.scene.shape.Line>  linesabove = new ArrayList<javafx.scene.shape.Line>();
-		List<javafx.scene.shape.Line>  linesunder = new ArrayList<javafx.scene.shape.Line>();
-		double cur_l = START_X;
-		int i = 0;
-		for (Segment segment : line.getSegments()) {
-			cur_l = (((double) segment.getLength()/(double) line.getLength())*(double)LENGHT) + cur_l; 
-			javafx.scene.shape.Line lineabove=new javafx.scene.shape.Line((int)cur_l, 300, (int)cur_l, 350);
-			javafx.scene.shape.Line lineunder=new javafx.scene.shape.Line((int)cur_l, 400, (int)cur_l, 450);
-			linesabove.add(lineabove);
-			linesunder.add(lineunder);
-			i++;
-		}
-		window.getChildren().addAll(linesabove);
-		window.getChildren().addAll(linesunder);
-	}
-	
-	public void printTrains(Group window){
-		trains_gui.clear();
-		int i=0;
-		System.out.println("printing trains");
-		for (Train train : trains) {
-			double pos = ((double)train.getPosition()/(double)line.getLength())*(double)LENGHT;
-			System.out.println("train" + i + " : " + "position = " + train.getPosition() + " position a lechelle : " + pos);			
-			Rectangle train_gui=new Rectangle();	
-			train_gui.setX((int)pos);
-			train_gui.setY(420);
-			train_gui.setWidth(20);
-			train_gui.setHeight(10);
-			train_gui.setFill(Color.DARKBLUE);
-			i++;
-			trains_gui.add(train_gui);
-		}
-		window.getChildren().addAll(trains_gui);
-	}
 
-	public void stationsSpecs(Circle station, int positionX){
-		station.setCenterX(positionX);
-		station.setCenterY(375);
-		station.setRadius(10);
-		station.setFill(Color.DARKTURQUOISE);
-		station.setStroke(Color.DARKBLUE);
-	}
 	
-	Line getLine() {
-		return this.line;
-	}
+
+		public void addTrain(Train train) {
+			trains.add(train);
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2 = (Graphics2D) g;
+			printLine(g2);
+			printTrains(g2);
+		}
+
+		private void printLine(Graphics2D g2) {
+			g2.setStroke(new BasicStroke(8));
+			double cur_l = START_X;
+			int i = 0;
+			g2.drawString("Canton 0" + " " + line.getStationAtPosition(0).getCapacity(), START_X, START_Y + 30);
+			g2.drawLine(START_X, START_Y, START_X + LENGHT -1 , START_Y);
+			g2.drawLine(START_X, START_Y + 50, START_X + LENGHT - 1, START_Y + 50);
+			for (Segment segment : line.getSegments()) {
+				int prev_int = (int) cur_l;
+				cur_l = (((double) segment.getLength()/((double) line.getLength()-1))*((double)LENGHT-1)) + cur_l;
+				int cur_int = (int) cur_l;
+				//System.out.println("station" + i + " : " + "total l = " + line.getLength() + " segment lenght = " + segment.getLength() + " cur lenght = " + cur_l);			
+				int n = segment.getId() +1;
+				g2.drawString("Station " + n + " " + line.getStationAtPosition(segment.getEndPoint()+1).getCapacity(), cur_int, START_Y + 30);
+				g2.drawLine(prev_int, START_Y - 10, prev_int, START_Y + 10);
+				g2.drawLine(cur_int, START_Y - 10, cur_int, START_Y + 10);
+
+				
+				g2.drawLine(prev_int, START_Y + 40, prev_int, START_Y + 60);
+				g2.drawLine(cur_int, START_Y + 40, cur_int, START_Y + 60);
+
+				i++;
+
+			}
+		}
+
+		private void printTrains(Graphics2D g2) {
+			g2.setStroke(new BasicStroke(6));
+			for (Train train : trains) {
+				if(train.isArrived()) {
+					System.out.println("I remove train " + train.getId() + " from trains") ;
+					trains.remove(train);
+				}
+
+				g2.setFont(new Font("Dialog", Font.PLAIN, 20));
+				int pos = train.getPosition();
+				double cur_l = (((double) pos/((double) line.getLength()-1))*((double)LENGHT-1));
+				
+				System.out.println("Train" + train.getId() + " : " + "pos = " + train.getPosition() + " proportional = " + START_X + cur_l);			
+
+				
+				int way = train.getWay();
+				switch(way) {
+				case 0:
+					g2.drawString("Train" + train.getId(), (int) cur_l, START_Y - 25);
+					g2.drawLine(START_X + (int) cur_l, START_Y - 5, START_X + (int) cur_l, START_Y + 5);
+				break;
+				case 1:
+					g2.drawString("Train" + train.getId(), (int) cur_l, START_Y + 75);
+					g2.drawLine(START_X + (int) cur_l, START_Y + 45, START_X + (int) cur_l, START_Y + 55);
+
+				break;
+				}
+			}
+		}
+
+		public Line getLine() {
+			return line;
+		}
+
+		public void setLine(Line line) {
+			this.line = line;
+		}
+
+		public List<Train> getTrains() {
+			return trains;
+		}
+		
+		public void refresh() {
+			for (Train train : trains) {
+				if(train.isArrived()) {
+					System.out.println("I remove train " + train.getId() + " from trains") ;
+					trains.remove(train);
+				}
+			}
+		}
+
+		public void setTrains(List<Train> trains) {
+			this.trains = trains;
+		}
 }

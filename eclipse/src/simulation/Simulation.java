@@ -11,6 +11,7 @@ public class Simulation implements Runnable{
 	private List<Train> trains;
 	public static final int DELAY = 50;
 	public static final int REGULAR_SPEED = 2;
+	public static final int CAP = 20;
 	
 	public Simulation() {
 		Builder builder = new Builder(false);
@@ -33,7 +34,7 @@ public class Simulation implements Runnable{
 					if (i == 0)
 						position = 0;
 					else position = line.getLength();
-					Train newtrain = new Train(line, n, i, position, REGULAR_SPEED, firstCantons[i]);
+					Train newtrain = new Train(n, i, line.getStationAtPosition(position), REGULAR_SPEED, CAP);
 					addTrain(newtrain);
 					newtrain.start();
 					n++;

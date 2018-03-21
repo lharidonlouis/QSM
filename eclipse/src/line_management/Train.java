@@ -53,6 +53,7 @@ public class Train extends Thread {
 					int nextposition = position + 1;
 						if (currentstation != null) {
 							try {
+								System.out.println("train "  + id + " position : " + position  + " in station");
 								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
 								int nextstationposition = line.getSegmentAtPosition(nextposition).getEndPoint() + 1;
 								Station followingstation = line.getStationAtPosition(nextstationposition);
@@ -60,14 +61,18 @@ public class Train extends Thread {
 								updatePosition();
 							} catch (TrainArrivedException terminus) {
 								arrived = true;
+								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() + 1).setTrackOccupiedFalse(way);
+								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() + 1 ) + " arrived");
 								/*
 								 * Destroy train when getting out of the last station ?
-								 */
+								 */								
 							}
 						}
 						else if (currentcanton != null) {
-							Station nextstation = line.getStationAtPosition(nextposition);
-							nextstation.enter(this);
+							if(line.stationexists(nextposition)){
+								Station nextstation = line.getStationAtPosition(nextposition);
+								nextstation.enter(this);
+							}
 							updatePosition();
 						}
 						else {
@@ -78,21 +83,23 @@ public class Train extends Thread {
 					int nextposition = position - 1;
 						if (currentstation != null) {
 							try {
+								System.out.println("train "  + id + " position : " + position  + " in station");
 								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
 								int nextstationposition = line.getSegmentAtPosition(nextposition).getStartPoint() - 1;
 								Station followingstation = line.getStationAtPosition(nextstationposition);
 								nextcanton.enter(this, followingstation);
-								updatePosition();
+								updatePosition(); 
 							} catch (TrainArrivedException terminus) {
 								arrived = true;
-								/*
-								 * Destroy train when getting out of the last station ?
-								 */
-							}
+								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() - 1).setTrackOccupiedFalse(way);
+								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() - 1)  + " arrived");
+							} 
 						}
 						else if (currentcanton != null) {
-							Station nextstation = line.getStationAtPosition(nextposition);
-							nextstation.enter(this);
+							if(line.stationexists(nextposition)){
+								Station nextstation = line.getStationAtPosition(nextposition);
+								nextstation.enter(this);
+							}
 							updatePosition();
 						}
 						else {
@@ -102,8 +109,19 @@ public class Train extends Thread {
 			}
 			else {}
 		}
+		line.getStationAtPosition(position).setTrackOccupiedFalse(way);
+		try {
+			line.getCantonAtPosition((position-1), way).setOccupiedFalse();
+		} catch (TrainArrivedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Fin du threan train : " + id);
 	}
 
+	public boolean isArrived() {
+		return arrived;
+	}
 	/*
 	 * make the train move on the line
 	 */
@@ -146,6 +164,14 @@ public class Train extends Thread {
 	 */
 	public long getId() {
 		return id;
+	}
+	
+
+	/*
+	 * returns the train's id
+	 */
+	public void destroy() {
+
 	}
 	
 	/*
