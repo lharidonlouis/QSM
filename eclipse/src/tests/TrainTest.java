@@ -4,29 +4,62 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import line_management.Builder;
 import line_management.Canton;
 import line_management.Line;
 import line_management.Passenger;
+import line_management.Segment;
 import line_management.Station;
 import line_management.Train;
 
 public class TrainTest {
 
-	@Test
-	public void testRun() {
-		int type = 0, capacity = 0, id = 0, way = 0, speed = 3;
-		int type2 = 1, capacity2 = 3, id2 = 1, way2 = 1, speed2 = 1;
-		
-		Builder builderTest = new Builder(true);
+	int type = 0, capacity = 0, position = 12, id = 0, way = 0, speed = 3;
+	int type2 = 1, capacity2 = 3, id2 = 1, way2 = 1, speed2 = 1;
+	
+	private Line lineTest = new Line();
 
+	private Segment segmentTest = new Segment(0, 5, lineTest, 0);
+	
+	private Canton cantonTest = new Canton(segmentTest);
+
+	private Builder builderTest = new Builder(true);
+	
+	Train trainTest;
+	
+	Train trainTest2;
+	
+	private Station stationTest;
+	
+	private Station stationTest2;
+	/*
+	private Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id, backup, terminus, start);
+	private Station stationTest2 = new Station("StatTest1",type, lineTest, capacity, position, id, backup, terminus, start);
+	
+	private Train trainTest = new Train(0, 0, stationTest, 3, 1);
+	private Train trainTest2 = new Train(2, 1, stationTest, 2, 1);
+	*/
+	private Passenger trainPassengerTest1 = new Passenger(0, 0, 1);
+	private Passenger trainPassengerTest2 = new Passenger(0, 1, 0);
+	private Passenger trainPassengerTest3 = new Passenger(5, 2, 0);
+	
+	@Before
+	public void builderRunner() {
 		builderTest.build(7);
 		
-		Train trainTest = new Train(id, way, builderTest.getLine().getStationAtPosition(0), speed, capacity);
-		Train trainTest2 = new Train(id2, way2, builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), speed2, capacity2);
+		stationTest = builderTest.getLine().getStationAtPosition(0);
+		stationTest2 = builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1);
+		
+		trainTest = new Train(id, way, stationTest, speed, capacity);
+		trainTest2 = new Train(id2, way2, stationTest2, speed2, capacity2);
 
+	}
+	
+	@Test
+	public void testRun() {
 		trainTest.run();
 		
 		assertEquals("Train run failed at some point (way=0)", builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), trainTest.getCurrentStation());
@@ -38,52 +71,29 @@ public class TrainTest {
 
 	@Test
 	public void testTrain() {
-		int type = 0, capacity = 0, position = 12, id = 0;
-		
-		Line lineTest = new Line();
-		Canton cantonTest = new Canton();
-		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3, 1);
-		
 		assertEquals("Failed to initiate line as Station's line", stationTest, trainTest.getCurrentStation());
 		assertEquals("Failed to initiate current Canton as null", null, trainTest.getCurrentCanton());
-		assertEquals("Failed to initiate position as station's position", position, trainTest.getPosition());
+		assertEquals("Failed to initiate position as station's position", stationTest.getPosition(), trainTest.getPosition());
 	}
 
 	@Test
 	public void testUpdatePosition() {
-		int type = 0, capacity = 0, position = 12, id = 0;
-		
-		Line lineTest = new Line();
-		Canton cantonTest = new Canton();
-		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		
-		Train trainTest = new Train(0, 0, stationTest, 3, 1);
-		Train trainTest2 = new Train(2, 1, stationTest, 2, 1);
-		
 		assertEquals("Train: Failed to get Initiate position", stationTest.getPosition(), trainTest.getPosition());
-		assertEquals("Train: Failed to get Initiate position", stationTest.getPosition(), trainTest2.getPosition());
+		assertEquals("Train: Failed to get Initiate position", stationTest2.getPosition(), trainTest2.getPosition());
 		
 		trainTest.updatePosition();
 		assertEquals("Train: Failed to get new position", stationTest.getPosition()+1, trainTest.getPosition());
 		
 		trainTest2.updatePosition();
-		assertEquals("Train: Failed to get new position", stationTest.getPosition()-1, trainTest2.getPosition());
+		assertEquals("Train: Failed to get new position", stationTest2.getPosition()-1, trainTest2.getPosition());
 	}
 
 	@Test
 	public void testGetCurrentCanton() {
-		int type = 0, capacity = 0, position = 12, id = 0;
-		
-		Line lineTest = new Line();
-		Canton cantonTest = new Canton();
-		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3, 1);
-		
-		cantonTest.enter(trainTest);
+		cantonTest.enter(trainTest, stationTest2);
 		assertEquals("Train: Canton Getter failed ", cantonTest, trainTest.getCurrentCanton());
 		
-		stationTest.enter(trainTest);
+		stationTest2.enter(trainTest);
 		assertEquals("Train: Canton Getter failed ", null, trainTest.getCurrentCanton());
 	}
 
@@ -96,14 +106,6 @@ public class TrainTest {
 
 	@Test
 	public void testGetCurrentStation() {
-		int type = 0, capacity = 0, position = 12, id = 0;
-		
-		Line lineTest = new Line();
-		Canton cantonTest = new Canton();
-		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Station stationTest2 = new Station("StatTest2",1, lineTest, 8, 4, 3);
-		Train trainTest = new Train(0, 0, stationTest, 3, 1);
-		
 		assertEquals("Train: failed to get initial station", stationTest, trainTest.getCurrentStation());
 		
 		trainTest.setCurrentStation(stationTest2);
@@ -119,38 +121,17 @@ public class TrainTest {
 
 	@Test
 	public void testGetWay() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, 1);
-		
 		assertEquals("Way getter failed", way, trainTest.getWay());
 	}
 
 	@Test
 	public void testGetPosition() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, 1);
-		
-		assertEquals("Position getter failed", position, trainTest.getPosition());
+		assertEquals("Position getter failed", stationTest.getPosition(), trainTest.getPosition());
 	}
 
 	@Test
 	public void testSetPosition() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, 1);
-		
-		assertEquals("Position getter failed", position, trainTest.getPosition());
+		assertEquals("Position getter failed", stationTest.getPosition(), trainTest.getPosition());
 		
 		trainTest.setPosition(62);
 		assertEquals("Position Setter failed", 62, trainTest.getPosition());
@@ -158,25 +139,11 @@ public class TrainTest {
 
 	@Test
 	public void testGetSpeed() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, 1);
-		
 		assertEquals("Speed getter failed", speed, trainTest.getSpeed());
 	}
 
 	@Test
 	public void testSetSpeed() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, 1);
-		
 		assertEquals("Speed getter failed", speed, trainTest.getSpeed());
 		
 		trainTest.setSpeed(-8);
@@ -185,31 +152,11 @@ public class TrainTest {
 
 	@Test
 	public void testGetCapacity() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, capacity);
-		
 		assertEquals("Capacity getter failed", capacity, trainTest.getCapacity());
 	}
 
 	@Test
 	public void testGetPassengers() {
-		/*
-		 * Test Fail: NullPointerException on add(Passenger)
-		 */
-		int type = 0, capacity = 12, position = 12, id = 0;
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id);
-		Train trainTest = new Train(0, 0, stationTest, 3, capacity);
-		
-		Passenger trainPassengerTest1 = new Passenger(0, 0, 1);
-		Passenger trainPassengerTest2 = new Passenger(0, 1, 0);
-		Passenger trainPassengerTest3 = new Passenger(5, 2, 0);
-		
 		trainTest.getPassengers().add(trainPassengerTest1);
 		trainTest.getPassengers().add(trainPassengerTest2);
 		trainTest.getPassengers().add(trainPassengerTest3);
@@ -219,25 +166,11 @@ public class TrainTest {
 
 	@Test
 	public void testGetLine() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, 1);
-		
-		assertEquals("Line getter failed", lineTest, trainTest.getLine());
+		assertEquals("Line getter failed", builderTest.getLine(), trainTest.getLine());
 	}
 
 	@Test
 	public void testGetId() {
-		int id = 0, way = 1, speed = 5, type = 3, capacity = 42, position = 4;
-		String name = "StatTest1";
-		
-		Line lineTest = new Line();
-		Station stationTest = new Station(name, type, lineTest, capacity, position, id);
-		Train trainTest = new Train(id, way, stationTest, speed, 1);
-		
 		assertEquals("Id getter failed", id, trainTest.getId());
 	}
 

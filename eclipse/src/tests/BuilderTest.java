@@ -9,10 +9,17 @@ import line_management.Line;
 import line_management.Station;
 
 public class BuilderTest {
+	
+	private Builder builderTest = new Builder(true);
+	
+	private Line lineTest = new Line();
+	
+	private boolean terminus[] = {false, false}, start[] = {false, false}, backup = false;
+	
+	private Station stationTest = new Station("TestStat1", 2, lineTest, 22, 5, 2, backup, terminus, start);
 
 	@Test
 	public void testBuilder() {
-		Builder builderTest = new Builder(true);
 		assertFalse("Builder Constructor Failed to init built", builderTest.isBuilt());
 
 	}
@@ -20,7 +27,6 @@ public class BuilderTest {
 	@Test
 	public void testBuild() {
 		int nbStationsTest = 4;
-		Builder builderTest = new Builder(false);
 		assertEquals("Line created with stations", 0, builderTest.getLine().getNbStations());
 		assertEquals("Line created with segments", 0, builderTest.getLine().getNbSegments());
 		builderTest.build(nbStationsTest);
@@ -31,9 +37,6 @@ public class BuilderTest {
 
 	@Test
 	public void testGetLine() {
-		Builder builderTest = new Builder(false);
-		Line lineTest = new Line();
-		Station stationTest = new Station("TestStat1", 2, lineTest, 22, 5, 2);
 		assertEquals("GetLine from Builder Failed", 0, builderTest.getLine().getNbStations());
 		builderTest.getLine().addStation(stationTest);
 		assertEquals("GetLine from Builder Failed", 1, builderTest.getLine().getNbStations());
@@ -41,7 +44,6 @@ public class BuilderTest {
 
 	@Test
 	public void testIsBuilt() {
-		Builder builderTest = new Builder(false);
 		assertFalse("Builder Constructor Failed: Set as Built", builderTest.isBuilt());
 		builderTest.build(3);
 		assertTrue("Builder isBuilt Failed: Set as not Built", builderTest.isBuilt());
