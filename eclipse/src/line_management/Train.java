@@ -61,8 +61,9 @@ public class Train extends Thread {
 								updatePosition();
 							} catch (TrainArrivedException terminus) {
 								arrived = true;
-								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() + 1).setTrackOccupiedFalse(way);
-								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() + 1 ) + " arrived");
+								System.out.println("Next Position is " + nextposition + " and current Position is " + position);
+								line.getStationAtPosition(line.getSegmentAtPosition(position - 1).getEndPoint() + 1).setTrackOccupiedFalse(way);
+								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(position - 1).getEndPoint() + 1 ) + " arrived");
 								/*
 								 * Destroy train when getting out of the last station ?
 								 */								
@@ -91,8 +92,9 @@ public class Train extends Thread {
 								updatePosition(); 
 							} catch (TrainArrivedException terminus) {
 								arrived = true;
-								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() - 1).setTrackOccupiedFalse(way);
-								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() - 1)  + " arrived");
+								System.out.println("Next Position is " + nextposition + " and current Position is " + position);
+								line.getStationAtPosition(line.getSegmentAtPosition(position + 1).getEndPoint() + 1).setTrackOccupiedFalse(way);
+								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(position + 1).getEndPoint() + 1)  + " arrived");
 							} 
 						}
 						else if (currentcanton != null) {
@@ -111,12 +113,16 @@ public class Train extends Thread {
 		}
 		line.getStationAtPosition(position).setTrackOccupiedFalse(way);
 		try {
-			line.getCantonAtPosition((position-1), way).setOccupiedFalse();
+			if (way == 0) {
+				line.getCantonAtPosition((position - 1), way).setOccupiedFalse();
+			}else{
+				line.getCantonAtPosition((position + 1), way).setOccupiedFalse();
+			}
 		} catch (TrainArrivedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Fin du threan train : " + id);
+		System.out.println("Fin du thread train : " + id);
 	}
 
 	public boolean isArrived() {

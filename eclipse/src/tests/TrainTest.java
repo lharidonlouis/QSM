@@ -14,11 +14,11 @@ import line_management.Passenger;
 import line_management.Segment;
 import line_management.Station;
 import line_management.Train;
+import line_management.TrainArrivedException;
 
 public class TrainTest {
-
-	int type = 0, capacity = 0, position = 12, id = 0, way = 0, speed = 3;
-	int type2 = 1, capacity2 = 3, id2 = 1, way2 = 1, speed2 = 1;
+	private int capacity = 0, id = 0, way = 0, speed = 3;
+	private int capacity2 = 3, id2 = 1, way2 = 1, speed2 = 1;
 	
 	private Line lineTest = new Line();
 
@@ -28,9 +28,9 @@ public class TrainTest {
 
 	private Builder builderTest = new Builder(true);
 	
-	Train trainTest;
+	private Train trainTest;
 	
-	Train trainTest2;
+	private Train trainTest2;
 	
 	private Station stationTest;
 	
@@ -59,14 +59,17 @@ public class TrainTest {
 	}
 	
 	@Test
-	public void testRun() {
+	public void testRun(){
+		System.out.println("-------------TEST RUN STARTS---------------");
 		trainTest.run();
 		
 		assertEquals("Train run failed at some point (way=0)", builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), trainTest.getCurrentStation());
 		
 		trainTest2.run();
-
+		
 		assertEquals("Train run failed at some point (way=1)", builderTest.getLine().getStationAtPosition(0), trainTest2.getCurrentStation());
+		
+		System.out.println("-------------TEST RUN ENDS---------------");
 	}
 
 	@Test
