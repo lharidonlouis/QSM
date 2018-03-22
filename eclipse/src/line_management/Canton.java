@@ -24,7 +24,7 @@ public class Canton {
 	 * then sets the old station of the train as not occupied
 	 * and the canton as occupied
 	 */
-	public synchronized void enter(Train train, Station followingstation) {
+	public void enter(Train train, Station followingstation) {
 		if(occupied) {
 			try {
 				wait();
@@ -41,7 +41,7 @@ public class Canton {
 		}
 		Station oldstation = train.getCurrentStation();
 		train.setCurrentCanton(this);
-		oldstation.exit(train);	
+		oldstation.exit(train);
 		setOccupiedTrue();
 	}
 	

@@ -1,7 +1,7 @@
 package line_management;
 
 import java.util.ArrayList;
-import line_management.TrainArrivedException;
+
 
 /*
  * represents a line with its list of stations and segments in between the stations
@@ -49,7 +49,9 @@ public class Line {
 			i++;
 		}
 		
-		return segment.getCanton(way);
+		if (segment != null)
+			return segment.getCanton(way);
+		else return null;
 	}
 	
 	public boolean positionInSegment(Segment segment, int position) {
@@ -77,14 +79,11 @@ public class Line {
 	public Segment getSegmentForCanton(Canton canton) {
 		Segment segment = null;
 		int i = 0, j;
-		boolean found = false;
 		
-		while (i < segments.size() && !found) {
+		while (i < segments.size() && segment == null) {
 			for (j = 0; j < 2; j++) {
-				if (segments.get(i).getCanton(j) == canton) {
+				if (segments.get(i).getCanton(j) == canton)
 					segment = segments.get(i);
-					found = true;
-				}
 			}
 			i++;
 		}

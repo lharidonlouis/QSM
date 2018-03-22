@@ -48,25 +48,22 @@ public class Train extends Thread {
 				} catch (InterruptedException e) {
 					System.err.println(e.getMessage());
 				}
-				
 				if (way == 0) {
 					int nextposition = position + 1;
 						if (currentstation != null) {
 							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-							int nextstationposition = line.getSegmentAtPosition(nextposition).getEndPoint() + 1;
+							int nextstationposition = line.getSegmentForCanton(nextcanton).getEndPoint() + 1;
 							Station followingstation = line.getStationAtPosition(nextstationposition);
-							nextcanton.enter(this, followingstation);
-							updatePosition();
-							
-							/*
-							 * Handle arrival at terminus
-							 * arrived = true;
-							 * Destroy train ?
-							 */
+							if (nextcanton != null && followingstation != null) {
+								nextcanton.enter(this, followingstation);
+								updatePosition();
+							}
+							else arrived = true;
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
-							nextstation.enter(this);
+							if (nextstation != null)
+								nextstation.enter(this);
 							updatePosition();
 						}
 						else {
@@ -77,19 +74,18 @@ public class Train extends Thread {
 					int nextposition = position - 1;
 						if (currentstation != null) {
 							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-							int nextstationposition = line.getSegmentAtPosition(nextposition).getStartPoint() - 1;
+							int nextstationposition = line.getSegmentForCanton(nextcanton).getStartPoint() - 1;
 							Station followingstation = line.getStationAtPosition(nextstationposition);
-							nextcanton.enter(this, followingstation);
-							updatePosition();
-							/*
-							 * Handle arrival at terminus
-							 * arrived = true;
-							 * Destroy train ?
-							 */
+							if(nextcanton != null && followingstation != null) {
+								nextcanton.enter(this, followingstation);
+								updatePosition();
+							}
+							else arrived = true;
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
-							nextstation.enter(this);
+							if (nextstation != null)
+								nextstation.enter(this);
 							updatePosition();
 						}
 						else {
@@ -97,8 +93,13 @@ public class Train extends Thread {
 						}
 				}
 			}
-			else {}
 		}
+		line.getStationAtPosition(position).setTrackOccupiedFalse(way);
+		
+		if (way == 0)
+			line.getCantonAtPosition((position - 1), way).setOccupiedFalse();
+		else
+			line.getCantonAtPosition((position + 1), way).setOccupiedFalse();
 	}
 
 	/*
