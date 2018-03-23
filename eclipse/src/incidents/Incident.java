@@ -5,7 +5,7 @@ import line_management.Train;
 import line_management.Canton;
 import line_management.Station;
 
-public class Incident {
+public abstract class Incident {
 	protected Line line;
 	protected Canton canton;
 	protected Train blockedtrain;
