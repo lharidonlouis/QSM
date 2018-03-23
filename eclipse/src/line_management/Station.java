@@ -20,7 +20,8 @@ public class Station {
 	
 	/*
 	 * creates a new station on the line at a given position
-	 * with a new name and a given capacity and type
+	 * with a new name and a given capacity, type,
+	 * possession of backup tracks, and as start/terminus or not
 	 */
 	public Station(String name, int type, Line line, int capacity, int position, int id, boolean backup, boolean[] terminus, boolean[] start){
 		this.name = name;
@@ -61,8 +62,8 @@ public class Station {
 	/*
 	 * makes a new train enter the station
 	 * and wait if it is occupied until it is free
-	 * then sets the old canton of the train as not occupied
-	 * and the station as occupied
+	 * then makes the train exit the canton it's leaving
+	 * and marks the station as occupied
 	 */
 	public synchronized void enter(Train train) {
 		if(tracksoccupied[train.getWay()]) {
@@ -165,23 +166,38 @@ public class Station {
 		return "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity;
 	}
 
+	/*
+	 * allows to check if the station has backup tracks
+	 */
 	public boolean isBackup() {
 		return isBackup;
 	}
 
-	public boolean isTerminus(int index) {
-		return isTerminus[index];
+	/*
+	 * allows to check if the station is a terminus for a given way
+	 */
+	public boolean isTerminus(int way) {
+		return isTerminus[way];
 	}
 
+	/*
+	 * allows to check if the station is a start for a given way
+	 */
 	public boolean getIsStart(int index) {
 		return isStart[index];
 	}
 	
-	public void setStart(int index, boolean value) {
-		isStart[index] = value;
+	/*
+	 * sets or unsets the station as a start for a given way
+	 */
+	public void setStart(int way, boolean value) {
+		isStart[way] = value;
 	}
 	
-	public void setTerminus(int index, boolean value) {
-		isTerminus[index] = value;
+	/*
+	 * sets or unsets the station as a terminus for a given way
+	 */
+	public void setTerminus(int way, boolean value) {
+		isTerminus[way] = value;
 	}
 }

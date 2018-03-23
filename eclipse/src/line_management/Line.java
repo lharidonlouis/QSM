@@ -45,15 +45,16 @@ public class Line {
 		while(i < nbSegments && segment == null) {
 			if (positionInSegment(segments.get(i), position))
 				segment=segments.get(i);
-			
 			i++;
 		}
-		
 		if (segment != null)
 			return segment.getCanton(way);
 		else return null;
 	}
 	
+	/*
+	 * allows to check if a position belongs to a segment
+	 */
 	public boolean positionInSegment(Segment segment, int position) {
 		return (position >= segment.getStartPoint() && position <= segment.getEndPoint());
 	}
@@ -76,6 +77,9 @@ public class Line {
 		return station;
 	}
 	
+	/*
+	 * returns the segment that a given canton belongs to
+	 */
 	public Segment getSegmentForCanton(Canton canton) {
 		Segment segment = null;
 		int i = 0, j;
@@ -151,10 +155,16 @@ public class Line {
 		return trains;
 	}
 	
+	/*
+	 * returns the list of stations in the line
+	 */
 	public ArrayList<Station> getStations(){
 		return stations;
 	}
 
+	/*
+	 * returns the index for a given object station
+	 */
 	public int getIndexForStation(Station station) {
 		int i = 0;
 		boolean found = false;
@@ -167,6 +177,8 @@ public class Line {
 			}
 		}
 		
-		return index;
+		if (found)
+			return index;
+		else return -1;
 	}
 }

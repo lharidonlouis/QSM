@@ -5,7 +5,13 @@ import line_management.Line;
 import line_management.Station;
 import line_management.Train;
 
+/*
+ * class instanciated in case of an incident on a canton
+ */
 public class CantonIncident extends Incident {
+	/*
+	 * creates a new incident on the canton
+	 */
 	public CantonIncident(Line line, Canton canton, int way) {
 		super(line,way);
 		
@@ -24,6 +30,9 @@ public class CantonIncident extends Incident {
 		activatePreviousTerminus();
 	}
 	
+	/*
+	 * gets the next station with backup tracks to set it as a temporary start on the line
+	 */
 	private void activateNextStart() {
 		int stationIndex = 0;
 		boolean found;
@@ -58,6 +67,9 @@ public class CantonIncident extends Incident {
 		nextStart.setStart(way, true);
 	}
 	
+	/*
+	 * gets the previous station with backup tracks to set it as a temporary terminus on the line
+	 */
 	private void activatePreviousTerminus() {
 		int stationIndex = 0;
 		boolean found;
@@ -92,6 +104,9 @@ public class CantonIncident extends Incident {
 		prevTerminus.setTerminus(way, true);
 	}
 
+	/*
+	 * ends the incident
+	 */
 	public void terminate() {
 		if (blockedtrain != null) {
 			blockedtrain.unblock();

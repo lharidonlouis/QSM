@@ -202,15 +202,24 @@ public class Train extends Thread {
 		return line;
 	}
 	
+	/*
+	 * blocks the train
+	 */
 	public void block() {
 		blocked = true;
 	}
 	
+	/*
+	 * unblocks the train
+	 */
 	public void unblock() {
 		blocked = false;
 	}
 
-	public boolean isArrived() {
+	/*
+	 * allows to check if the train has arrived to a terminus
+	 */
+	public boolean hasArrived() {
 		return arrived;
 	}
 }
