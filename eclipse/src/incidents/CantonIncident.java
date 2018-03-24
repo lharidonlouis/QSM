@@ -34,33 +34,33 @@ public class CantonIncident extends Incident {
 	 * gets the next station with backup tracks to set it as a temporary start on the line
 	 */
 	private void activateNextStart() {
-		int stationIndex = 0;
+		int stationId = -1;
 		boolean found;
 		Station nextStation;
 		
 		found = false;
 		if (way == 0) {
 			nextStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getEndPoint() + 1);
-			stationIndex = line.getIndexForStation(nextStation);
+			stationId = nextStation.getId();
 					
-			while (stationIndex<line.getStations().size() && !found) {
-				if (line.getStations().get(stationIndex).isBackup()) {
-					nextStart = line.getStations().get(stationIndex);
+			while (stationId<line.getStations().size() && !found) {
+				if (line.getStations().get(stationId).isBackup()) {
+					nextStart = line.getStations().get(stationId);
 					found = true;
 				}
-				stationIndex++;
+				stationId++;
 			}
 		}
 		else {
 			nextStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getStartPoint() - 1);
-			stationIndex = line.getIndexForStation(nextStation);
+			stationId = nextStation.getId();
 			
-			while (stationIndex>=0 && !found) {
-				if (line.getStations().get(stationIndex).isBackup()) {
-					nextStart = line.getStations().get(stationIndex);
+			while (stationId>=0 && !found) {
+				if (line.getStations().get(stationId).isBackup()) {
+					nextStart = line.getStations().get(stationId);
 					found = true;
 				}
-				stationIndex--;
+				stationId--;
 			}
 		}
 		
@@ -71,33 +71,33 @@ public class CantonIncident extends Incident {
 	 * gets the previous station with backup tracks to set it as a temporary terminus on the line
 	 */
 	private void activatePreviousTerminus() {
-		int stationIndex = 0;
+		int stationId = 0;
 		boolean found;
 		Station prevStation;
 		
 		found = false;
 		if (way == 0) {
 			prevStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getStartPoint() - 1);
-			stationIndex = line.getIndexForStation(prevStation);
+			stationId = prevStation.getId();
 					
-			while (stationIndex>=0 && !found) {
-				if (line.getStations().get(stationIndex).isBackup()) {
-					prevTerminus = line.getStations().get(stationIndex);
+			while (stationId>=0 && !found) {
+				if (line.getStations().get(stationId).isBackup()) {
+					prevTerminus = line.getStations().get(stationId);
 					found = true;
 				}
-				stationIndex--;
+				stationId--;
 			}
 		}
 		else {
 			prevStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getEndPoint() + 1);
-			stationIndex = line.getIndexForStation(prevStation);
+			stationId = prevStation.getId();
 			
-			while (stationIndex<line.getStations().size() && !found) {
-				if (line.getStations().get(stationIndex).isBackup()) {
-					prevTerminus = line.getStations().get(stationIndex);
+			while (stationId<line.getStations().size() && !found) {
+				if (line.getStations().get(stationId).isBackup()) {
+					prevTerminus = line.getStations().get(stationId);
 					found = true;
 				}
-				stationIndex--;
+				stationId--;
 			}
 		}
 		

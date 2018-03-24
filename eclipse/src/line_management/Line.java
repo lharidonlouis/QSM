@@ -49,7 +49,8 @@ public class Line {
 		}
 		if (segment != null)
 			return segment.getCanton(way);
-		else return null;
+		else
+			return null;
 	}
 	
 	/*
@@ -71,8 +72,6 @@ public class Line {
 		if (stations.get(i).getPosition() == position)
 			station = stations.get(i);
 		
-		else
-			System.err.println("Station not found, returns null");
 		
 		return station;
 	}
@@ -145,7 +144,17 @@ public class Line {
 	 * returns a short description of the line
 	 */
 	public String getDescription() {
-		return "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments;
+		String result = "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments + "\n\n";
+		for (Station station : stations) {
+			result += "Station " + station.getId() + "\n\tTracks occupied : " + station.isTrackOccupied(0) +
+					" / " + station.isTrackOccupied(1) + "\n";
+			result += "\tCapacity : " + station.getCapacity() + "\n";
+			result += "\tPosition : " + station.getPosition() + "\n";
+			result += "\tIs start :\t" + station.isStart(0) + " / " + station.isStart(1) + "\n";
+			result += "\tIs terminus :\t" + station.isTerminus(0) + " / " + station.isTerminus(1) + "\n";
+			result += "\tIs backup : " + station.isBackup() + "\n\n";
+		}
+		return result;
 	}
 
 	/*
@@ -160,25 +169,5 @@ public class Line {
 	 */
 	public ArrayList<Station> getStations(){
 		return stations;
-	}
-
-	/*
-	 * returns the index for a given object station
-	 */
-	public int getIndexForStation(Station station) {
-		int i = 0;
-		boolean found = false;
-		int index = 0;
-		
-		while (i < stations.size() && !found) {
-			if (stations.get(i) == station) {
-				index = i;
-				found = true;
-			}
-		}
-		
-		if (found)
-			return index;
-		else return -1;
 	}
 }

@@ -12,7 +12,7 @@ public class Station {
 	private Line line;
 	private int capacity;
 	private int position;
-	private boolean[] tracksoccupied;
+	private boolean[] tracksoccupied = {false, false};
 	private ArrayList<Passenger> passengers;
 	private boolean isBackup;
 	private boolean[] isTerminus;
@@ -92,8 +92,8 @@ public class Station {
 	/*
 	 * allows to check if a train is on a track of the station
 	 */
-	public boolean isTrackOccupied(int index) {
-		return tracksoccupied[index];
+	public boolean isTrackOccupied(int way) {
+		return tracksoccupied[way];
 	}
 
 	/*
@@ -158,13 +158,6 @@ public class Station {
 	public int getId() {
 		return id;
 	}
-	
-	/*
-	 * returns a short description of the station
-	 */
-	public String getDescription() {
-		return "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity;
-	}
 
 	/*
 	 * allows to check if the station has backup tracks
@@ -183,8 +176,8 @@ public class Station {
 	/*
 	 * allows to check if the station is a start for a given way
 	 */
-	public boolean getIsStart(int index) {
-		return isStart[index];
+	public boolean isStart(int way) {
+		return isStart[way];
 	}
 	
 	/*

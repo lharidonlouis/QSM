@@ -25,7 +25,7 @@ public class Canton {
 	 * then makes the train exit the station it is leaving
 	 * and marks the canton as occupied
 	 */
-	public void enter(Train train, Station followingstation) {
+	public synchronized void enter(Train train, Station followingstation) {
 		if(occupied) {
 			try {
 				wait();

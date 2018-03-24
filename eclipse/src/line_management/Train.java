@@ -26,7 +26,7 @@ public class Train extends Thread {
 		arrived = false;
 		currentstation = station;
 		currentstation.setTrackOccupiedTrue(way);
-		this.line = station.getLine();
+		line = station.getLine();
 		this.id = id;
 		this.way = way;
 		this.position = station.getPosition();
@@ -52,13 +52,20 @@ public class Train extends Thread {
 					int nextposition = position + 1;
 						if (currentstation != null) {
 							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-							int nextstationposition = line.getSegmentForCanton(nextcanton).getEndPoint() + 1;
-							Station followingstation = line.getStationAtPosition(nextstationposition);
-							if (nextcanton != null && followingstation != null) {
-								nextcanton.enter(this, followingstation);
-								updatePosition();
+							int indexcurrentstation = currentstation.getId();
+							
+							if (!currentstation.isTerminus(way)) {
+								Station followingstation = line.getStations().get(indexcurrentstation + 1);
+								
+								if (nextcanton != null && followingstation != null) {
+									nextcanton.enter(this, followingstation);
+									updatePosition();
+								}
 							}
-							else arrived = true;
+							else {
+								arrived = true;
+								System.out.println("Train " + id + " arrived at terminus : station " + currentstation.getId());
+							}
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
@@ -74,13 +81,20 @@ public class Train extends Thread {
 					int nextposition = position - 1;
 						if (currentstation != null) {
 							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-							int nextstationposition = line.getSegmentForCanton(nextcanton).getStartPoint() - 1;
-							Station followingstation = line.getStationAtPosition(nextstationposition);
-							if(nextcanton != null && followingstation != null) {
-								nextcanton.enter(this, followingstation);
-								updatePosition();
+							int indexcurrentstation = currentstation.getId();
+							
+							if (!currentstation.isTerminus(way)) {
+								Station followingstation = line.getStations().get(indexcurrentstation - 1);
+								
+								if(nextcanton != null && followingstation != null) {
+									nextcanton.enter(this, followingstation);
+									updatePosition();
+								}
 							}
-							else arrived = true;
+							else {
+								arrived = true;
+								System.out.println("Train " + id + " arrived at terminus : station " + currentstation.getId());
+							}
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
