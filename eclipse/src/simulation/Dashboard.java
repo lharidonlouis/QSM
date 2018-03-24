@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JPanel;
 import line_management.Builder;
@@ -43,15 +44,15 @@ public class Dashboard  extends JPanel{
 		
 		g2.setStroke(new BasicStroke(8));
 		double current_position = START_X;
-		g2.drawString("Station 0", START_X - 20, START_Y + 30);
+		g2.drawString("Station 0", START_X - 20, START_Y + 80);
 		
 		g2.drawLine(START_X, START_Y, START_X + LENGTH, START_Y);
-		g2.drawLine(START_X, START_Y + 50, START_X + LENGTH, START_Y + 50);
+		g2.drawLine(START_X, START_Y + 20, START_X + LENGTH, START_Y + 20);
 		
 		// Station 0, way 0
 		g2.drawLine(START_X, START_Y - 10, START_X, START_Y + 10);
 		// Station 0, way 1
-		g2.drawLine(START_X, START_Y + 40, START_X, START_Y + 60);
+		g2.drawLine(START_X, START_Y + 10, START_X, START_Y + 30);
 		
 		for (int segmentId = 0; segmentId < line.getNbSegments(); segmentId++) {
 			segment = line.getSegments().get(segmentId);
@@ -60,18 +61,18 @@ public class Dashboard  extends JPanel{
 			
 			int n = segment.getId() + 1;
 			
-			g2.drawString("Station " + n, (int)current_position - 20, START_Y + 30);
+			g2.drawString("Station " + n, (int)current_position - 20, START_Y + 80);
 			
 			// Stations
 			if (segmentId != line.getNbSegments() - 1) {
 				g2.drawLine((int)current_position, START_Y - 10, (int)current_position, START_Y + 10);
-				g2.drawLine((int)current_position, START_Y + 40, (int)current_position, START_Y + 60);
+				g2.drawLine((int)current_position, START_Y + 10, (int)current_position, START_Y + 30);
 			}
 		}
 		
 		// Last station
 		g2.drawLine(START_X + LENGTH, START_Y - 10, START_X + LENGTH, START_Y + 10);
-		g2.drawLine(START_X + LENGTH, START_Y + 40, START_X + LENGTH, START_Y + 60);
+		g2.drawLine(START_X + LENGTH, START_Y + 10, START_X + LENGTH, START_Y + 30);
 	}
 
 	private void printTrains(Graphics2D g2) {
@@ -88,8 +89,8 @@ public class Dashboard  extends JPanel{
 				g2.drawLine(START_X + (int) cur_l, START_Y - 5, START_X + (int) cur_l, START_Y + 5);
 				break;
 			case 1:
-				g2.drawString("Train" + train.getId(), (int) cur_l, START_Y + 75);
-				g2.drawLine(START_X + (int) cur_l, START_Y + 45, START_X + (int) cur_l, START_Y + 55);
+				g2.drawString("Train" + train.getId(), (int) cur_l, START_Y + 55);
+				g2.drawLine(START_X + (int) cur_l, START_Y + 15, START_X + (int) cur_l, START_Y + 25);
 
 				break;
 			}
@@ -111,10 +112,19 @@ public class Dashboard  extends JPanel{
 	}
 	
 	public void refreshTrains() {
-		for (Train train : trains) {
+		Iterator<Train> iter = trains.iterator();
+
+		while (iter.hasNext()) {
+		    Train train = iter.next();
+
+		    if (train.hasArrived())
+		        iter.remove();
+		}
+		
+		/*for (Train train : trains) {
 			if(train.hasArrived()) {
 				trains.remove(train);
 			}
-		}
+		}*/
 	}
 }

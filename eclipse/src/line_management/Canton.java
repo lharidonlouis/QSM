@@ -26,14 +26,7 @@ public class Canton {
 	 * and marks the canton as occupied
 	 */
 	public synchronized void enter(Train train, Station followingstation) {
-		if(occupied) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				System.err.println(e.getMessage());
-			}
-		}
-		if(followingstation.isTrackOccupied(train.getWay())) {
+		if(occupied || followingstation.isTrackOccupied(train.getWay())) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
