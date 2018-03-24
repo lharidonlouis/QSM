@@ -1,5 +1,7 @@
 package line_management;
 
+import java.util.Random;
+
 /*
  * Class used to build a line containing a given number of stations
  * returns the built line for simulation purposes
@@ -28,6 +30,7 @@ public class Builder {
 		int i, type, capacity, length;
 		Segment segment;
 		boolean backup = true;
+		Random r = new Random();
 		
 		int maxi = lineNbStations/5 + 1;
 		int remaining = maxi;
@@ -37,7 +40,7 @@ public class Builder {
 			boolean terminus[] = new boolean[2];
 			boolean start[] = new boolean[2];
 			
-			type = (int)(Math.random() * ((2 - 0) + 1));
+			type = r.nextInt(3);
 			capacity = (int)(Math.random() * ((MAX_CAPACITY - MIN_CAPACITY) + 1)) + MIN_CAPACITY;
 			
 			if (i == 0) {
