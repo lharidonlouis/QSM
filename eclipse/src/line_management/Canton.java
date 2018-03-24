@@ -2,13 +2,24 @@ package line_management;
 
 import line_management.Canton;
 import line_management.Train;
+import line_management.IncidentException;
 
 public class Canton {
 	private boolean occupied;
+	private Incident incident = Incident.OK;
+	private Train train;
+    private Station station = null;
 
+	
 	public Canton() {
 		occupied = false;
 	}
+	public void setIncident(Incident incident) {
+		  this.incident = incident;
+		    	}
+	public Incident getIncident() {
+			return incident;
+		  	}
 	
 	/*public synchronized void enter(Train train) {
 		if(occupied) {
@@ -25,6 +36,19 @@ public class Canton {
 		setOccupiedFalse();
 	}
 	*/
+	public boolean hasStation () {
+        return station != null;
+    }
+	// method for stopping train from canton
+	
+   	public void generateException(Incident incident) throws IncidentException {
+   		if (occupied) {
+   			setIncident(incident);
+   			System.out.println("Incident state change :" + incident);
+   			train.stop(incident);
+    		}
+    	}
+   	
 	public synchronized void enter(Train train) {
 		if (occupied) {
 			System.out.println(toString() + " occupied !");
@@ -43,6 +67,7 @@ public class Canton {
 		System.out.println("Train " + train.getId() + " : Canton changed ");
 
 	}
+	
 	
 	public synchronized void exit() {
 		setOccupiedFalse();
