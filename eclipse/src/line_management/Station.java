@@ -2,6 +2,8 @@ package line_management;
 
 import java.util.ArrayList;
 
+import passengers.Passenger;
+
 /*
  * represents a train station
  */

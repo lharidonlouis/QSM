@@ -2,6 +2,8 @@ package line_management;
 
 import java.util.ArrayList;
 
+import passengers.Passenger;
+
 /*
  * represents a moving train on the line
  * with its speed, a list of passengers and a given way
