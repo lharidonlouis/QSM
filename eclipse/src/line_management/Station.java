@@ -62,6 +62,13 @@ public class Station {
 	}
 	
 	/*
+	 * allows to add a passenger to the station
+	 */
+	public void addPassenger(Passenger p) {
+		passengers.add(p);
+	}
+	
+	/*
 	 * makes a new train enter the station
 	 * and wait if it is occupied until it is free
 	 * then makes the train exit the canton it's leaving
