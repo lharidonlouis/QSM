@@ -24,24 +24,24 @@ public class Canton {
 	 * then sets the old station of the train as not occupied
 	 * and the canton as occupied
 	 */
-	public synchronized void enter(Train train, Station followingstation) {
-		while(occupied) {
+	public void enter(Train train, Station followingstation) {
+		if(occupied) {
 			try {
-				train.sleep(100);
+				wait();
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 		}
-		while(followingstation.isTrackOccupied(train.getWay())) {
+		if(followingstation.isTrackOccupied(train.getWay())) {
 			try {
-				train.sleep(100);
+				wait();
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 		}
 		Station oldstation = train.getCurrentStation();
 		train.setCurrentCanton(this);
-		oldstation.exit(train);	
+		oldstation.exit(train);
 		setOccupiedTrue();
 	}
 	
@@ -74,5 +74,9 @@ public class Canton {
 	 */
 	public void setOccupiedFalse() {
 		this.occupied = false;
+	}
+	
+	public Segment getSegment() {
+		return segment;
 	}
 }

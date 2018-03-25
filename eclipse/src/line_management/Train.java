@@ -48,31 +48,22 @@ public class Train extends Thread {
 				} catch (InterruptedException e) {
 					System.err.println(e.getMessage());
 				}
-				
 				if (way == 0) {
 					int nextposition = position + 1;
 						if (currentstation != null) {
-							try {
-								System.out.println("train "  + id + " position : " + position  + " in station");
-								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-								int nextstationposition = line.getSegmentAtPosition(nextposition).getEndPoint() + 1;
-								Station followingstation = line.getStationAtPosition(nextstationposition);
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							int nextstationposition = line.getSegmentForCanton(nextcanton).getEndPoint() + 1;
+							Station followingstation = line.getStationAtPosition(nextstationposition);
+							if (nextcanton != null && followingstation != null) {
 								nextcanton.enter(this, followingstation);
 								updatePosition();
-							} catch (TrainArrivedException terminus) {
-								arrived = true;
-								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() + 1).setTrackOccupiedFalse(way);
-								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() + 1 ) + " arrived");
-								/*
-								 * Destroy train when getting out of the last station ?
-								 */								
 							}
+							else arrived = true;
 						}
 						else if (currentcanton != null) {
-							if(line.stationexists(nextposition)){
-								Station nextstation = line.getStationAtPosition(nextposition);
+							Station nextstation = line.getStationAtPosition(nextposition);
+							if (nextstation != null)
 								nextstation.enter(this);
-							}
 							updatePosition();
 						}
 						else {
@@ -82,24 +73,19 @@ public class Train extends Thread {
 				else {
 					int nextposition = position - 1;
 						if (currentstation != null) {
-							try {
-								System.out.println("train "  + id + " position : " + position  + " in station");
-								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
-								int nextstationposition = line.getSegmentAtPosition(nextposition).getStartPoint() - 1;
-								Station followingstation = line.getStationAtPosition(nextstationposition);
+							Canton nextcanton = line.getCantonAtPosition(nextposition, way);
+							int nextstationposition = line.getSegmentForCanton(nextcanton).getStartPoint() - 1;
+							Station followingstation = line.getStationAtPosition(nextstationposition);
+							if(nextcanton != null && followingstation != null) {
 								nextcanton.enter(this, followingstation);
-								updatePosition(); 
-							} catch (TrainArrivedException terminus) {
-								arrived = true;
-								line.getStationAtPosition(line.getSegmentAtPosition(nextposition).getEndPoint() - 1).setTrackOccupiedFalse(way);
-								System.out.println("train "  + id + " position : " + (line.getSegmentAtPosition(nextposition).getEndPoint() - 1)  + " arrived");
-							} 
+								updatePosition();
+							}
+							else arrived = true;
 						}
 						else if (currentcanton != null) {
-							if(line.stationexists(nextposition)){
-								Station nextstation = line.getStationAtPosition(nextposition);
+							Station nextstation = line.getStationAtPosition(nextposition);
+							if (nextstation != null)
 								nextstation.enter(this);
-							}
 							updatePosition();
 						}
 						else {
@@ -107,21 +93,15 @@ public class Train extends Thread {
 						}
 				}
 			}
-			else {}
 		}
 		line.getStationAtPosition(position).setTrackOccupiedFalse(way);
-		try {
-			line.getCantonAtPosition((position-1), way).setOccupiedFalse();
-		} catch (TrainArrivedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Fin du threan train : " + id);
+		
+		if (way == 0)
+			line.getCantonAtPosition((position - 1), way).setOccupiedFalse();
+		else
+			line.getCantonAtPosition((position + 1), way).setOccupiedFalse();
 	}
 
-	public boolean isArrived() {
-		return arrived;
-	}
 	/*
 	 * make the train move on the line
 	 */
@@ -164,14 +144,6 @@ public class Train extends Thread {
 	 */
 	public long getId() {
 		return id;
-	}
-	
-
-	/*
-	 * returns the train's id
-	 */
-	public void destroy() {
-
 	}
 	
 	/*
@@ -236,5 +208,9 @@ public class Train extends Thread {
 	
 	public void unblock() {
 		blocked = false;
+	}
+
+	public boolean isArrived() {
+		return arrived;
 	}
 }

@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import line_management.Canton;
 import line_management.Line;
 import line_management.Train;
-import line_management.TrainArrivedException;
 
 public class SimulationGUI extends JFrame implements Runnable{
 	private Dashboard dashboard=new Dashboard();
@@ -47,19 +46,9 @@ public class SimulationGUI extends JFrame implements Runnable{
 			System.out.println("Debut de la boucle");
 			Canton[] terminus = new Canton[2];
 			
-			try {
 				terminus[0] = line.getCantonAtPosition(1, 0);
-			} catch (TrainArrivedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			System.out.println("On a le terminus 1");
-			try {
 				terminus[1] = line.getCantonAtPosition(line.getLength()-2, 1);
-			} catch (TrainArrivedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			System.out.println("On a le terminus 2");
 			System.out.println("Canton de depart " + terminus.toString() );
 
