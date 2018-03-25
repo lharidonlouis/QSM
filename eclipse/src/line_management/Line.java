@@ -1,7 +1,7 @@
 package line_management;
 
 import java.util.ArrayList;
-import line_management.TrainArrivedException;
+
 
 /*
  * represents a line with its list of stations and segments in between the stations
@@ -39,23 +39,23 @@ public class Line {
 	/*
 	 * returns the canton for a given way at a given position on the line
 	 */
-	public Canton getCantonAtPosition(int position, int way) throws TrainArrivedException {
-		//System.out.println("On cherche le canton");
+	public Canton getCantonAtPosition(int position, int way) {
 		int i=0;
 		Segment segment = null;
 		while(i < nbSegments && segment == null) {
-		//	System.out.println("Segment : " + i + " Nbsemgment : " + nbSegments + " position : " + position);
 			if (positionInSegment(segments.get(i), position))
 				segment=segments.get(i);
-			
 			i++;
 		}
-		if (segment != null) {
+		if (segment != null)
 			return segment.getCanton(way);
-		}
-		else throw new TrainArrivedException();
+		else
+			return null;
 	}
 	
+	/*
+	 * allows to check if a position belongs to a segment
+	 */
 	public boolean positionInSegment(Segment segment, int position) {
 		return (position >= segment.getStartPoint() && position <= segment.getEndPoint());
 	}
@@ -72,36 +72,21 @@ public class Line {
 		if (stations.get(i).getPosition() == position)
 			station = stations.get(i);
 		
-		else
-			System.err.println("Station not found, returns null");
 		
 		return station;
 	}
 	
-	
-	public boolean stationexists(int position) {
-		int i = 0;
-		Station station = null;
-		while(stations.get(i).getPosition() < position && i < nbStations) {
-			i++;
-		}
-		if (stations.get(i).getPosition() == position)
-			return true;
-		
-		else
-			return false;
-	}
+	/*
+	 * returns the segment that a given canton belongs to
+	 */
 	public Segment getSegmentForCanton(Canton canton) {
 		Segment segment = null;
 		int i = 0, j;
-		boolean found = false;
 		
-		while (i < segments.size() && !found) {
+		while (i < segments.size() && segment == null) {
 			for (j = 0; j < 2; j++) {
-				if (segments.get(i).getCanton(j) == canton) {
+				if (segments.get(i).getCanton(j) == canton)
 					segment = segments.get(i);
-					found = true;
-				}
 			}
 			i++;
 		}
@@ -159,7 +144,17 @@ public class Line {
 	 * returns a short description of the line
 	 */
 	public String getDescription() {
-		return "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments;
+		String result = "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments + "\n\n";
+		for (Station station : stations) {
+			result += "Station " + station.getId() + "\n\tTracks occupied : " + station.isTrackOccupied(0) +
+					" / " + station.isTrackOccupied(1) + "\n";
+			result += "\tCapacity : " + station.getCapacity() + "\n";
+			result += "\tPosition : " + station.getPosition() + "\n";
+			result += "\tIs start :\t" + station.isStart(0) + " / " + station.isStart(1) + "\n";
+			result += "\tIs terminus :\t" + station.isTerminus(0) + " / " + station.isTerminus(1) + "\n";
+			result += "\tIs backup : " + station.isBackup() + "\n\n";
+		}
+		return result;
 	}
 
 	/*
@@ -169,22 +164,10 @@ public class Line {
 		return trains;
 	}
 	
+	/*
+	 * returns the list of stations in the line
+	 */
 	public ArrayList<Station> getStations(){
 		return stations;
-	}
-
-	public int getIndexForStation(Station station) {
-		int i = 0;
-		boolean found = false;
-		int index = 0;
-		
-		while (i < stations.size() && !found) {
-			if (stations.get(i) == station) {
-				index = i;
-				found = true;
-			}
-		}
-		
-		return index;
 	}
 }

@@ -2,145 +2,49 @@ package incidents;
 
 import line_management.Line;
 import line_management.Train;
-import line_management.TrainArrivedException;
 import line_management.Canton;
 import line_management.Station;
 
-public class Incident {
-	private Line line;
-	private Canton canton;
-	private Train blockedtrain;
-	private Station station;
-	private Station nextStart;
-	private Station previousTerminus;
-	private boolean active;
-	private int typeincident;
+/*
+ * abstract class representing an incident
+ */
+public abstract class Incident {
+	protected Line line;
+	protected Canton canton;
+	protected Train blockedtrain;
+	protected Station nextStart;
+	protected Station prevTerminus;
+	protected boolean active;
+	protected int way;
 
-	public Incident(Line line, Canton canton, int way) {
-		typeincident = 0;
+	/*
+	 * creates a new incident on a given way on the line and sets it active
+	 */
+	public Incident(Line line, int way) {
 		active = true;
 		this.line = line;
-		this.canton = canton;
+		this.way = way;
 		blockedtrain = null;
-		
-		if (canton.isOccupied()) {
-			Train train = getTrainOnCanton(canton);
-			train.block();
-			blockedtrain = train;
-		}
-		else {
-			canton.setOccupiedTrue();
-		}
+	}
+	
+	/*
+	 * deactivates the next station on the line using backup tracks to be used as a temporary start
+	 */
+	protected void deactivateNextStart() {
+		nextStart.setStart(way, false);
+	}
 
-		activateNextStart(way);
-		activatePreviousTerminus(way);
+	/*
+	 * deactivates the next station on the line using backup tracks to be used as a temporary terminus
+	 */
+	protected void deactivatePreviousTerminus() {
+		prevTerminus.setTerminus(way, false);
 	}
 	
-	public Incident(Line line, Station station, int way) {
-		typeincident = 1;
-		active = true;
-		this.line = line;
-		this.station = station;
-		int cantonposition;
-
-		blockedtrain = null;
-		
-		
-		if (way == 0)
-			cantonposition = station.getPosition() - 1;
-		else cantonposition = station.getPosition() + 1;
-		
-		try {
-			canton = line.getCantonAtPosition(cantonposition, way);
-			
-			if (station.isTrackOccupied(way)) {
-				Train train = getTrainInStation(station);
-				train.block();
-				blockedtrain = train;
-			}
-			else {
-				if (canton.isOccupied()) {
-					Train train = getTrainOnCanton(canton);
-					train.block();
-					blockedtrain = train;
-				}
-				else
-					station.setTrackOccupiedTrue(way);
-			}
-		} catch (TrainArrivedException e) {}
-		
-
-		activateNextStart(way);
-		activatePreviousTerminus(way);
-	}
-	
-	private void activateNextStart(int way) {
-		int stationIndex = 0;
-		boolean found;
-		Station nextStation;
-		
-		if (typeincident == 0) {
-			found = false;
-			if (way == 0) {
-				nextStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getEndPoint() + 1);
-				stationIndex = line.getIndexForStation(nextStation);
-						
-				while (stationIndex<line.getStations().size() && !found) {
-					if (line.getStations().get(stationIndex).isBackup()) {
-						nextStart = line.getStations().get(stationIndex);
-						found = true;
-					}
-					stationIndex++;
-				}
-			}
-			else {
-				nextStation = line.getStationAtPosition(line.getSegmentForCanton(canton).getStartPoint() - 1);
-				stationIndex = line.getIndexForStation(nextStation);
-				
-				while (stationIndex>=0 && !found) {
-					if (line.getStations().get(stationIndex).isBackup()) {
-						nextStart = line.getStations().get(stationIndex);
-						found = true;
-					}
-					stationIndex--;
-				}
-			}
-			
-			nextStart.setStart(way, true);
-		}
-		else {
-			stationIndex = line.getIndexForStation(station);
-			found = false;
-			if (way == 0) {
-				stationIndex++;
-				while (stationIndex<line.getStations().size() && !found) {
-					if (line.getStations().get(stationIndex).isBackup()) {
-						nextStart = line.getStations().get(stationIndex);
-						found = true;
-					}
-					stationIndex++;
-				}
-			}
-			else {
-				stationIndex--;
-				while (stationIndex>=0 && !found) {
-					if (line.getStations().get(stationIndex).isBackup()) {
-						nextStart = line.getStations().get(stationIndex);
-						found = true;
-					}
-					stationIndex--;
-				}
-			}
-			nextStart.setStart(way, true);
-		}
-	}
-	
-	
-	private void activatePreviousTerminus(int way) {
-		
-	}
-	
-	private Train getTrainOnCanton(Canton canton) {
+	/*
+	 * returns the train occupying a given canton or null if none is on the canton
+	 */
+	protected Train getTrainOnCanton(Canton canton) {
 		Train train = null;
 		boolean found = false;
 		int i = 0;
@@ -155,7 +59,10 @@ public class Incident {
 		return train;
 	}
 
-	private Train getTrainInStation(Station station) {
+	/*
+	 * returns the train occupying a given station or null if none is in the station
+	 */
+	protected Train getTrainInStation(Station station) {
 		Train train = null;
 		boolean found = false;
 		int i = 0;
@@ -170,35 +77,24 @@ public class Incident {
 		return train;
 	}
 	
+	/*
+	 * returns the line on which the incident occurs
+	 */
 	public Line getLine() {
 		return line;
 	}
 
+	/*
+	 * returns the canton impacted by the incident
+	 */
 	public Canton getCanton() {
 		return canton;
 	}
 
-	public Station getStation() {
-		return station;
-	}
-	
+	/*
+	 * allows to check if the incident is active
+	 */
 	public boolean isActive() {
 		return active;
 	}
-	
-	public void terminate() {
-		if (typeincident == 0) {
-			if (blockedtrain != null) {
-				
-			}
-		}
-			
-		if (typeincident == 1) {
-			
-		}
-		
-		active = false;
-	}
-	
-	
 }
