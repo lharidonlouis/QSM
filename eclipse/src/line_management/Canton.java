@@ -11,7 +11,7 @@ public class Canton {
 	private Segment segment;
 
 	/*
-	 * constructor simply sets the canton as not occupied
+	 * sets the canton as not occupied
 	 */
 	public Canton(Segment segment) {
 		occupied = false;
@@ -21,18 +21,12 @@ public class Canton {
 	/*
 	 * makes a new train enter the canton
 	 * and wait if it is occupied until it is free
-	 * then sets the old station of the train as not occupied
-	 * and the canton as occupied
+	 * then waits if the station following the canton is occupied until it is free
+	 * then makes the train exit the station it is leaving
+	 * and marks the canton as occupied
 	 */
-	public void enter(Train train, Station followingstation) {
-		if(occupied) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				System.err.println(e.getMessage());
-			}
-		}
-		if(followingstation.isTrackOccupied(train.getWay())) {
+	public synchronized void enter(Train train, Station followingstation) {
+		if(occupied || followingstation.isTrackOccupied(train.getWay())) {
 			try {
 				wait();
 			} catch (InterruptedException e) {

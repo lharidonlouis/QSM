@@ -1,4 +1,4 @@
-package line_management;
+package passengers;
 
 /*
  * represents a passenger on the line

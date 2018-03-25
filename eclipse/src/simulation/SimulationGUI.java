@@ -1,97 +1,78 @@
 package simulation;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.List;
-
+import java.util.ArrayList;
 import javax.swing.JFrame;
-
-import line_management.Canton;
-import line_management.Line;
+import line_management.Station;
 import line_management.Train;
 
 public class SimulationGUI extends JFrame implements Runnable{
-	private Dashboard dashboard=new Dashboard();
-	public static final int DELAY = 250;
-	public static final int REGULAR_SPEED = 10;
-	public static final int CAP = 20;
-	private Line line;
+	private static final long serialVersionUID = 1L;
+	public static final int DELAY = 100;
+	public static final int REGULAR_SPEED = 15;
+	public static final int CAPACITY = 20;
+	
+	private Dashboard dashboard;
+	private ArrayList<Station> starts;
+	private int currentId;
 	
 	public SimulationGUI() {
 		super("Train simulation");
+		dashboard = new Dashboard();
 		getContentPane().add(dashboard);
-		setSize(1280, 800);
+		setSize(1150, 800);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
-
 	
 	public static void main(String[] args) {
 		SimulationGUI simulationGUI = new SimulationGUI();
 		Thread simulationThread = new Thread(simulationGUI);
 		simulationThread.start();
 	}
-	
 
 	@Override
-	public void run()  {
-		// TODO Auto-generated method stub		
-		line = dashboard.getLine();
-		int id = 0;
-		System.out.println("Debut de la fonction");
+	public void run() {	
+		currentId = 0;
+		int way;
 
 		while(true) {
-			System.out.println("Debut de la boucle");
-			Canton[] terminus = new Canton[2];
-			
-				terminus[0] = line.getCantonAtPosition(1, 0);
-			System.out.println("On a le terminus 1");
-				terminus[1] = line.getCantonAtPosition(line.getLength()-2, 1);
-			System.out.println("On a le terminus 2");
-			System.out.println("Canton de depart " + terminus.toString() );
-
-			int position;
-			System.out.println("Sens " + 0 + " occuped : " +  terminus[0].isOccupied() );
-			System.out.println("Sens " + 1 + " occuped : " +  terminus[1].isOccupied() );
-			for(int i =0; i<2; i++) {
-				System.out.println("i : " + i);
-				Train newtrain = null;
-				if(!terminus[i].isOccupied()) {
-					System.out.println("terminus i  : " + i + " " + terminus[i].isOccupied());
-					switch (i) {
-						case 0:
-								position = 0;
-								//System.out.println("station info : " + line.getStationAtPosition(position).getDescription());
-								if(!line.getStationAtPosition(position).isTrackOccupied(i)) {
-									newtrain = new Train(id, i, line.getStationAtPosition(position), REGULAR_SPEED, CAP);
-								}
-						break;
-						case 1:
-								position = line.getLength()-1;
-							//	System.out.println("station info : " + line.getStationAtPosition(position).getDescription());
-								if(!line.getStationAtPosition(position).isTrackOccupied(i)) {
-									newtrain = new Train(id, i, line.getStationAtPosition(position), REGULAR_SPEED, CAP);
-								}
-						break;
+			starts = getStarts();
+			for (Station station : starts) {
+				for(way = 0; way < 2; way++) {
+					Train newtrain = null;
+					if (station.isStart(way) && !station.isTerminus(way)) {
+						if (!station.isTrackOccupied(way)) {
+							newtrain = new Train(currentId, way, station, REGULAR_SPEED, CAPACITY);
+						}
+					}
+					
+					if(newtrain != null){
+						dashboard.addTrain(newtrain);
+						currentId++;
 					}
 				}
-				if(newtrain != null){
-					System.out.println("Train " + id + " successfully created");
-					newtrain.start();
-					dashboard.trains.add(newtrain);
-					id++;
-				}
+				
 			}
-			//dashboard.refresh();
 			dashboard.repaint();
+			dashboard.refreshTrains();
 			try {
 				Thread.sleep(DELAY);
-				System.out.println(" ");
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 			}
 		}
     }
+	
+	public ArrayList<Station> getStarts() {
+		ArrayList<Station> stations = new ArrayList<Station>();
+		
+		for (Station station : dashboard.getLine().getStations()) {
+			for(int way = 0; way < 2; way++) {
+				if (station.isStart(way) && !station.isTerminus(way))
+					stations.add(station);
+			}
+		}
+		
+		return stations;
+	}
 }
