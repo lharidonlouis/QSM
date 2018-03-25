@@ -58,20 +58,20 @@ public class Train extends Thread {
 								int indexcurrentstation = currentstation.getId();
 								Station followingstation = line.getStations().get(indexcurrentstation + 1);
 								if (nextcanton != null && followingstation != null) {
-									System.out.println("Tr. " + id + " trying to enter canton " + line.getSegmentForCanton(nextcanton).getId());
 									nextcanton.enter(this, followingstation);
 									updatePosition();
 								}
 							}
 							else {
 								arrived = true;
+								Canton prevcanton = line.getCantonAtPosition(position - 1, way);
+								prevcanton.wakeWaitingTrain();
 								System.out.println("Train " + id + " arrived at terminus : station " + currentstation.getId());
 							}
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
 							if (nextstation != null) {
-								System.out.println("Tr. " + id + " trying to enter station " + nextstation.getId());
 								nextstation.enter(this);
 							}
 							updatePosition();
@@ -88,20 +88,20 @@ public class Train extends Thread {
 								int indexcurrentstation = currentstation.getId();
 								Station followingstation = line.getStations().get(indexcurrentstation - 1);
 								if(nextcanton != null && followingstation != null) {
-									System.out.println("Tr. " + id + " trying to enter canton " + line.getSegmentForCanton(nextcanton).getId());
 									nextcanton.enter(this, followingstation);
 									updatePosition();
 								}
 							}
 							else {
 								arrived = true;
+								Canton prevcanton = line.getCantonAtPosition(position + 1, way);
+								prevcanton.wakeWaitingTrain();
 								System.out.println("Train " + id + " arrived at terminus : station " + currentstation.getId());
 							}
 						}
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
 							if (nextstation != null) {
-								System.out.println("Tr. " + id + " trying to enter station " + nextstation.getId());
 								nextstation.enter(this);
 							}
 							updatePosition();

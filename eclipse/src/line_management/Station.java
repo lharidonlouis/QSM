@@ -84,7 +84,7 @@ public class Station {
 		}
 		Canton oldcanton = train.getCurrentCanton();
 		train.setCurrentStation(this);
-		oldcanton.exit(train);	
+		oldcanton.exit(train);
 		setTrackOccupiedTrue(train.getWay());
 	}
 	
@@ -93,9 +93,24 @@ public class Station {
 	 * and the train's current station as null
 	 */
 	public synchronized void exit(Train train) {
-		setTrackOccupiedFalse(train.getWay());
-		train.setCurrentStation(null);
-		notify();
+		int positionprevcanton;
+		
+		if (!isStart[train.getWay()]) {
+			if (train.getWay() == 0)
+				positionprevcanton = position - 1;
+			else positionprevcanton = position + 1;
+
+			Canton prevcanton = line.getCantonAtPosition(positionprevcanton, train.getWay());
+			
+			setTrackOccupiedFalse(train.getWay());
+			train.setCurrentStation(null);
+			
+			prevcanton.wakeWaitingTrain();
+		}
+		else {
+			setTrackOccupiedFalse(train.getWay());
+			train.setCurrentStation(null);
+		}
 	}
 	
 	/*

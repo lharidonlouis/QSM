@@ -8,7 +8,7 @@ import line_management.Train;
 public class SimulationGUI extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
 	public static final int DELAY = 100;
-	public static final int REGULAR_SPEED = 15;
+	public static final int REGULAR_SPEED = 5;
 	public static final int CAPACITY = 20;
 	
 	private Dashboard dashboard;
@@ -19,7 +19,7 @@ public class SimulationGUI extends JFrame implements Runnable{
 		super("Train simulation");
 		dashboard = new Dashboard();
 		getContentPane().add(dashboard);
-		setSize(1150, 800);
+		setSize(1920, 1080);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}

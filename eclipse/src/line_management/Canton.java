@@ -46,6 +46,12 @@ public class Canton {
 	public synchronized void exit(Train train) {
 		setOccupiedFalse();
 		train.setCurrentCanton(null);
+	}
+	
+	/*
+	 * Notifies the train waiting to enter the canton
+	 */
+	public synchronized void wakeWaitingTrain() {
 		notify();
 	}
 	
