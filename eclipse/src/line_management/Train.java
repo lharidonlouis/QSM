@@ -58,7 +58,6 @@ public class Train extends Thread {
 								int indexcurrentstation = currentstation.getId();
 								Station followingstation = line.getStations().get(indexcurrentstation + 1);
 								if (nextcanton != null && followingstation != null) {
-									System.out.println("Tr. " + id + " trying to enter canton " + line.getSegmentForCanton(nextcanton).getId());
 									nextcanton.enter(this, followingstation);
 									updatePosition();
 								}
@@ -71,7 +70,6 @@ public class Train extends Thread {
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
 							if (nextstation != null) {
-								System.out.println("Tr. " + id + " trying to enter station " + nextstation.getId());
 								nextstation.enter(this);
 							}
 							updatePosition();
@@ -88,7 +86,6 @@ public class Train extends Thread {
 								int indexcurrentstation = currentstation.getId();
 								Station followingstation = line.getStations().get(indexcurrentstation - 1);
 								if(nextcanton != null && followingstation != null) {
-									System.out.println("Tr. " + id + " trying to enter canton " + line.getSegmentForCanton(nextcanton).getId());
 									nextcanton.enter(this, followingstation);
 									updatePosition();
 								}
@@ -101,7 +98,6 @@ public class Train extends Thread {
 						else if (currentcanton != null) {
 							Station nextstation = line.getStationAtPosition(nextposition);
 							if (nextstation != null) {
-								System.out.println("Tr. " + id + " trying to enter station " + nextstation.getId());
 								nextstation.enter(this);
 							}
 							updatePosition();
