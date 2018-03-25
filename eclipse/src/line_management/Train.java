@@ -64,6 +64,8 @@ public class Train extends Thread {
 							}
 							else {
 								arrived = true;
+								Canton prevcanton = line.getCantonAtPosition(position - 1, way);
+								prevcanton.wakeWaitingTrain();
 								System.out.println("Train " + id + " arrived at terminus : station " + currentstation.getId());
 							}
 						}
@@ -92,6 +94,8 @@ public class Train extends Thread {
 							}
 							else {
 								arrived = true;
+								Canton prevcanton = line.getCantonAtPosition(position + 1, way);
+								prevcanton.wakeWaitingTrain();
 								System.out.println("Train " + id + " arrived at terminus : station " + currentstation.getId());
 							}
 						}
