@@ -8,29 +8,25 @@ import line_management.Train;
  */
 public class Canton {
 	private boolean occupied;
+	private Segment segment;
 
 	/*
-	 * constructor simply sets the canton as not occupied
+	 * sets the canton as not occupied
 	 */
-	public Canton() {
+	public Canton(Segment segment) {
 		occupied = false;
+		this.segment = segment;
 	}
 	
 	/*
 	 * makes a new train enter the canton
 	 * and wait if it is occupied until it is free
-	 * then sets the old station of the train as not occupied
-	 * and the canton as occupied
+	 * then waits if the station following the canton is occupied until it is free
+	 * then makes the train exit the station it is leaving
+	 * and marks the canton as occupied
 	 */
 	public synchronized void enter(Train train, Station followingstation) {
-		if(occupied) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				System.err.println(e.getMessage());
-			}
-		}
-		if(followingstation.isTrackOccupied(train.getWay())) {
+		if(occupied || followingstation.isTrackOccupied(train.getWay())) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -39,7 +35,7 @@ public class Canton {
 		}
 		Station oldstation = train.getCurrentStation();
 		train.setCurrentCanton(this);
-		oldstation.exit(train);	
+		oldstation.exit(train);
 		setOccupiedTrue();
 	}
 	
@@ -50,6 +46,12 @@ public class Canton {
 	public synchronized void exit(Train train) {
 		setOccupiedFalse();
 		train.setCurrentCanton(null);
+	}
+	
+	/*
+	 * Notifies the train waiting to enter the canton
+	 */
+	public synchronized void wakeWaitingTrain() {
 		notify();
 	}
 	
@@ -72,5 +74,9 @@ public class Canton {
 	 */
 	public void setOccupiedFalse() {
 		this.occupied = false;
+	}
+	
+	public Segment getSegment() {
+		return segment;
 	}
 }

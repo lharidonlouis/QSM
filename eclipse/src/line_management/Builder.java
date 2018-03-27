@@ -1,11 +1,12 @@
 package line_management;
 
+import java.util.Random;
+
 /*
  * Class used to build a line containing a given number of stations
  * returns the built line for simulation purposes
  */
 public class Builder {
-	private boolean debug;
 	private Line line;
 	private boolean built;
 	private static final int MIN_LENGTH = 100;
@@ -16,8 +17,7 @@ public class Builder {
 	/*
 	 * Constructor simply sets built as false
 	 */
-	public Builder(boolean debug) {
-		this.debug = debug;
+	public Builder() {
 		line = new Line();
 		built = false;
 	}
@@ -28,47 +28,58 @@ public class Builder {
 	 */
 	public void build(int lineNbStations) {
 		int i, type, capacity, length;
-		Station station;
 		Segment segment;
-		if(debug) {
-			System.out.println("Building...");
-			System.out.println("Line length : " + line.getLength());
-			System.out.println("Stations : " + line.getNbStations());
-			System.out.println("Segments : " + line.getNbSegments());
-		}
+		boolean backup = true;
+		Random r = new Random();
 		
+		int maxi = lineNbStations/5 + 1;
+		int remaining = maxi;
+		
+		//System.out.println("Adding stations");
 		for (i = 0; i < lineNbStations - 1; i++) {
-			type = (int)(Math.random() * ((2 - 0) + 1));
+			boolean terminus[] = new boolean[2];
+			boolean start[] = new boolean[2];
+			
+			type = r.nextInt(3);
 			capacity = (int)(Math.random() * ((MAX_CAPACITY - MIN_CAPACITY) + 1)) + MIN_CAPACITY;
-			station = new Station("Station" + i, type, line, capacity, line.getLength(), i);
+			
+			if (i == 0) {
+				terminus[0] = false;
+				terminus[1] = true;
+				start[0] = true;
+				start[1] = false;
+			}
+			else if (i > 0) {
+				terminus[1] = false;
+				start[0] = false;
+			}
+			
+			if (remaining == 0) {
+				backup = true;
+				remaining = maxi;
+			}
+			
+			Station station = new Station("Station" + i, type, line, capacity, line.getLength(), i, backup, terminus, start);
 			line.addStation(station);
+			
+			if (!backup)
+				remaining--;
+			backup = false;
 			
 			length = (int)(Math.random() * ((MAX_LENGTH - MIN_LENGTH) + 1)) + MIN_LENGTH;
 			segment = new Segment(line.getLength(), length, line, i);
 			line.addSegment(segment);
-			
-			if(debug) {
-				System.out.println();
-				System.out.println(station.getName() + " added : \n\tid : " + station.getId() + "\n\tposition : " + station.getPosition() +
-				"\n\ttype : " + station.getType() + "\n\tcapacity : " + station.getCapacity());
-				System.out.println("Segment added : \n\tstart : " + segment.getStartPoint() + "\n\tend : " + segment.getEndPoint() +
-				"\n\tlength : " + segment.getLength() +	"\n\tid : " + segment.getId());
-
-				System.out.println(line.getDescription());
-			}
 		}
+
+		boolean terminus[] = {true, false};
+		boolean start[] = {false, true};
+		
+		backup = true;
 		
 		type = (int)(Math.random() * ((2 - 0) + 1));
 		capacity = (int)(Math.random() * ((MAX_CAPACITY - MIN_CAPACITY) + 1)) + MIN_CAPACITY;
-		station = new Station("Station" + i, type, line, capacity, line.getLength(), i);
+		Station station = new Station("Station" + i, type, line, capacity, line.getLength(), i, true, terminus, start);
 		line.addStation(station);
-		
-		if(debug) {
-			System.out.println();
-			System.out.println(station.getName() + " added : \n" + station.getDescription());
-			
-			System.out.println(line.getDescription());
-		}
 		
 		built = true;
 	}

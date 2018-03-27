@@ -2,6 +2,8 @@ package line_management;
 
 import java.util.ArrayList;
 
+import passengers.Passenger;
+
 /*
  * represents a train station
  */
@@ -12,20 +14,27 @@ public class Station {
 	private Line line;
 	private int capacity;
 	private int position;
-	private boolean[] tracksoccupied;
+	private boolean[] tracksoccupied = {false, false};
 	private ArrayList<Passenger> passengers;
+	private boolean isBackup;
+	private boolean[] isTerminus;
+	private boolean[] isStart;
 	
 	/*
 	 * creates a new station on the line at a given position
-	 * with a new name and a given capacity and type
+	 * with a new name and a given capacity, type,
+	 * possession of backup tracks, and as start/terminus or not
 	 */
-	public Station(String name, int type, Line line, int capacity, int position, int id){
+	public Station(String name, int type, Line line, int capacity, int position, int id, boolean backup, boolean[] terminus, boolean[] start){
 		this.name = name;
 		this.type = type;
 		this.line = line;
 		this.capacity = capacity;
 		this.position = position;
 		this.id = id;
+		isBackup = backup;
+		isTerminus = terminus;
+		isStart = start;
 		passengers = new ArrayList<Passenger>();
 	}
 	
@@ -53,10 +62,17 @@ public class Station {
 	}
 	
 	/*
+	 * allows to add a passenger to the station
+	 */
+	public void addPassenger(Passenger p) {
+		passengers.add(p);
+	}
+	
+	/*
 	 * makes a new train enter the station
 	 * and wait if it is occupied until it is free
-	 * then sets the old canton of the train as not occupied
-	 * and the station as occupied
+	 * then makes the train exit the canton it's leaving
+	 * and marks the station as occupied
 	 */
 	public synchronized void enter(Train train) {
 		if(tracksoccupied[train.getWay()]) {
@@ -68,7 +84,7 @@ public class Station {
 		}
 		Canton oldcanton = train.getCurrentCanton();
 		train.setCurrentStation(this);
-		oldcanton.exit(train);	
+		oldcanton.exit(train);
 		setTrackOccupiedTrue(train.getWay());
 	}
 	
@@ -77,16 +93,31 @@ public class Station {
 	 * and the train's current station as null
 	 */
 	public synchronized void exit(Train train) {
-		setTrackOccupiedFalse(train.getWay());
-		train.setCurrentStation(null);
-		notify();
+		int positionprevcanton;
+		
+		if (!isStart[train.getWay()]) {
+			if (train.getWay() == 0)
+				positionprevcanton = position - 1;
+			else positionprevcanton = position + 1;
+
+			Canton prevcanton = line.getCantonAtPosition(positionprevcanton, train.getWay());
+			
+			setTrackOccupiedFalse(train.getWay());
+			train.setCurrentStation(null);
+			
+			prevcanton.wakeWaitingTrain();
+		}
+		else {
+			setTrackOccupiedFalse(train.getWay());
+			train.setCurrentStation(null);
+		}
 	}
 	
 	/*
 	 * allows to check if a train is on a track of the station
 	 */
-	public boolean isTrackOccupied(int index) {
-		return tracksoccupied[index];
+	public boolean isTrackOccupied(int way) {
+		return tracksoccupied[way];
 	}
 
 	/*
@@ -151,11 +182,39 @@ public class Station {
 	public int getId() {
 		return id;
 	}
+
+	/*
+	 * allows to check if the station has backup tracks
+	 */
+	public boolean isBackup() {
+		return isBackup;
+	}
+
+	/*
+	 * allows to check if the station is a terminus for a given way
+	 */
+	public boolean isTerminus(int way) {
+		return isTerminus[way];
+	}
+
+	/*
+	 * allows to check if the station is a start for a given way
+	 */
+	public boolean isStart(int way) {
+		return isStart[way];
+	}
 	
 	/*
-	 * returns a short description of the station
+	 * sets or unsets the station as a start for a given way
 	 */
-	public String getDescription() {
-		return "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity;
+	public void setStart(int way, boolean value) {
+		isStart[way] = value;
+	}
+	
+	/*
+	 * sets or unsets the station as a terminus for a given way
+	 */
+	public void setTerminus(int way, boolean value) {
+		isTerminus[way] = value;
 	}
 }
