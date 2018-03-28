@@ -115,9 +115,6 @@ public class Builder {
 		return line;
 	}
 	
-	/**
-	 * @return the value of the built indicator
-	 */
 	public boolean isBuilt() {
 		return built;
 	}
