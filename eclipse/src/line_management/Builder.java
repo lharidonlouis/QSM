@@ -2,29 +2,54 @@ package line_management;
 
 import java.util.Random;
 
-/*
+/**
  * Class used to build a line containing a given number of stations
- * returns the built line for simulation purposes
+ * 
+ * @author bastien.ck
  */
 public class Builder {
+	/**
+	 * @see Line
+	 * @see Builder#getLine()
+	 */
 	private Line line;
+	/**
+	 * @see Builder#isBuilt()
+	 */
 	private boolean built;
+	/**
+	 * minimum length for a segment between two stations
+	 */
 	private static final int MIN_LENGTH = 100;
+	/**
+	 * maximum length for a segment between two stations
+	 */
 	private static final int MAX_LENGTH = 300;
+	/**
+	 * minimum capacity for a station
+	 */
 	private static final int MIN_CAPACITY = 100;
+	/**
+	 * maximum capacity for a station
+	 */
 	private static final int MAX_CAPACITY = 500;
 	
-	/*
-	 * Constructor simply sets built as false
+	/**
+	 * Creates a new builder, sets built false
+	 * @see Line#Line()
 	 */
 	public Builder() {
 		line = new Line();
 		built = false;
 	}
 	
-	/*
+	/**
+	 * Main method
 	 * Adds the stations with segments of length in range (min_length, max_length) in between
 	 * then sets built as true
+	 * 
+	 * @param lineNbStations
+	 * number of stations on the line
 	 */
 	public void build(int lineNbStations) {
 		int i, type, capacity, length;
@@ -35,7 +60,6 @@ public class Builder {
 		int maxi = lineNbStations/5 + 1;
 		int remaining = maxi;
 		
-		//System.out.println("Adding stations");
 		for (i = 0; i < lineNbStations - 1; i++) {
 			boolean terminus[] = new boolean[2];
 			boolean start[] = new boolean[2];
@@ -84,15 +108,15 @@ public class Builder {
 		built = true;
 	}
 	
-	/*
-	 * returns the built line
+	/**
+	 * @return the built line
 	 */
 	public Line getLine() {
 		return line;
 	}
 	
-	/*
-	 * allows to check if the build is done
+	/**
+	 * @return the value of the built indicator
 	 */
 	public boolean isBuilt() {
 		return built;
