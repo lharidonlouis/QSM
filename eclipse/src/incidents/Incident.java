@@ -5,20 +5,46 @@ import line_management.Train;
 import line_management.Canton;
 import line_management.Station;
 
-/*
- * abstract class representing an incident
- */
+/**
+  * abstract class representing an incident
+  * 
+  * @author bastien.ck
+  */
 public abstract class Incident {
+	/**
+	 * @see Line
+	 * @see Incident#getLine()
+	 */
 	protected Line line;
+	/**
+	 * @see Canton
+	 * @see Incident#getCanton()
+	 */
 	protected Canton canton;
+	/**
+	 * @see Train
+	 */
 	protected Train blockedtrain;
+	/**
+	 * @see Station
+	 */
 	protected Station nextStart;
+	/**
+	 * @see Station
+	 */
 	protected Station prevTerminus;
+	/**
+	 * @see Incident#isActive()
+	 */
 	protected boolean active;
 	protected int way;
 
-	/*
+	/**
 	 * creates a new incident on a given way on the line and sets it active
+	 * @param line
+	 * the line impacted by the incident
+	 * @param way
+	 * the way on the line impacted by the incident
 	 */
 	public Incident(Line line, int way) {
 		active = true;
@@ -27,22 +53,34 @@ public abstract class Incident {
 		blockedtrain = null;
 	}
 	
-	/*
+	/**
+	 * abstract method used to activate the next station with backup tracks on the line as a start
+	 */
+	protected abstract void activateNextStart();
+	
+	/**
+	 * abstract method used to activate the previous station with backup tracks on the line as a terminus
+	 */
+	protected abstract void activatePreviousTerminus();
+	
+	/**
 	 * deactivates the next station on the line using backup tracks to be used as a temporary start
 	 */
 	protected void deactivateNextStart() {
 		nextStart.setStart(way, false);
 	}
 
-	/*
+	/**
 	 * deactivates the next station on the line using backup tracks to be used as a temporary terminus
 	 */
 	protected void deactivatePreviousTerminus() {
 		prevTerminus.setTerminus(way, false);
 	}
 	
-	/*
-	 * returns the train occupying a given canton or null if none is on the canton
+	/**
+	 * @param canton
+	 * the canton for which we want the occupying train
+	 * @return the occupying train or null
 	 */
 	protected Train getTrainOnCanton(Canton canton) {
 		Train train = null;
@@ -59,8 +97,10 @@ public abstract class Incident {
 		return train;
 	}
 
-	/*
-	 * returns the train occupying a given station or null if none is in the station
+	/**
+	 * @param station
+	 * the station for which we want the occupying train
+	 * @return the occupying train or null
 	 */
 	protected Train getTrainInStation(Station station) {
 		Train train = null;
@@ -77,24 +117,29 @@ public abstract class Incident {
 		return train;
 	}
 	
-	/*
-	 * returns the line on which the incident occurs
+	/**
+	 * @return the line on which the incident occurs
 	 */
 	public Line getLine() {
 		return line;
 	}
 
-	/*
-	 * returns the canton impacted by the incident
+	/**
+	 * @return the canton impacted by the incident
 	 */
 	public Canton getCanton() {
 		return canton;
 	}
 
-	/*
-	 * allows to check if the incident is active
+	/**
+	 * @return if the incident is still active or not
 	 */
 	public boolean isActive() {
 		return active;
 	}
+	
+	/**
+	 * abstract method used to end an incident
+	 */
+	public abstract void terminate();
 }
