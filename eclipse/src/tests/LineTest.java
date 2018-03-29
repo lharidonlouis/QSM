@@ -9,7 +9,6 @@ import org.junit.Test;
 import line_management.Line;
 import line_management.Segment;
 import line_management.Station;
-import line_management.TrainArrivedException;
 
 public class LineTest {
 
@@ -43,17 +42,12 @@ public class LineTest {
 	}
 
 	@Test
-	public void testGetCantonAtPosition() throws TrainArrivedException{
+	public void testGetCantonAtPosition() {
 		lineTest.addSegment(segmentTest);
 		lineTest.addSegment(segmentTest2);
 		assertEquals("getCantonAtPosition Failed", segmentTest.getCanton(1), lineTest.getCantonAtPosition(startPoint1, 1));
 		assertEquals("getCantonAtPosition Failed", segmentTest2.getCanton(0), lineTest.getCantonAtPosition(startPoint2, 0));
 	}
-
-	@Test(expected=TrainArrivedException.class)
-	public void testGetCantonAtPositionException() throws TrainArrivedException{
-		lineTest.getCantonAtPosition(startPoint1, 1);
-		}
 	
 	@Test
 	public void testPositionInSegment() {
@@ -128,10 +122,17 @@ public class LineTest {
 
 	@Test
 	public void testGetDescription() {
-		Line lineTest = new Line();
-		assertEquals("Description went wrong"
-				, "Line length : " + lineTest.getLength() + "\nStations : " + lineTest.getNbStations() + "\nSegments : " + lineTest.getNbSegments()
-				, lineTest.getDescription());
-	}
+		String result = "Line length : " + lineTest.getLength() + "\nStations : " + lineTest.getNbStations() + "\nSegments : " + lineTest.getNbSegments() + "\n\n";
+		for (Station station : lineTest.getStations()) {
+			result += "Station " + station.getId() + "\n\tTracks occupied : " + station.isTrackOccupied(0) +
+					" / " + station.isTrackOccupied(1) + "\n";
+			result += "\tCapacity : " + station.getCapacity() + "\n";
+			result += "\tPosition : " + station.getPosition() + "\n";
+			result += "\tIs start :\t" + station.isStart(0) + " / " + station.isStart(1) + "\n";
+			result += "\tIs terminus :\t" + station.isTerminus(0) + " / " + station.isTerminus(1) + "\n";
+			result += "\tIs backup : " + station.isBackup() + "\n\n";
+		}
+		assertEquals("Description went wrong", result, lineTest.getDescription());
+	} 
 
 }

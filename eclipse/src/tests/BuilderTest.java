@@ -10,7 +10,7 @@ import line_management.Station;
 
 public class BuilderTest {
 	
-	private Builder builderTest = new Builder(true);
+	private Builder builderTest = new Builder();
 	
 	private Line lineTest = new Line();
 	

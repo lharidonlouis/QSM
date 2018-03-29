@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import line_management.Passenger;
+import passengers.Passenger;
 
 public class PassengerTest {
 

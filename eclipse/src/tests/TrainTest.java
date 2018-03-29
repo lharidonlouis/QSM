@@ -2,19 +2,16 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import line_management.Builder;
 import line_management.Canton;
 import line_management.Line;
-import line_management.Passenger;
+import passengers.Passenger;
 import line_management.Segment;
 import line_management.Station;
 import line_management.Train;
-import line_management.TrainArrivedException;
 
 public class TrainTest {
 	private int capacity = 0, id = 0, way = 0, speed = 3;
@@ -26,7 +23,7 @@ public class TrainTest {
 	
 	private Canton cantonTest = new Canton(segmentTest);
 
-	private Builder builderTest = new Builder(true);
+	private Builder builderTest = new Builder();
 	
 	private Train trainTest;
 	

@@ -1,11 +1,8 @@
 package tests;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import junit.framework.TestCase;
-import line_management.Canton;
 import line_management.Line;
 import line_management.Segment;
 

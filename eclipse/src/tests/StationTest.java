@@ -6,14 +6,12 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import line_management.Canton;
 import line_management.Line;
-import line_management.Passenger;
 import line_management.Segment;
 import line_management.Station;
 import line_management.Train;
+import passengers.Passenger;
 
 public class StationTest {
 	int type = 3, capacity = 8, position = 1, id = 6, way = 0;
@@ -27,7 +25,7 @@ public class StationTest {
 	
 	private Canton cantonTest = new Canton(segmentTest);
 	
-	private boolean terminus[] = {false, false}, start[] = {false, false}, backup = false;
+	private boolean terminus[] = {false, true}, start[] = {true, false}, backup = false;
 	
 	private Station stationTest = new Station("StatTest1", type, lineTest, capacity, position, id, backup, terminus, start);
 	private Station stationTest2 = new Station("StatTest2", type2, lineTest, capacity2, position2, id2, backup, terminus, start);
@@ -82,6 +80,8 @@ public class StationTest {
 		
 		stationTest2.enter(trainTest);
 		
+		assertFalse("Train entered canton without exiting station", stationTest.isTrackOccupied(trainTest.getWay()));
+		
 		assertEquals("Enter failed to free previous Canton", null, trainTest.getCurrentCanton());
 		
 		assertEquals("Train failed to enter the station", stationTest2, trainTest.getCurrentStation());
@@ -96,7 +96,7 @@ public class StationTest {
 		stationTest2.enter(trainTest);
 		
 		assertEquals("Train failed to enter the station", stationTest2, trainTest.getCurrentStation());
-		
+		System.out.println("Position : " + trainTest.getPosition());
 		stationTest2.exit(trainTest);
 		
 		assertEquals("Train failed to exit the station", null, trainTest.getCurrentStation());
@@ -175,11 +175,6 @@ public class StationTest {
 	@Test
 	public void testGetId() {
 		assertEquals("Station id Getter went wrong", id, stationTest.getId());
-	}
-
-	@Test
-	public void testGetDescription() {
-		assertEquals("Station Description Getter went wrong", "id : " + id + "\n\tposition : " + position + "\n\ttype : " + type + "\n\tcapacity : " + capacity, stationTest.getDescription());
 	}
 
 }

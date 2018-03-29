@@ -21,7 +21,7 @@ public class CantonTest {
 	
 	private Canton cantonTest = new Canton(segmentTest);
 	
-	private Builder builderTest = new Builder(true);
+	private Builder builderTest = new Builder();
 	
 	private Train trainTest;
 	
