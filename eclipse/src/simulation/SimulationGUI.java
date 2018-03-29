@@ -9,7 +9,7 @@ public class SimulationGUI extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
 	public static final int DELAY = 100;
 	public static final int REGULAR_SPEED = 5;
-  public static final int CAPACITY = 20;
+	public static final int CAPACITY = 20;
 	
 	private Dashboard dashboard;
 	private ArrayList<Station> starts;

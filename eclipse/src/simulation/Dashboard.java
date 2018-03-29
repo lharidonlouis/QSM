@@ -25,7 +25,7 @@ public class Dashboard  extends JPanel{
 
 	public Dashboard(){
 		Builder builder = new Builder();
-		builder.build(8);
+		builder.build(15);
 		line = builder.getLine();
 
 		ratio = (double) LENGTH / (double)line.getLength();
@@ -42,22 +42,17 @@ public class Dashboard  extends JPanel{
 	private void printLine(Graphics2D g2) {
 		Segment segment;
 		
-		g2.setStroke(new BasicStroke(2));
+		g2.setStroke(new BasicStroke(8));
 		double current_position = START_X;
 		g2.drawString("Station 0", START_X - 20, START_Y + 80);
 		
 		g2.drawLine(START_X, START_Y, START_X + LENGTH, START_Y);
 		g2.drawLine(START_X, START_Y + 20, START_X + LENGTH, START_Y + 20);
 		
-		
-		g2.drawLine(START_X, START_Y + 60, START_X + LENGTH, START_Y + 60);
-		g2.drawLine(START_X, START_Y + 80, START_X + LENGTH, START_Y + 80);
-
-		
 		// Station 0, way 0
 		g2.drawLine(START_X, START_Y - 10, START_X, START_Y + 10);
 		// Station 0, way 1
-		g2.drawLine(START_X, START_Y + 10, START_X, START_Y + 90);
+		g2.drawLine(START_X, START_Y + 10, START_X, START_Y + 30);
 		
 		for (int segmentId = 0; segmentId < line.getNbSegments(); segmentId++) {
 			segment = line.getSegments().get(segmentId);
@@ -70,18 +65,14 @@ public class Dashboard  extends JPanel{
 			
 			// Stations
 			if (segmentId != line.getNbSegments() - 1) {
-				//g2.drawLine((int)current_position, START_Y - 10, (int)current_position, START_Y + 10);
-				//g2.drawLine((int)current_position, START_Y + 10, (int)current_position, START_Y + 30);
-		         //drawCircleByCenter(g2, (int)current_position, START_Y + 5, 10);
-		         //drawCircleByCenter(g2, (int)current_position, START_Y + 25, 10);
-				g2.drawLine((int)current_position, START_Y + -10, (int)current_position, START_Y + 90);
-
+				g2.drawLine((int)current_position, START_Y - 10, (int)current_position, START_Y + 10);
+				g2.drawLine((int)current_position, START_Y + 10, (int)current_position, START_Y + 30);
 			}
 		}
 		
 		// Last station
 		g2.drawLine(START_X + LENGTH, START_Y - 10, START_X + LENGTH, START_Y + 10);
-		g2.drawLine(START_X + LENGTH, START_Y + 10, START_X + LENGTH, START_Y + 90);
+		g2.drawLine(START_X + LENGTH, START_Y + 10, START_X + LENGTH, START_Y + 30);
 	}
 
 	private void printTrains(Graphics2D g2) {
@@ -95,24 +86,16 @@ public class Dashboard  extends JPanel{
 			switch(way) {
 			case 0:
 				g2.drawString("Train" + train.getId(), (int) cur_l, START_Y - 25);
-				//g2.drawLine(START_X + (int) cur_l - 5 , START_Y - 5, START_X + (int) cur_l  +5, START_Y + 5);
-				g2.drawRect(START_X + (int) cur_l - 15, START_Y +1, 30, 18);
+				g2.drawLine(START_X + (int) cur_l, START_Y - 5, START_X + (int) cur_l, START_Y + 5);
 				break;
 			case 1:
 				g2.drawString("Train" + train.getId(), (int) cur_l, START_Y + 55);
-				//g2.drawLine(START_X + (int) cur_l + 5, START_Y + 15, START_X + (int) cur_l - 5, START_Y + 25);
-				g2.drawRect(START_X + (int) cur_l - 15 , START_Y + 59, 30, 18);
+				g2.drawLine(START_X + (int) cur_l, START_Y + 15, START_X + (int) cur_l, START_Y + 25);
 
 				break;
 			}
 		}
 	}
-	
-    void drawCircleByCenter(Graphics g, int x, int y, int radius){
-        //g.setColor(Color.LIGHT_GRAY);
-        g.drawOval(x-radius, y-(radius), radius, radius);
-    }
-
 	
 	public void addTrain(Train train) {
 		trains.add(train);
@@ -144,6 +127,4 @@ public class Dashboard  extends JPanel{
 			}
 		}*/
 	}
-	
 }
-
