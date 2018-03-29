@@ -142,7 +142,9 @@ public class Station {
 	 * the passenger to add
 	 */
 	public void addPassenger(Passenger p) {
-		passengers.add(p);
+		if(passengers.size() < capacity) {
+			passengers.add(p);
+		}
 	}
 	
 	/**
@@ -162,10 +164,17 @@ public class Station {
 				System.err.println(e.getMessage());
 			}
 		}
+		try {
+			train.sleep(500);
+		} catch (InterruptedException e) {
+			System.err.println(e.getMessage());
+		}
+
 		Canton oldcanton = train.getCurrentCanton();
 		train.setCurrentStation(this);
 		oldcanton.exit(train);
 		setTrackOccupiedTrue(train.getWay());
+		pickPassengers(train);
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import line_management.Station;
 import line_management.Train;
+import passengers.PassengerGenerator;
 
 public class SimulationGUI extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
@@ -34,6 +35,9 @@ public class SimulationGUI extends JFrame implements Runnable{
 	public void run() {	
 		currentId = 0;
 		int way;
+		
+		PassengerGenerator pg = new PassengerGenerator(dashboard.getLine() , 1000);
+		pg.start();
 
 		while(true) {
 			starts = getStarts();
