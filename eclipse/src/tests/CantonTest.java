@@ -29,14 +29,6 @@ public class CantonTest {
 	
 	private Station stationTest2;
 	
-	/*
-	private Station stationTest = new Station("TestStat1", 2, lineTest, 22, 5, 2, backup, terminus, start);
-	
-	private Train trainTest = new Train(5, 1, stationTest, 8, 1);
-	
-	private Station nextStation = trainTest.getLine().getStationAtPosition(trainTest.getPosition()+segmentTest.getLength());
-	*/
-	
 	@Before
 	public void builderRunner() {
 		builderTest.build(7);
@@ -71,7 +63,7 @@ public class CantonTest {
 		assertFalse("Exit failed", cantonTest.isOccupied());
 		assertEquals("Free Train Canton failed", null, trainTest.getCurrentCanton());
 	}
-
+	
 	@Test
 	public void testIsOccupied() {
 		cantonTest.setOccupiedTrue();
@@ -94,6 +86,11 @@ public class CantonTest {
 		cantonTest.setOccupiedFalse();
 		
 		assertFalse("Canton still occupied", cantonTest.isOccupied());
+	}
+	
+	@Test
+	public void testGetSegment() {
+		assertEquals("Canton.getSegment went wrong", segmentTest, cantonTest.getSegment());
 	}
 
 }

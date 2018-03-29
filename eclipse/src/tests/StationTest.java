@@ -14,33 +14,34 @@ import line_management.Train;
 import passengers.Passenger;
 
 public class StationTest {
-	int type = 3, capacity = 8, position = 1, id = 6, way = 0;
-	int type2 = 2, capacity2 = 7, position2 = 5, id2 = 2, way2 = 0;
+	private int type = 0, capacity = 8, position = 1, id = 6, way = 0;
+	private int type2 = 2, capacity2 = 7, position2 = 5, id2 = 2;
 	
-	String name = "StatTest1";
+	private String name = "StatTest1";
 	
-	Line lineTest = new Line();
+	private Line lineTest = new Line();
 
 	private Segment segmentTest = new Segment(0, 5, lineTest, 0);
 	
 	private Canton cantonTest = new Canton(segmentTest);
 	
-	private boolean terminus[] = {false, true}, start[] = {true, false}, backup = false;
+	private boolean terminus[] = {false, true}, start[] = {true, false}, backup1 = false, backup2 = true;
 	
-	private Station stationTest = new Station("StatTest1", type, lineTest, capacity, position, id, backup, terminus, start);
-	private Station stationTest2 = new Station("StatTest2", type2, lineTest, capacity2, position2, id2, backup, terminus, start);
+	private Station stationTest = new Station("StatTest1", type, lineTest, capacity, position, id, backup1, terminus, start);
+	private Station stationTest2 = new Station("StatTest2", type2, lineTest, capacity2, position2, id2, backup2, terminus, start);
+
+	private Train trainTest = new Train(0, 0, stationTest, 3, capacity);
 	
-	Train trainTest = new Train(0, 0, stationTest, 3, capacity);
+	private Passenger trainPassengerTest1 = new Passenger(0, 0, 0);
+	private Passenger trainPassengerTest2 = new Passenger(0, 1, 1);
+	private Passenger trainPassengerTest3 = new Passenger(5, 2, 0);
 	
-	Passenger trainPassengerTest1 = new Passenger(0, 0, 0);
-	Passenger trainPassengerTest2 = new Passenger(0, 1, 1);
-	Passenger trainPassengerTest3 = new Passenger(5, 2, 0);
+	private Passenger stationPassengerTest1 = new Passenger(3, 5, 1);
+	private Passenger stationPassengerTest2 = new Passenger(0, 4, 0);
+	private Passenger stationPassengerTest3 = new Passenger(3, 5, 1);
 	
-	Passenger stationPassengerTest1 = new Passenger(3, 5, 1);
-	Passenger stationPassengerTest2 = new Passenger(0, 4, 0);
-	Passenger stationPassengerTest3 = new Passenger(3, 5, 0);
-	
-	ArrayList<Passenger> passengersTest = new ArrayList<Passenger>();
+	private ArrayList<Passenger> passengersTest = new ArrayList<Passenger>();
+	private ArrayList<Passenger> passengersTest2 = new ArrayList<Passenger>();
 
 	@Test
 	public void testStation() {
@@ -63,15 +64,31 @@ public class StationTest {
 		trainTest.getPassengers().add(trainPassengerTest2);
 		trainTest.getPassengers().add(trainPassengerTest3);
 		
-		stationTest.getPassengers().add(stationPassengerTest1);
-		stationTest.getPassengers().add(stationPassengerTest2);
-		stationTest.getPassengers().add(stationPassengerTest3);
+		stationTest.addPassenger(stationPassengerTest1);
+		stationTest.addPassenger(stationPassengerTest2);
+		stationTest.addPassenger(stationPassengerTest3);
 		
-		assertEquals("Train Passengers missing", 3, trainTest.getPassengers().size());
+		passengersTest.add(trainPassengerTest2);
+		passengersTest.add(trainPassengerTest3);
+		passengersTest.add(stationPassengerTest2);
 		
-		assertEquals("Station Passengers missing", 3, stationTest.getPassengers().size());
+		passengersTest2.add(stationPassengerTest1);
+		passengersTest2.add(stationPassengerTest3);
 		
 		stationTest.pickPassengers(trainTest);
+		
+		assertEquals("Station.pickPassengers failed to empty train", passengersTest, trainTest.getPassengers());
+
+		assertEquals("Station.pickPassengers failed to fill station", passengersTest2, stationTest.getPassengers());
+	}
+	
+	@Test
+	public void testAddPassenger() {
+		stationTest.addPassenger(stationPassengerTest1);
+		stationTest.addPassenger(stationPassengerTest2);
+		stationTest.addPassenger(stationPassengerTest3);
+		
+		assertEquals("Station Passengers missing", 3, stationTest.getPassengers().size());
 	}
 
 	@Test
@@ -96,7 +113,7 @@ public class StationTest {
 		stationTest2.enter(trainTest);
 		
 		assertEquals("Train failed to enter the station", stationTest2, trainTest.getCurrentStation());
-		System.out.println("Position : " + trainTest.getPosition());
+		
 		stationTest2.exit(trainTest);
 		
 		assertEquals("Train failed to exit the station", null, trainTest.getCurrentStation());
@@ -173,8 +190,39 @@ public class StationTest {
 	}
 
 	@Test
-	public void testGetId() {
-		assertEquals("Station id Getter went wrong", id, stationTest.getId());
+	public void testIsBackup() {
+		assertFalse("Station.isBackup went wrong", stationTest.isBackup());
+		assertTrue("Station.isBackup went wrong", stationTest2.isBackup());
+	}
+	
+	@Test
+	public void testIsTerminus() {
+		assertFalse("Station.isTerminus went wrong", stationTest.isTerminus(0));
+		assertTrue("Station.isTerminus went wrong", stationTest2.isTerminus(1));
+	}
+	
+	@Test
+	public void testisStart() {
+		assertFalse("Station.isStart went wrong", stationTest2.isStart(1));
+		assertTrue("Station.isStart went wrong", stationTest.isStart(0));
+	}	
+
+	@Test
+	public void testSetStart() {
+		assertFalse("Station.setStart went wrong", stationTest2.isStart(1));
+		
+		stationTest2.setStart(1, true);
+		
+		assertTrue("Station.setStart went wrong", stationTest2.isStart(1));
+	}
+
+	@Test
+	public void testSetTerminus() {
+		assertFalse("Station.setTerminus went wrong", stationTest2.isTerminus(0));
+		
+		stationTest2.setTerminus(0, true);
+		
+		assertTrue("Station.setTerminus went wrong", stationTest2.isTerminus(0));
 	}
 
 }

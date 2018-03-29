@@ -5,13 +5,24 @@ import line_management.Line;
 import line_management.Station;
 import line_management.Train;
 
-/*
- * class instanciated in case of an incident on a canton
- */
+/**
+  * Class instantiated in case of an incident on a canton
+  * 
+  * @author bastien.ck
+  * 
+  * @see Incident
+  */
 public class CantonIncident extends Incident {
-	/*
-	 * creates a new incident on the canton
-	 */
+	/**
+	  * creates a new incident on the canton
+	  * @param line
+	  * the line impacted by the incident
+	  * @param canton
+	  * the canton impacted by the incident
+	  * @param way
+	  * the way on the line impacted by the incident
+	  * @see Incident#Incident(Line, int)
+	  */
 	public CantonIncident(Line line, Canton canton, int way) {
 		super(line,way);
 		
@@ -30,10 +41,10 @@ public class CantonIncident extends Incident {
 		activatePreviousTerminus();
 	}
 	
-	/*
-	 * gets the next station with backup tracks to set it as a temporary start on the line
-	 */
-	private void activateNextStart() {
+	/**
+	  * gets the next station with backup tracks to set it as a temporary start on the line
+	  */
+	protected void activateNextStart() {
 		int stationId = -1;
 		boolean found;
 		Station nextStation;
@@ -67,10 +78,10 @@ public class CantonIncident extends Incident {
 		nextStart.setStart(way, true);
 	}
 	
-	/*
-	 * gets the previous station with backup tracks to set it as a temporary terminus on the line
-	 */
-	private void activatePreviousTerminus() {
+	/**
+	  * gets the previous station with backup tracks to set it as a temporary terminus on the line
+	  */
+	protected void activatePreviousTerminus() {
 		int stationId = 0;
 		boolean found;
 		Station prevStation;
@@ -104,9 +115,9 @@ public class CantonIncident extends Incident {
 		prevTerminus.setTerminus(way, true);
 	}
 
-	/*
-	 * ends the incident
-	 */
+	/**
+	  * ends the incident
+	  */
 	public void terminate() {
 		if (blockedtrain != null) {
 			blockedtrain.unblock();

@@ -3,19 +3,46 @@ package line_management;
 import java.util.ArrayList;
 
 
-/*
+/**
  * represents a line with its list of stations and segments in between the stations
+ * 
+ * @author bastien.ck
  */
 public class Line {
 	private int length;
+	/**
+	 * @see Station
+	 * @see Line#getStations()
+	 * @see Line#addStation(Station)
+	 * @see Line#getStationAtPosition(int)
+	 */
 	private ArrayList<Station> stations;
+	/**
+	 * @see Segment
+	 * @see Line#addSegment(Segment)
+	 * @see Line#getSegmentAtPosition(int)
+	 * @see Line#getSegmentForCanton(Canton)
+	 * @see Line#getSegments()
+	 */
 	private ArrayList<Segment> segments;
+	/**
+	 * @see Train
+	 * @see Line#getTrains()
+	 */
 	private ArrayList<Train> trains;
+	/**
+	 * @see Line#getNbSegments()
+	 * @see Line#addSegment(Segment)
+	 */
 	private int nbSegments;
+	/**
+	 * @see Line#getNbStations()
+	 * @see Line#addStation(Station)
+	 */
 	private int nbStations;
 
-	/*
-	 * a new line as a null length and no stations nor segments
+	/**
+	 * Creates a new line as a null length and no stations nor segments
 	 */
 	public Line() {
 		length = 0;
@@ -26,8 +53,10 @@ public class Line {
 		nbStations = 0;
 	}
 	
-	/*
-	 * returns the segment at a given position on the line
+	/**
+	 * @param position
+	 * the checked position
+	 * @return the segment at a given position on the line
 	 */
 	public Segment getSegmentAtPosition(int position) {
 		int i = 0;
@@ -36,8 +65,12 @@ public class Line {
 		return segments.get(i);
 	}
 	
-	/*
-	 * returns the canton for a given way at a given position on the line
+	/**
+	 * @param position
+	 * the checked position
+	 * @param way
+	 * the checked way
+	 * @return the canton for a given way at a given position on the line
 	 */
 	public Canton getCantonAtPosition(int position, int way) {
 		int i=0;
@@ -53,15 +86,21 @@ public class Line {
 			return null;
 	}
 	
-	/*
-	 * allows to check if a position belongs to a segment
+	/**
+	 * @param segment
+	 * the segment to check
+	 * @param position
+	 * the position checked
+	 * @return if a position belongs to a segment
 	 */
 	public boolean positionInSegment(Segment segment, int position) {
 		return (position >= segment.getStartPoint() && position <= segment.getEndPoint());
 	}
 	
-	/*
-	 * returns the station that a train is reaching at a given position with a given speed
+	/**
+	 * @param position
+	 * the checked position
+	 * @return the station that a train is reaching at a given position with a given speed
 	 */
 	public Station getStationAtPosition(int position) {
 		int i = 0;
@@ -76,8 +115,10 @@ public class Line {
 		return station;
 	}
 	
-	/*
-	 * returns the segment that a given canton belongs to
+	/**
+	 * @param canton
+	 * the checked canton
+	 * @return the segment that a given canton belongs to
 	 */
 	public Segment getSegmentForCanton(Canton canton) {
 		Segment segment = null;
@@ -94,8 +135,10 @@ public class Line {
 		return segment;
 	}
 	
-	/*
+	/**
 	 * adds a new segment to the line
+	 * @param segment
+	 * the segment to add to the line
 	 */
 	public void addSegment(Segment segment) {
 		length += segment.getLength();
@@ -103,8 +146,10 @@ public class Line {
 		segments.add(segment);
 	}
 	
-	/*
+	/**
 	 * adds a new station to the line
+	 * @param station
+	 * the station to add to the line
 	 */
 	public void addStation(Station station) {
 		nbStations++;
@@ -112,36 +157,37 @@ public class Line {
 		stations.add(station);
 	}
 	
-	/*
-	 * returns the number of stations
+	/**
+	 * @return the number of stations on the line
 	 */
 	public int getNbStations() {
 		return nbStations;
 	}
 	
-	/*
-	 * returns the segments of the line
+	/**
+	 * @return the segments of the line
+	 * @see ArrayList
 	 */
 	public ArrayList<Segment> getSegments() {
 		return segments;
 	}
 	
-	/*
-	 * returns the number of segments
+	/**
+	 * @return the number of segments in the line
 	 */
 	public int getNbSegments() {
 		return nbSegments;
 	}
 	
-	/*
-	 * returns the length of the line
+	/**
+	 * @return the length of the line
 	 */
 	public int getLength() {
 		return length;
 	}
 	
-	/*
-	 * returns a short description of the line
+	/**
+	 * @return a short description of the line
 	 */
 	public String getDescription() {
 		String result = "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments + "\n\n";
@@ -157,15 +203,17 @@ public class Line {
 		return result;
 	}
 
-	/*
-	 * returns the list of trains on the line
+	/**
+	 * @return the list of trains on the line
+	 * @see ArrayList
 	 */
 	public ArrayList<Train> getTrains() {
 		return trains;
 	}
 	
-	/*
-	 * returns the list of stations in the line
+	/**
+	 * @return the list of stations in the line
+	 * @see ArrayList
 	 */
 	public ArrayList<Station> getStations(){
 		return stations;

@@ -32,13 +32,7 @@ public class TrainTest {
 	private Station stationTest;
 	
 	private Station stationTest2;
-	/*
-	private Station stationTest = new Station("StatTest1",type, lineTest, capacity, position, id, backup, terminus, start);
-	private Station stationTest2 = new Station("StatTest1",type, lineTest, capacity, position, id, backup, terminus, start);
 	
-	private Train trainTest = new Train(0, 0, stationTest, 3, 1);
-	private Train trainTest2 = new Train(2, 1, stationTest, 2, 1);
-	*/
 	private Passenger trainPassengerTest1 = new Passenger(0, 0, 1);
 	private Passenger trainPassengerTest2 = new Passenger(0, 1, 0);
 	private Passenger trainPassengerTest3 = new Passenger(5, 2, 0);
@@ -57,7 +51,6 @@ public class TrainTest {
 	
 	@Test
 	public void testRun(){
-		System.out.println("-------------TEST RUN STARTS---------------");
 		trainTest.run();
 		
 		assertEquals("Train run failed at some point (way=0)", builderTest.getLine().getStationAtPosition(builderTest.getLine().getLength()-1), trainTest.getCurrentStation());
@@ -65,8 +58,6 @@ public class TrainTest {
 		trainTest2.run();
 		
 		assertEquals("Train run failed at some point (way=1)", builderTest.getLine().getStationAtPosition(0), trainTest2.getCurrentStation());
-		
-		System.out.println("-------------TEST RUN ENDS---------------");
 	}
 
 	@Test
@@ -130,14 +121,6 @@ public class TrainTest {
 	}
 
 	@Test
-	public void testSetPosition() {
-		assertEquals("Position getter failed", stationTest.getPosition(), trainTest.getPosition());
-		
-		trainTest.setPosition(62);
-		assertEquals("Position Setter failed", 62, trainTest.getPosition());
-	}
-
-	@Test
 	public void testGetSpeed() {
 		assertEquals("Speed getter failed", speed, trainTest.getSpeed());
 	}
@@ -172,6 +155,36 @@ public class TrainTest {
 	@Test
 	public void testGetId() {
 		assertEquals("Id getter failed", id, trainTest.getId());
+	}
+	
+	@Test
+	public void testIsBlocked() {
+		assertFalse("isBlocked method has failed", trainTest.isBlocked());
+	}
+	
+	@Test
+	public void testBlock() {
+		trainTest.block();
+		
+		assertTrue("Train.block method failed", trainTest.isBlocked());
+	}
+	
+	@Test
+	public void testUnblock() {
+		trainTest.block();
+		
+		trainTest.unblock();
+		
+		assertFalse("Train.block method failed", trainTest.isBlocked());
+	}
+	
+	@Test
+	public void testHasArrived() {
+		assertFalse("Train.hasArrived method failed", trainTest.hasArrived());
+
+		trainTest.run();
+		
+		assertTrue("Train.hasArrived method failed", trainTest.hasArrived());
 	}
 
 }

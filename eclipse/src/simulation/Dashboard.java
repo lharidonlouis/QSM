@@ -19,13 +19,13 @@ public class Dashboard  extends JPanel{
 	private Line line;
 	public ArrayList<Train> trains = new ArrayList<Train>();
 	private static final int START_X = 50;
-	private static final int LENGTH = 1000;
+	private static final int LENGTH = 1200;
 	private static final int START_Y = 150;
 	private double ratio;
 
 	public Dashboard(){
 		Builder builder = new Builder();
-		builder.build(5);
+		builder.build(15);
 		line = builder.getLine();
 
 		ratio = (double) LENGTH / (double)line.getLength();
@@ -61,7 +61,7 @@ public class Dashboard  extends JPanel{
 			
 			int n = segment.getId() + 1;
 			
-			g2.drawString("Station " + n, (int)current_position - 20, START_Y + 80);
+			g2.drawString("Station " + n + " " + line.getStationAtPosition(segment.getLength()+1), (int)current_position - 20, START_Y + 80);
 			
 			// Stations
 			if (segmentId != line.getNbSegments() - 1) {

@@ -4,14 +4,30 @@ import line_management.Line;
 import line_management.Station;
 import line_management.Train;
 
-/*
- * class instanciated in case of an incident in a station
+/**
+ * class instantiated in case of an incident in a station
+ * 
+ * @author bastien.ck
+ * 
+ * @see Incident
  */
 public class StationIncident extends Incident {
+	/**
+	 * @see Station
+	 * @see StationIncident#getStation()
+	 */
 	private Station station;
 	
-	/*
+	/**
 	 * creates a new incident in the station
+	 * 
+	 * @param line
+	 * the line impacted by the incident
+	 * @param station
+	 * the station impacted by the incident
+	 * @param way
+	 * the way on the line impacted by the incident
+	 * @see Incident#Incident(Line, int)
 	 */
 	public StationIncident(Line line, Station station, int way) {
 		super(line, way);
@@ -44,10 +60,10 @@ public class StationIncident extends Incident {
 		activatePreviousTerminus();
 	}
 	
-	/*
+	/**
 	 * gets the next station with backup tracks to set it as a temporary start on the line
 	 */
-	private void activateNextStart() {
+	protected void activateNextStart() {
 		int stationId = 0;
 		boolean found;
 		
@@ -76,10 +92,10 @@ public class StationIncident extends Incident {
 		nextStart.setStart(way, true);
 	}
 	
-	/*
+	/**
 	 * gets the previous station with backup tracks to set it as a temporary terminus on the line
 	 */
-	private void activatePreviousTerminus() {
+	protected void activatePreviousTerminus() {
 		int stationId = 0;
 		boolean found;
 		
@@ -108,14 +124,14 @@ public class StationIncident extends Incident {
 		prevTerminus.setTerminus(way, true);
 	}
 
-	/*
-	 * returns the station impacted by the incident
+	/**
+	 * @return the station impacted by the incident
 	 */
 	public Station getStation() {
 		return station;
 	}
 
-	/*
+	/**
 	 * ends the incident
 	 */
 	public void terminate() {

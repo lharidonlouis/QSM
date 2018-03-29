@@ -10,9 +10,10 @@ public class SegmentTest extends TestCase{
 	/*
 	 * Initiate Segment and everything needed
 	 */
-	Line testLine = new Line();
-	Segment testSegment = new Segment(0, 1, testLine, 0);
-	Segment testSegment2 = new Segment(1, 3, testLine, 1);
+	private Line testLine = new Line();
+	
+	private Segment testSegment = new Segment(0, 1, testLine, 0);
+	private Segment testSegment2 = new Segment(1, 3, testLine, 1);
 
 	@Test
 	public void testBuilder() throws Exception{
