@@ -54,6 +54,9 @@ public class Dashboard  extends JPanel{
 		// Station 0, way 1
 		g2.drawLine(START_X, START_Y + 10, START_X, START_Y + 30);
 		
+		//counter
+		int ct = 0;
+		
 		for (int segmentId = 0; segmentId < line.getNbSegments(); segmentId++) {
 			segment = line.getSegments().get(segmentId);
 			
@@ -61,7 +64,8 @@ public class Dashboard  extends JPanel{
 			
 			int n = segment.getId() + 1;
 			
-			g2.drawString("Station " + n + " " + line.getStationAtPosition(segment.getLength()+1), (int)current_position - 20, START_Y + 80);
+			g2.drawString("Station " + n + " " + line.getStationAtPosition(ct+segment.getLength()+1).getPassengers().size() + "/" + line.getStationAtPosition(ct+segment.getLength()+1).getCapacity(), (int)current_position - 20, START_Y + 80);
+			ct = ct + segment.getLength() + 1;
 			
 			// Stations
 			if (segmentId != line.getNbSegments() - 1) {
@@ -85,13 +89,14 @@ public class Dashboard  extends JPanel{
 			int way = train.getWay();
 			switch(way) {
 			case 0:
-				g2.drawString("Train" + train.getId(), (int) cur_l, START_Y - 25);
-				g2.drawLine(START_X + (int) cur_l, START_Y - 5, START_X + (int) cur_l, START_Y + 5);
+				g2.drawString("Train" + train.getId() + " " + train.getPassengers().size() + "/" + train.getCapacity(), (int) cur_l, START_Y - 25);
+				//g2.drawLine(START_X + (int) cur_l - 5 , START_Y - 5, START_X + (int) cur_l  +5, START_Y + 5);
+				g2.drawRect(START_X + (int) cur_l - 15, START_Y +1, 30, 18);
 				break;
 			case 1:
-				g2.drawString("Train" + train.getId(), (int) cur_l, START_Y + 55);
-				g2.drawLine(START_X + (int) cur_l, START_Y + 15, START_X + (int) cur_l, START_Y + 25);
-
+				g2.drawString("Train" + train.getId() + " " + train.getPassengers().size() + "/" + train.getCapacity(), (int) cur_l, START_Y + 55);
+				//g2.drawLine(START_X + (int) cur_l + 5, START_Y + 15, START_X + (int) cur_l - 5, START_Y + 25);
+				g2.drawRect(START_X + (int) cur_l - 15 , START_Y + 59, 30, 18);
 				break;
 			}
 		}
