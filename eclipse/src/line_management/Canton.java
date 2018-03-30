@@ -70,9 +70,9 @@ public class Canton {
 		train.setCurrentCanton(null);
 	}
 	
-	/*
+	/**
 	 * Notifies the train waiting to enter the canton
-  */
+	 */
 	public synchronized void wakeWaitingTrain() {
 		notify();
 	}
