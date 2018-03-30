@@ -9,6 +9,11 @@ import java.util.ArrayList;
  * @author bastien.ck
  */
 public class Line {
+	/**
+	 * length of the line
+	 * 
+	 * @see Line#getLength()
+	 */
 	private int length;
 	/**
 	 * @see Station

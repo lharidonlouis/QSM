@@ -115,6 +115,9 @@ public class Builder {
 		return line;
 	}
 	
+	/**
+	 * @return true if the line is built
+	 */
 	public boolean isBuilt() {
 		return built;
 	}
