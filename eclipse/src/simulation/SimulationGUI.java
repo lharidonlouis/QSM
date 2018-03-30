@@ -44,20 +44,20 @@ public class SimulationGUI extends JFrame implements Runnable{
 		currentId = 0;
 		int way;
 		
-		IncidentGenerator ig = new IncidentGenerator(10000,dashboard.getLine(), incidents);
-		ig.start();
+		/*IncidentGenerator ig = new IncidentGenerator(10000,dashboard.getLine(), incidents);
+		ig.start();*/
 		PassengerGenerator pg = new PassengerGenerator(dashboard.getLine() , 1000);
 		pg.start();
 
 		
-		JButton jb1 = new JButton("Repair");
+		/*JButton jb1 = new JButton("Repair");
 		jb1.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 			   ig.solveAllProblems();
 			  } 
 		} );
 		dashboard.add(jb1);
-
+		*/
 		
 		while(true) {
 			starts = getStarts();
