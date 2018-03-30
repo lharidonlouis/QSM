@@ -1,6 +1,10 @@
 package simulation;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import incidents.Incident;
@@ -45,6 +49,16 @@ public class SimulationGUI extends JFrame implements Runnable{
 		PassengerGenerator pg = new PassengerGenerator(dashboard.getLine() , 1000);
 		pg.start();
 
+		
+		JButton jb1 = new JButton("Repair");
+		jb1.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+			   ig.solveAllProblems();
+			  } 
+		} );
+		dashboard.add(jb1);
+
+		
 		while(true) {
 			starts = getStarts();
 			for (Station station : starts) {
