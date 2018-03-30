@@ -2,6 +2,9 @@ package simulation;
 
 import java.util.ArrayList;
 import javax.swing.JFrame;
+
+import incidents.Incident;
+import incidents.IncidentGenerator;
 import line_management.Station;
 import line_management.Train;
 import passengers.PassengerGenerator;
@@ -10,7 +13,8 @@ public class SimulationGUI extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
 	public static final int DELAY = 100;
 	public static final int REGULAR_SPEED = 5;
-	public static final int CAPACITY = 20;
+	public static final int CAPACITY = 50;
+	public static final ArrayList<Incident> incidents = new ArrayList<Incident>();
 	
 	private Dashboard dashboard;
 	private ArrayList<Station> starts;
@@ -36,6 +40,8 @@ public class SimulationGUI extends JFrame implements Runnable{
 		currentId = 0;
 		int way;
 		
+		IncidentGenerator ig = new IncidentGenerator(10000,dashboard.getLine(), incidents);
+		ig.start();
 		PassengerGenerator pg = new PassengerGenerator(dashboard.getLine() , 1000);
 		pg.start();
 
