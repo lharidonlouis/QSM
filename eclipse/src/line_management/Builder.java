@@ -32,7 +32,7 @@ public class Builder {
 	/**
 	 * maximum capacity for a station
 	 */
-	private static final int MAX_CAPACITY = 500;
+	private static final int MAX_CAPACITY = 300;
 	
 	/**
 	 * Creates a new builder, sets built false
