@@ -31,6 +31,7 @@ public class StationIncident extends Incident {
 	 */
 	public StationIncident(Line line, Station station, int way) {
 		super(line, way);
+		System.err.println("New incident at station " + station.getId() + ", way " + way);
 		
 		this.station = station;
 		int cantonposition;
@@ -89,8 +90,11 @@ public class StationIncident extends Incident {
 				stationId--;
 			}
 		}
-		if (nextStart != null)
+
+		if (nextStart != null) {
+			System.err.println("station " + nextStart.getId() + " is now a start for way " + way);
 			nextStart.setStart(way, true);
+		}
 	}
 	
 	/**
@@ -122,8 +126,11 @@ public class StationIncident extends Incident {
 				stationId++;
 			}
 		}
-		if (prevTerminus != null)
+
+		if (prevTerminus != null) {
+			System.err.println("station " + prevTerminus.getId() + " is now a terminus for way " + way);
 			prevTerminus.setTerminus(way, true);
+		}
 	}
 
 	/**
@@ -138,11 +145,16 @@ public class StationIncident extends Incident {
 	 */
 	public void terminate() {
 		if (blockedtrain != null) {
+			System.err.println("Unblocking blocked train in station " + station.getId());
 			blockedtrain.unblock();
+			canton.wakeWaitingTrain();
+			station.wakeWaitingTrain();
 			blockedtrain = null;
 		}
-		else
-			station.setTrackOccupiedFalse(way);
+		else {
+			station.unblock(way);
+			station.wakeWaitingTrain();
+		}
 		
 		deactivateNextStart();
 		deactivatePreviousTerminus();

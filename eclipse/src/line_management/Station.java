@@ -208,6 +208,10 @@ public class Station {
 		}
 	}
 	
+	public synchronized void wakeWaitingTrain() {
+		notify();
+	}
+	
 	/**
 	 * allows to check if a train is on a track of the station
 	 * @param way
@@ -329,6 +333,10 @@ public class Station {
 	 */
 	public void setTerminus(int way, boolean value) {
 		isTerminus[way] = value;
+	}
+	
+	public boolean isBlocked(int way) {
+		return blocked[way];
 	}
 	
 	public void block(int way) {

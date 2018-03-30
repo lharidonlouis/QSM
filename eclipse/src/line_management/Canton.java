@@ -77,7 +77,7 @@ public class Canton {
 	
 	/*
 	 * Notifies the train waiting to enter the canton
-  */
+	 */
 	public synchronized void wakeWaitingTrain() {
 		notify();
 	}

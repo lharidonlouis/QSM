@@ -21,6 +21,7 @@ public class IncidentGenerator extends Thread {
 		Incident result;
 		Random r = new Random();
 		int type, index, way;
+		int i = 0;
 		while(running) {
 			try {
 				sleep(delay);
@@ -38,12 +39,17 @@ public class IncidentGenerator extends Thread {
 				result = new CantonIncident(line, line.getSegments().get(index).getCanton(way), way);
 			}
 			
+			System.out.println("Incident " + i + " added");
+			i++;
 			incidents.add(result);
 		}
 	}
 	
 	public void solveAllProblems() {
+		int i = 0;
 		for (Incident incident : incidents) {
+			System.out.println("Incident " + i + " over");
+			i++;
 			incident.terminate();
 		}
 	}

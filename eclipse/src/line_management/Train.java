@@ -123,7 +123,7 @@ public class Train extends Thread {
 								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
 								int indexcurrentstation = currentstation.getId();
 								Station followingstation = line.getStations().get(indexcurrentstation + 1);
-								if (nextcanton != null && followingstation != null) {
+								if (nextcanton != null && followingstation != null && !nextcanton.isBlocked() && !followingstation.isBlocked(way)) {
 									nextcanton.enter(this, followingstation);
 									updatePosition();
 								}
@@ -152,7 +152,7 @@ public class Train extends Thread {
 								Canton nextcanton = line.getCantonAtPosition(nextposition, way);
 								int indexcurrentstation = currentstation.getId();
 								Station followingstation = line.getStations().get(indexcurrentstation - 1);
-								if(nextcanton != null && followingstation != null) {
+								if(nextcanton != null && followingstation != null && !nextcanton.isBlocked() && !followingstation.isBlocked(way)) {
 									nextcanton.enter(this, followingstation);
 									updatePosition();
 								}

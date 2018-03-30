@@ -67,14 +67,16 @@ public abstract class Incident {
 	 * deactivates the next station on the line using backup tracks to be used as a temporary start
 	 */
 	protected void deactivateNextStart() {
-		nextStart.setStart(way, false);
+		if (nextStart != null)
+			nextStart.setStart(way, false);
 	}
 
 	/**
 	 * deactivates the next station on the line using backup tracks to be used as a temporary terminus
 	 */
 	protected void deactivatePreviousTerminus() {
-		prevTerminus.setTerminus(way, false);
+		if (prevTerminus != null)
+			prevTerminus.setTerminus(way, false);
 	}
 	
 	/**
