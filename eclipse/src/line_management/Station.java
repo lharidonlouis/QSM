@@ -48,7 +48,9 @@ public class Station {
 	 * @see Station#setTrackOccupiedTrue(int)
 	 * @see Station#setTrackOccupiedFalse(int)
 	 */
-	private boolean[] tracksoccupied = {false, false};
+	private Train[] tracksoccupied = {null, null};
+	
+	private boolean[] blocked = {false, false};
 	/**
 	 * the list of passengers in the station
 	 * @see Passenger
@@ -157,7 +159,7 @@ public class Station {
 	 * the train to enter the station
 	 */
 	public synchronized void enter(Train train) {
-		if(tracksoccupied[train.getWay()]) {
+		if(tracksoccupied[train.getWay()] != null) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -173,7 +175,7 @@ public class Station {
 		Canton oldcanton = train.getCurrentCanton();
 		train.setCurrentStation(this);
 		oldcanton.exit(train);
-		setTrackOccupiedTrue(train.getWay());
+		setTrackOccupiedTrue(train.getWay(), train);
 		pickPassengers(train);
 	}
 	
@@ -206,12 +208,16 @@ public class Station {
 		}
 	}
 	
+	public synchronized void wakeWaitingTrain() {
+		notify();
+	}
+	
 	/**
 	 * allows to check if a train is on a track of the station
 	 * @param way
 	 * the track to check
 	 */
-	public boolean isTrackOccupied(int way) {
+	public Train getTrainOnTrack(int way) {
 		return tracksoccupied[way];
 	}
 
@@ -220,8 +226,8 @@ public class Station {
 	 * @param index
 	 * the track to set as occupied
 	 */
-	public void setTrackOccupiedTrue(int index) {
-		tracksoccupied[index] = true;
+	public void setTrackOccupiedTrue(int index, Train train) {
+		tracksoccupied[index] = train;
 	}
 	
 	/**
@@ -230,7 +236,7 @@ public class Station {
 	 * the track to set as not occupied
 	 */
 	public void setTrackOccupiedFalse(int index) {
-		tracksoccupied[index] = false;
+		tracksoccupied[index] = null;
 	}
 
 	/**
@@ -327,5 +333,17 @@ public class Station {
 	 */
 	public void setTerminus(int way, boolean value) {
 		isTerminus[way] = value;
+	}
+	
+	public boolean isBlocked(int way) {
+		return blocked[way];
+	}
+	
+	public void block(int way) {
+		blocked[way] = true;
+	}
+	
+	public void unblock(int way) {
+		blocked[way] = false;
 	}
 }

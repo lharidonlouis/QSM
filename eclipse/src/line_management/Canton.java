@@ -15,7 +15,7 @@ public class Canton {
 	 * @see Canton#setOccupiedTrue()
 	 * @see Canton#setOccupiedFalse()
 	 */
-	private boolean occupied;
+	private Train occupyingTrain;
 	/**
 	 * @see Segment
 	 * @see Canton#getSegment()
@@ -23,12 +23,17 @@ public class Canton {
 	private Segment segment;
 
 	/**
+	 * @see 
+	 */
+	private boolean blocked;
+	/**
 	 * Creates a new canton, not occupied
 	 * @param segment
 	 * the segment that contains this canton
 	 */
 	public Canton(Segment segment) {
-		occupied = false;
+		occupyingTrain = null;
+		blocked = false;
 		this.segment = segment;
 	}
 	
@@ -45,7 +50,7 @@ public class Canton {
 	 * the station after this canton on the line
 	 */
 	public synchronized void enter(Train train, Station followingstation) {
-		if(occupied || followingstation.isTrackOccupied(train.getWay())) {
+		if(occupyingTrain != null || followingstation.getTrainOnTrack(train.getWay()) != null) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -55,7 +60,7 @@ public class Canton {
 		Station oldstation = train.getCurrentStation();
 		train.setCurrentCanton(this);
 		oldstation.exit(train);
-		setOccupiedTrue();
+		setOccupyingTrain(train);
 	}
 	
 	/**
@@ -80,22 +85,22 @@ public class Canton {
 	/**
 	 * @return the status of the canton
 	 */
-	public boolean isOccupied() {
-		return occupied;
+	public Train getOccupyingTrain() {
+		return occupyingTrain;
 	}
 	
 	/**
 	 * sets the canton as occupied
 	 */
-	public void setOccupiedTrue() {
-		this.occupied = true;
+	public void setOccupyingTrain(Train train) {
+		occupyingTrain = train;
 	}
 	
 	/**
 	 * sets the canton as not occupied
 	 */
 	public void setOccupiedFalse() {
-		this.occupied = false;
+		occupyingTrain = null;
 	}
 	
 	/**
@@ -103,5 +108,17 @@ public class Canton {
 	 */
 	public Segment getSegment() {
 		return segment;
+	}
+	
+	public boolean isBlocked() {
+		return blocked;
+	}
+	
+	public void block() {
+		blocked = true;
+	}
+	
+	public void unblock() {
+		blocked = false;
 	}
 }

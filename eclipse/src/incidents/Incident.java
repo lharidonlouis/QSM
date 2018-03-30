@@ -67,14 +67,16 @@ public abstract class Incident {
 	 * deactivates the next station on the line using backup tracks to be used as a temporary start
 	 */
 	protected void deactivateNextStart() {
-		nextStart.setStart(way, false);
+		if (nextStart != null)
+			nextStart.setStart(way, false);
 	}
 
 	/**
 	 * deactivates the next station on the line using backup tracks to be used as a temporary terminus
 	 */
 	protected void deactivatePreviousTerminus() {
-		prevTerminus.setTerminus(way, false);
+		if (prevTerminus != null)
+			prevTerminus.setTerminus(way, false);
 	}
 	
 	/**
@@ -83,18 +85,14 @@ public abstract class Incident {
 	 * @return the occupying train or null
 	 */
 	protected Train getTrainOnCanton(Canton canton) {
-		Train train = null;
-		boolean found = false;
-		int i = 0;
-		
-		while (i < line.getTrains().size() && !found) {
+		for (int i = 0; i < line.getTrains().size(); i++) {
 			if (line.getTrains().get(i).getCurrentCanton() == canton) {
-				train = line.getTrains().get(i);
-				found = true;
+				return line.getTrains().get(i);
 			}
 		}
+		System.err.println("getTrainOnCanton returns null");
 		
-		return train;
+		return null;
 	}
 
 	/**
@@ -103,18 +101,14 @@ public abstract class Incident {
 	 * @return the occupying train or null
 	 */
 	protected Train getTrainInStation(Station station) {
-		Train train = null;
-		boolean found = false;
-		int i = 0;
-		
-		while (i < line.getTrains().size() && !found) {
+		for (int i = 0; i < line.getTrains().size(); i++) {
 			if (line.getTrains().get(i).getCurrentStation() == station) {
-				train = line.getTrains().get(i);
-				found = true;
+				return line.getTrains().get(i);
 			}
 		}
+		System.err.println("getTrainInStation returns null");
 		
-		return train;
+		return null;
 	}
 	
 	/**

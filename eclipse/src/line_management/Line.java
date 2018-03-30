@@ -197,8 +197,7 @@ public class Line {
 	public String getDescription() {
 		String result = "Line length : " + length + "\nStations : " + nbStations + "\nSegments : " + nbSegments + "\n\n";
 		for (Station station : stations) {
-			result += "Station " + station.getId() + "\n\tTracks occupied : " + station.isTrackOccupied(0) +
-					" / " + station.isTrackOccupied(1) + "\n";
+			result += "Station " + station.getId() + "\n";
 			result += "\tCapacity : " + station.getCapacity() + "\n";
 			result += "\tPosition : " + station.getPosition() + "\n";
 			result += "\tIs start :\t" + station.isStart(0) + " / " + station.isStart(1) + "\n";

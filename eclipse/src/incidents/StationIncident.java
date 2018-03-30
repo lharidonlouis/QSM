@@ -31,6 +31,7 @@ public class StationIncident extends Incident {
 	 */
 	public StationIncident(Line line, Station station, int way) {
 		super(line, way);
+		System.err.println("New incident at station " + station.getId() + ", way " + way);
 		
 		this.station = station;
 		int cantonposition;
@@ -41,19 +42,19 @@ public class StationIncident extends Incident {
 		
 		canton = line.getCantonAtPosition(cantonposition, way);
 		
-		if (station.isTrackOccupied(way)) {
-			Train train = getTrainInStation(station);
+		if (station.getTrainOnTrack(way) != null) {
+			Train train = station.getTrainOnTrack(way);
 			train.block();
 			blockedtrain = train;
 		}
 		else {
-			if (canton.isOccupied()) {
-				Train train = getTrainOnCanton(canton);
+			if (canton.getOccupyingTrain() != null) {
+				Train train = canton.getOccupyingTrain();
 				train.block();
 				blockedtrain = train;
 			}
 			else
-				station.setTrackOccupiedTrue(way);
+				station.block(way);
 		}
 		
 		activateNextStart();
@@ -89,8 +90,11 @@ public class StationIncident extends Incident {
 				stationId--;
 			}
 		}
-		if (nextStart != null)
+
+		if (nextStart != null) {
+			System.err.println("station " + nextStart.getId() + " is now a start for way " + way);
 			nextStart.setStart(way, true);
+		}
 	}
 	
 	/**
@@ -122,7 +126,11 @@ public class StationIncident extends Incident {
 				stationId++;
 			}
 		}
-		prevTerminus.setTerminus(way, true);
+
+		if (prevTerminus != null) {
+			System.err.println("station " + prevTerminus.getId() + " is now a terminus for way " + way);
+			prevTerminus.setTerminus(way, true);
+		}
 	}
 
 	/**
@@ -137,11 +145,16 @@ public class StationIncident extends Incident {
 	 */
 	public void terminate() {
 		if (blockedtrain != null) {
+			System.err.println("Unblocking blocked train in station " + station.getId());
 			blockedtrain.unblock();
+			canton.wakeWaitingTrain();
+			station.wakeWaitingTrain();
 			blockedtrain = null;
 		}
-		else
-			station.setTrackOccupiedFalse(way);
+		else {
+			station.unblock(way);
+			station.wakeWaitingTrain();
+		}
 		
 		deactivateNextStart();
 		deactivatePreviousTerminus();

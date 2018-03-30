@@ -282,7 +282,7 @@ public class Dashboard  extends JPanel{
 	
 	public void addTrain(Train train) {
 		trains.add(train);
-		System.out.println("Train " + train.getId() + " added to dashboard (at station " + train.getCurrentStation().getId() + ", way " + train.getWay() + ")");
+		//System.out.println("Train " + train.getId() + " added to dashboard (at station " + train.getCurrentStation().getId() + ", way " + train.getWay() + ")");
 		train.getCurrentStation().pickPassengers(train);
 		train.start();
 	}

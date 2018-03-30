@@ -25,16 +25,17 @@ public class CantonIncident extends Incident {
 	  */
 	public CantonIncident(Line line, Canton canton, int way) {
 		super(line,way);
+		System.err.println("New incident on canton " + canton.getSegment().getId() + ", way " + way);
 		
 		this.canton = canton;
 		
-		if (canton.isOccupied()) {
-			Train train = getTrainOnCanton(canton);
+		if (canton.getOccupyingTrain() != null) {
+			Train train = canton.getOccupyingTrain();
 			train.block();
 			blockedtrain = train;
 		}
 		else {
-			canton.setOccupiedTrue();
+			canton.block();
 		}
 
 		activateNextStart();
@@ -75,7 +76,10 @@ public class CantonIncident extends Incident {
 			}
 		}
 		
-		nextStart.setStart(way, true);
+		if (nextStart != null) {
+			System.err.println("station " + nextStart.getId() + " is now a start for way " + way);
+			nextStart.setStart(way, true);
+		}
 	}
 	
 	/**
@@ -111,8 +115,11 @@ public class CantonIncident extends Incident {
 				stationId--;
 			}
 		}
-		
-		prevTerminus.setTerminus(way, true);
+
+		if (prevTerminus != null) {
+			System.err.println("station " + prevTerminus.getId() + " is now a terminus for way " + way);
+			prevTerminus.setTerminus(way, true);
+		}
 	}
 
 	/**
@@ -120,10 +127,15 @@ public class CantonIncident extends Incident {
 	  */
 	public void terminate() {
 		if (blockedtrain != null) {
+			System.err.println("Unblocking blocked train on canton " + canton.getSegment().getId());
 			blockedtrain.unblock();
+			canton.wakeWaitingTrain();
 			blockedtrain = null;
 		}
-		else canton.setOccupiedFalse();
+		else {
+			canton.unblock();
+			canton.wakeWaitingTrain();
+		}
 		
 		deactivateNextStart();
 		deactivatePreviousTerminus();
