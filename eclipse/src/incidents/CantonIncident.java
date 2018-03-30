@@ -28,13 +28,13 @@ public class CantonIncident extends Incident {
 		
 		this.canton = canton;
 		
-		if (canton.isOccupied()) {
-			Train train = getTrainOnCanton(canton);
+		if (canton.getOccupyingTrain() != null) {
+			Train train = canton.getOccupyingTrain();
 			train.block();
 			blockedtrain = train;
 		}
 		else {
-			canton.setOccupiedTrue();
+			canton.block();
 		}
 
 		activateNextStart();

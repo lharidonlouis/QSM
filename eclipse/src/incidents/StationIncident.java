@@ -41,19 +41,19 @@ public class StationIncident extends Incident {
 		
 		canton = line.getCantonAtPosition(cantonposition, way);
 		
-		if (station.isTrackOccupied(way)) {
-			Train train = getTrainInStation(station);
+		if (station.getTrainOnTrack(way) != null) {
+			Train train = station.getTrainOnTrack(way);
 			train.block();
 			blockedtrain = train;
 		}
 		else {
-			if (canton.isOccupied()) {
-				Train train = getTrainOnCanton(canton);
+			if (canton.getOccupyingTrain() != null) {
+				Train train = canton.getOccupyingTrain();
 				train.block();
 				blockedtrain = train;
 			}
 			else
-				station.setTrackOccupiedTrue(way);
+				station.block(way);
 		}
 		
 		activateNextStart();
@@ -122,7 +122,8 @@ public class StationIncident extends Incident {
 				stationId++;
 			}
 		}
-		prevTerminus.setTerminus(way, true);
+		if (prevTerminus != null)
+			prevTerminus.setTerminus(way, true);
 	}
 
 	/**

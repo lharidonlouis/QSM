@@ -36,7 +36,7 @@ public class SimulationGUI extends JFrame implements Runnable{
 	}
 
 	@Override
-	public void run() {	
+	public void run() {
 		currentId = 0;
 		int way;
 		
@@ -51,7 +51,7 @@ public class SimulationGUI extends JFrame implements Runnable{
 				for(way = 0; way < 2; way++) {
 					Train newtrain = null;
 					if (station.isStart(way) && !station.isTerminus(way)) {
-						if (!station.isTrackOccupied(way)) {
+						if (station.getTrainOnTrack(way) == null) {
 							newtrain = new Train(currentId, way, station, REGULAR_SPEED, CAPACITY);
 						}
 					}

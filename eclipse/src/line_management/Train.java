@@ -93,7 +93,7 @@ public class Train extends Thread {
 	public Train(int id, int way, Station station, int speed, int capacity) {
 		arrived = false;
 		currentstation = station;
-		currentstation.setTrackOccupiedTrue(way);
+		currentstation.setTrackOccupiedTrue(way, this);
 		line = station.getLine();
 		this.id = id;
 		this.way = way;

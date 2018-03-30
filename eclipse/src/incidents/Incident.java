@@ -83,18 +83,14 @@ public abstract class Incident {
 	 * @return the occupying train or null
 	 */
 	protected Train getTrainOnCanton(Canton canton) {
-		Train train = null;
-		boolean found = false;
-		int i = 0;
-		
-		while (i < line.getTrains().size() && !found) {
+		for (int i = 0; i < line.getTrains().size(); i++) {
 			if (line.getTrains().get(i).getCurrentCanton() == canton) {
-				train = line.getTrains().get(i);
-				found = true;
+				return line.getTrains().get(i);
 			}
 		}
+		System.err.println("getTrainOnCanton returns null");
 		
-		return train;
+		return null;
 	}
 
 	/**
@@ -103,18 +99,14 @@ public abstract class Incident {
 	 * @return the occupying train or null
 	 */
 	protected Train getTrainInStation(Station station) {
-		Train train = null;
-		boolean found = false;
-		int i = 0;
-		
-		while (i < line.getTrains().size() && !found) {
+		for (int i = 0; i < line.getTrains().size(); i++) {
 			if (line.getTrains().get(i).getCurrentStation() == station) {
-				train = line.getTrains().get(i);
-				found = true;
+				return line.getTrains().get(i);
 			}
 		}
+		System.err.println("getTrainInStation returns null");
 		
-		return train;
+		return null;
 	}
 	
 	/**

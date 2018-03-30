@@ -41,4 +41,10 @@ public class IncidentGenerator extends Thread {
 			incidents.add(result);
 		}
 	}
+	
+	public void solveAllProblems() {
+		for (Incident incident : incidents) {
+			incident.terminate();
+		}
+	}
 }
