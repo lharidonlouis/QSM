@@ -89,7 +89,8 @@ public class StationIncident extends Incident {
 				stationId--;
 			}
 		}
-		nextStart.setStart(way, true);
+		if (nextStart != null)
+			nextStart.setStart(way, true);
 	}
 	
 	/**
