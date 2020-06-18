@@ -165,7 +165,7 @@ public class LineTest {
 	
 	@Test
 	public void testGetTrains() {
-		ArrayList<Train> trainsTest = new ArrayList<>();
+		ArrayList<Train> trainsTest = new ArrayList<Train>();
 		
 		lineTest.getTrains().add(trainTest);
 		
@@ -176,7 +176,7 @@ public class LineTest {
 	
 	@Test
 	public void testGetStations() {
-		ArrayList<Station> stationsTest = new ArrayList<>();
+		ArrayList<Station> stationsTest = new ArrayList<Station>();
 		
 		stationsTest.add(stationTest);
 		
